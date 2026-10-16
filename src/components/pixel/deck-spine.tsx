@@ -6,7 +6,7 @@ export function spineColor(colorKey: string): string {
 }
 
 /** Upright book spine with two bands. Decorative; put the title next to it, not on it. */
-export function TomeSpine({ colorKey, className = "h-24 w-8" }: { colorKey: string; className?: string }) {
+export function DeckSpine({ colorKey, className = "h-24 w-8" }: { colorKey: string; className?: string }) {
   return (
     <svg viewBox="0 0 8 24" className={`pixelated ${className}`} aria-hidden>
       <rect x={0} y={0} width={8} height={24} fill="var(--border)" />

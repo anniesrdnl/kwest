@@ -22,7 +22,7 @@
   --gold: #b8922a;
   --accent-ink: #8a5a12; /* amber for text/lines on light backgrounds (AA) */
   --focus: #8a5a12;
-  /* Tome spines + room art (decorative; titles never sit on these colors). */
+  /* Deck spines + room art (decorative; titles never sit on these colors). */
   --spine-1: #8c3b2e;
   --spine-2: #2f5d7c;
   --spine-3: #3f7a3b;

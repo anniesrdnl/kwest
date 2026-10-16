@@ -354,11 +354,11 @@ export type Database = {
         Args: { p_item_key: string };
         Returns: Json; // see BuyItemResult
       };
-      create_starter_tome: {
+      create_starter_deck: {
         Args: Record<string, never>;
         Returns: string;
       };
-      tome_dust: {
+      deck_dust: {
         Args: Record<string, never>;
         Returns: { set_id: string; due_count: number; new_count: number; next_due_at: Timestamp | null }[];
       };

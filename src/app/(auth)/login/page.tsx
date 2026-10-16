@@ -11,7 +11,7 @@ export default function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <AuthCard
       title="Welcome back"
-      subtitle="Your tomes are waiting."
+      subtitle="Your decks are waiting."
       footer={
         <>
           New to Kwest?{" "}

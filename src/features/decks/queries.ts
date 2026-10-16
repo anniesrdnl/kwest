@@ -3,7 +3,7 @@ import { cache } from "react";
 import { requireUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 
-export type Tome = {
+export type Deck = {
   id: string;
   title: string;
   subject: string | null;
@@ -18,8 +18,8 @@ export type Tome = {
   nextDueAt: string | null;
 };
 
-/** The player's tomes with dust counts, most recently studied first. */
-export const getTomes = cache(async (): Promise<Tome[]> => {
+/** The player's decks with dust counts, most recently studied first. */
+export const getDecks = cache(async (): Promise<Deck[]> => {
   await requireUser();
   const supabase = await createClient();
 
@@ -29,9 +29,9 @@ export const getTomes = cache(async (): Promise<Tome[]> => {
       .select("id, title, subject, color_key, card_count, last_studied_at")
       .order("last_studied_at", { ascending: false, nullsFirst: false })
       .order("updated_at", { ascending: false }),
-    supabase.rpc("tome_dust"),
+    supabase.rpc("deck_dust"),
   ]);
-  if (sets.error) throw new Error(`Could not load tomes: ${sets.error.message}`);
+  if (sets.error) throw new Error(`Could not load decks: ${sets.error.message}`);
   if (dust.error) throw new Error(`Could not load review counts: ${dust.error.message}`);
 
   const dustBySet = new Map(dust.data.map((row) => [row.set_id, row]));

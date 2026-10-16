@@ -1,27 +1,27 @@
 import { ArrowRight } from "lucide-react";
-import { TomeSpine } from "@/components/pixel/tome-spine";
+import { DeckSpine } from "@/components/pixel/deck-spine";
 import { ButtonLink } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
-import type { Tome } from "@/features/tomes/queries";
+import type { Deck } from "@/features/decks/queries";
 import type { NextUp } from "../queries";
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
-  const { tome, minutes } = nextUp;
+  const { deck, minutes } = nextUp;
   const parts = [
-    tome.due > 0 && `${plural(tome.due, "card")} gathering dust`,
-    tome.fresh > 0 && (tome.due > 0 ? `${tome.fresh} new` : `${plural(tome.fresh, "new card")}`),
+    deck.due > 0 && `${plural(deck.due, "card")} gathering dust`,
+    deck.fresh > 0 && (deck.due > 0 ? `${deck.fresh} new` : `${plural(deck.fresh, "new card")}`),
     `~${minutes} min`,
   ].filter(Boolean);
 
   return (
     <Panel title="Next up" aria-label="Next up">
       <div className="flex items-start gap-4">
-        <TomeSpine colorKey={tome.colorKey} className="h-20 w-7 shrink-0" />
+        <DeckSpine colorKey={deck.colorKey} className="h-20 w-7 shrink-0" />
         <div className="min-w-0 flex-1 space-y-3">
           <div>
-            <p className="font-pixel text-xl break-words">{tome.title}</p>
+            <p className="font-pixel text-xl break-words">{deck.title}</p>
             <p className="text-text-muted">{parts.join(" · ")}</p>
           </div>
           {/* Study modes are Phase 9: this opens an honest "coming soon" page for now. */}
@@ -36,9 +36,9 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
   );
 }
 
-/** Tomes exist but nothing is due or new. */
-export function AllDustedCard({ tomes, timeZone }: { tomes: Tome[]; timeZone: string }) {
-  const next = tomes
+/** Decks exist but nothing is due or new. */
+export function AllDustedCard({ decks, timeZone }: { decks: Deck[]; timeZone: string }) {
+  const next = decks
     .map((t) => t.nextDueAt)
     .filter((d): d is string => d !== null)
     .sort()[0];

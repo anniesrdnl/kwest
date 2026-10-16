@@ -2,7 +2,7 @@
 
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
-import { createStarterTome } from "@/features/tomes/starter";
+import { createStarterDeck } from "@/features/decks/starter";
 import { requireUser } from "@/lib/auth/session";
 import type { FormState } from "@/lib/forms";
 import { HOME_ROUTE } from "@/lib/routes";
@@ -29,9 +29,9 @@ export async function finishWelcome(): Promise<FormState> {
   return { status: "success" };
 }
 
-/** Step 2 choice: add the starter tome, then go to the dashboard. */
-export async function startWithStarterTome(): Promise<FormState> {
-  const error = (await createStarterTome()) ?? (await saveStep(ONBOARDING_DONE));
+/** Step 2 choice: add the starter deck, then go to the dashboard. */
+export async function startWithStarterDeck(): Promise<FormState> {
+  const error = (await createStarterDeck()) ?? (await saveStep(ONBOARDING_DONE));
   if (error) return { status: "error", message: error };
   redirect(HOME_ROUTE);
 }

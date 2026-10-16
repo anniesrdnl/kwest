@@ -23,8 +23,8 @@ const FILL: Record<string, string> = {
   s: "var(--surface-2)",
 };
 
-/** 16×14 open tome with a pennant (the Kwest mark). Placeholder art. */
-export function PixelTome({ className = "h-28 w-32", label = "Kwest tome" }: { className?: string; label?: string }) {
+/** 16×14 open book with a pennant (the Kwest logo). Placeholder art. */
+export function PixelBook({ className = "h-28 w-32", label = "Kwest logo" }: { className?: string; label?: string }) {
   return (
     <svg
       viewBox="0 0 16 14"

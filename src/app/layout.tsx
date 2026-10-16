@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: "Kwest",
     template: "%s · Kwest",
   },
-  description: "Knowledge is the adventure. Turn your notes into tomes and study in a cozy pixel world.",
+  description: "Knowledge is the adventure. Turn your notes into flashcard decks and study in a cozy pixel world.",
 };
 
 export const viewport: Viewport = {

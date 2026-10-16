@@ -1,14 +1,14 @@
 import { Companion } from "@/components/pixel/companion";
 import { Lantern } from "@/components/pixel/lantern";
-import { TomeSpine } from "@/components/pixel/tome-spine";
+import { DeckSpine } from "@/components/pixel/deck-spine";
 import { ActionButton } from "@/components/ui/action-button";
 import { finishWelcome } from "../actions";
 
 const IDEAS = [
   {
-    art: <TomeSpine colorKey="spine-3" className="h-12 w-4" />,
-    name: "Tomes",
-    text: "Each study set is a tome on your bookshelf.",
+    art: <DeckSpine colorKey="spine-3" className="h-12 w-4" />,
+    name: "Decks",
+    text: "A deck is a set of flashcards. Your decks sit on your bookshelf.",
   },
   {
     art: <span aria-hidden className="block h-4 w-6 bg-dust pixel-border" />,

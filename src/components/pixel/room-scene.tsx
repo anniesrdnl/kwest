@@ -1,8 +1,8 @@
 import { CompanionPixels } from "./companion";
-import { spineColor } from "./tome-spine";
+import { spineColor } from "./deck-spine";
 
 // PLACEHOLDER ART: a fixed dorm room until the room editor (Phase 11) draws
-// the player's real room_placements. The bookshelf does show the real tomes.
+// the player's real room_placements. The bookshelf does show the real decks.
 
 const W = 160; // 10 tiles × 16 px
 const H = 96; // 6 tiles × 16 px
@@ -11,7 +11,7 @@ const SPINES_PER_SHELF = 9;
 const SHELF_ROWS = [29, 45, 61]; // y of each plank's top edge
 
 type RoomSceneProps = {
-  /** color_key of each tome, most recent first. Up to 27 are shown. */
+  /** color_key of each deck, most recent first. Up to 27 are shown. */
   spines: string[];
   /** Compact strip for small screens: crops the scene to a short band. */
   compact?: boolean;
@@ -22,7 +22,7 @@ export function RoomScene({ spines, compact = false, className = "" }: RoomScene
   const label =
     spines.length === 0
       ? "Your dorm room. The bookshelf is empty."
-      : `Your dorm room. ${spines.length} ${spines.length === 1 ? "tome" : "tomes"} on the bookshelf.`;
+      : `Your dorm room. ${spines.length} ${spines.length === 1 ? "deck" : "decks"} on the bookshelf.`;
 
   return (
     <svg

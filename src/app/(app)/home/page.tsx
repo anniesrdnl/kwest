@@ -6,7 +6,7 @@ import { Panel } from "@/components/ui/panel";
 import { EmptyShelfCard } from "@/features/dashboard/components/empty-shelf-card";
 import { LanternMeter } from "@/features/dashboard/components/lantern-meter";
 import { AllDustedCard, NextUpCard } from "@/features/dashboard/components/next-up-card";
-import { RecentTomes } from "@/features/dashboard/components/recent-tomes";
+import { RecentDecks } from "@/features/dashboard/components/recent-decks";
 import { getDashboard } from "@/features/dashboard/queries";
 import { isOnboarded } from "@/features/onboarding/steps";
 import { getPlayer } from "@/features/profile/queries";
@@ -16,14 +16,14 @@ import { ONBOARDING_ROUTE } from "@/lib/routes";
 export const metadata: Metadata = { title: "Home" };
 
 // Renders inside home/loading.tsx's Suspense.
-// Mobile order follows the DOM: Next up, Lantern, room strip, progress, tomes.
+// Mobile order follows the DOM: Next up, Lantern, room strip, progress, decks.
 // Desktop (md+): room on the left, Next up / Lantern / progress on the right.
 export default async function HomePage() {
   const { profile } = await getPlayer();
   if (!isOnboarded(profile.onboarding_step)) redirect(ONBOARDING_ROUTE);
 
-  const { player, tomes, nextUp, lantern } = await getDashboard();
-  const spines = tomes.map((t) => t.colorKey);
+  const { player, decks, nextUp, lantern } = await getDashboard();
+  const spines = decks.map((t) => t.colorKey);
 
   return (
     <div className="space-y-6">
@@ -31,12 +31,12 @@ export default async function HomePage() {
 
       <div className="grid gap-6 md:grid-cols-[3fr_2fr] md:items-start">
         <div className="md:col-start-2 md:row-start-1">
-          {tomes.length === 0 ? (
+          {decks.length === 0 ? (
             <EmptyShelfCard />
           ) : nextUp ? (
             <NextUpCard nextUp={nextUp} />
           ) : (
-            <AllDustedCard tomes={tomes} timeZone={player.profile.timezone} />
+            <AllDustedCard decks={decks} timeZone={player.profile.timezone} />
           )}
         </div>
 
@@ -65,7 +65,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {tomes.length > 0 && <RecentTomes tomes={tomes} />}
+      {decks.length > 0 && <RecentDecks decks={decks} />}
     </div>
   );
 }
