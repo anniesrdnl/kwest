@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+/* -----------------------------------------------------------------------------
+   Kwest design tokens
+   Day = parchment (light), Night = lamplight (dark).
+   Theme follows the system unless <html data-theme="light|dark"> overrides it.
+----------------------------------------------------------------------------- */
+:root {
+  --bg: #f4ead5;
+  --surface: #fbf5e8;
+  --surface-2: #eadfc6;
+  --text: #1b1f3b;
+  --text-muted: #5a5a6e;
+  --border: #1b1f3b;
+  --accent: #c9852b;
+  --accent-hover: #b57422;
+  --accent-fg: #1b1f3b;
+  --correct: #3f7a3b;
+  --wrong: #b5533a;
+  --dust: #8c8474;
+  --gold: #b8922a;
+  --focus: #c9852b;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1f3b;
+    --surface: #2e335a;
+    --surface-2: #3a4070;
+    --text: #f4ead5;
+    --text-muted: #b9b4c9;
+    --border: #0f1226;
+    --accent: #f2b45a;
+    --accent-hover: #f6c579;
+    --accent-fg: #1b1f3b;
+    --correct: #7fbf78;
+    --wrong: #e8866b;
+    --dust: #b8b0a0;
+    --gold: #e3c15c;
+    --focus: #f2b45a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1b1f3b;
+  --surface: #2e335a;
+  --surface-2: #3a4070;
+  --text: #f4ead5;
+  --text-muted: #b9b4c9;
+  --border: #0f1226;
+  --accent: #f2b45a;
+  --accent-hover: #f6c579;
+  --accent-fg: #1b1f3b;
+  --correct: #7fbf78;
+  --wrong: #e8866b;
+  --dust: #b8b0a0;
+  --gold: #e3c15c;
+  --focus: #f2b45a;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-correct: var(--correct);
+  --color-wrong: var(--wrong);
+  --color-dust: var(--dust);
+  --color-gold: var(--gold);
+  --color-focus: var(--focus);
+
+  /* Pixel font: headings, labels, buttons, numbers only. Never paragraphs or card content. */
+  --font-pixel: var(--font-pixelify), ui-monospace, monospace;
+  /* Readable font: body text, forms, all study content. */
+  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-*: initial; /* no rounded corners in Kwest */
+}
+
+/* -----------------------------------------------------------------------------
+   Pixel utilities
+----------------------------------------------------------------------------- */
+
+/* 2px border with notched corners (box-shadow, so it doesn't clip content). */
+@utility pixel-border {
+  box-shadow:
+    0 -2px 0 0 var(--border),
+    0 2px 0 0 var(--border),
+    -2px 0 0 0 var(--border),
+    2px 0 0 0 var(--border);
+}
+
+/* Same border plus a 4px "ledge" underneath, for pressable things. */
+@utility pixel-raised {
+  box-shadow:
+    0 -2px 0 0 var(--border),
+    -2px 0 0 0 var(--border),
+    2px 0 0 0 var(--border),
+    0 2px 0 0 var(--border),
+    0 6px 0 0 var(--border);
+}
+
+@utility pixelated {
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
+
+/* -----------------------------------------------------------------------------
+   Base
+----------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
