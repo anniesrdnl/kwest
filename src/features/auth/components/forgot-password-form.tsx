@@ -4,11 +4,11 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
-import { idleState, type FormState } from "@/lib/forms";
+import { idleState } from "@/lib/forms";
 import { requestPasswordReset } from "../actions";
 
-export function ForgotPasswordForm({ notice }: { notice?: FormState }) {
-  const [state, action, pending] = useActionState(requestPasswordReset, notice ?? idleState);
+export function ForgotPasswordForm() {
+  const [state, action, pending] = useActionState(requestPasswordReset, idleState);
 
   return (
     <form action={action} className="space-y-5" noValidate>

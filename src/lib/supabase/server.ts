@@ -1,6 +1,7 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { env } from "@/lib/env";
 import type { Database } from "@/lib/types/database";
 
@@ -11,6 +12,9 @@ import type { Database } from "@/lib/types/database";
  * (a loading.tsx file provides one for the whole route).
  */
 export async function createClient() {
+  // Database reads are per-user and per-request; never prerender them.
+  // (Supabase also checks token expiry with Date.now(), which prerendering forbids.)
+  await connection();
   const cookieStore = await cookies();
 
   return createServerClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {

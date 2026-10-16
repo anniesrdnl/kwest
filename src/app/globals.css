@@ -12,6 +12,7 @@
   --text: #1b1f3b;
   --text-muted: #5a5a6e;
   --border: #1b1f3b;
+  --ledge: #1b1f3b;
   --accent: #c9852b;
   --accent-hover: #b57422;
   --accent-fg: #1b1f3b;
@@ -19,7 +20,8 @@
   --wrong: #b5533a;
   --dust: #8c8474;
   --gold: #b8922a;
-  --focus: #c9852b;
+  --accent-ink: #8a5a12; /* amber for text/lines on light backgrounds (AA) */
+  --focus: #8a5a12;
   color-scheme: light;
 }
 
@@ -30,7 +32,8 @@
     --surface-2: #3a4070;
     --text: #f4ead5;
     --text-muted: #b9b4c9;
-    --border: #0f1226;
+    --border: #8f8bb3;
+    --ledge: #0f1226;
     --accent: #f2b45a;
     --accent-hover: #f6c579;
     --accent-fg: #1b1f3b;
@@ -38,6 +41,7 @@
     --wrong: #e8866b;
     --dust: #b8b0a0;
     --gold: #e3c15c;
+    --accent-ink: #f2b45a;
     --focus: #f2b45a;
     color-scheme: dark;
   }
@@ -49,7 +53,8 @@
   --surface-2: #3a4070;
   --text: #f4ead5;
   --text-muted: #b9b4c9;
-  --border: #0f1226;
+  --border: #8f8bb3;
+  --ledge: #0f1226;
   --accent: #f2b45a;
   --accent-hover: #f6c579;
   --accent-fg: #1b1f3b;
@@ -57,6 +62,7 @@
   --wrong: #e8866b;
   --dust: #b8b0a0;
   --gold: #e3c15c;
+  --accent-ink: #f2b45a;
   --focus: #f2b45a;
   color-scheme: dark;
 }
@@ -68,6 +74,7 @@
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
   --color-border: var(--border);
+  --color-ledge: var(--ledge);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-fg: var(--accent-fg);
@@ -75,6 +82,7 @@
   --color-wrong: var(--wrong);
   --color-dust: var(--dust);
   --color-gold: var(--gold);
+  --color-accent-ink: var(--accent-ink);
   --color-focus: var(--focus);
 
   /* Pixel font: headings, labels, buttons, numbers only. Never paragraphs or card content. */
@@ -105,7 +113,7 @@
     -2px 0 0 0 var(--border),
     2px 0 0 0 var(--border),
     0 2px 0 0 var(--border),
-    0 6px 0 0 var(--border);
+    0 6px 0 0 var(--ledge);
 }
 
 @utility pixelated {

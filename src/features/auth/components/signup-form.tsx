@@ -1,19 +1,17 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, PasswordField } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
 import { idleState } from "@/lib/forms";
+import { readTimeZone, useBrowserValue } from "@/lib/hooks/use-browser-value";
 import { signUp } from "../actions";
 
 export function SignUpForm() {
   const [state, action, pending] = useActionState(signUp, idleState);
-  // The browser's time zone, filled in after hydration (the server doesn't know it).
-  const timezoneRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (timezoneRef.current) timezoneRef.current.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  }, []);
+  // The browser's time zone (the server doesn't know it).
+  const timezone = useBrowserValue(readTimeZone);
 
   return (
     <form action={action} className="space-y-5" noValidate>
@@ -45,7 +43,7 @@ export function SignUpForm() {
         hint="At least 8 characters."
         errors={state.fieldErrors?.password}
       />
-      <input ref={timezoneRef} type="hidden" name="timezone" defaultValue="" />
+      <input type="hidden" name="timezone" value={timezone} />
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
         {pending ? "Creating your room…" : "Create account"}
       </Button>

@@ -8,7 +8,7 @@ export default function LandingPage() {
       <PixelTome />
       <div className="space-y-3">
         <h1 className="font-pixel text-4xl font-bold tracking-wide sm:text-5xl">KWEST</h1>
-        <p className="font-pixel text-lg text-accent">Knowledge is the adventure.</p>
+        <p className="font-pixel text-lg text-accent-ink">Knowledge is the adventure.</p>
         <p className="mx-auto max-w-prose text-text-muted">
           Turn your notes into tomes, study them in a cozy pixel room, and watch your world grow as you learn.
         </p>

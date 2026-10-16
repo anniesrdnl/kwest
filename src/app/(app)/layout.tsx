@@ -34,7 +34,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="inline-flex min-h-11 items-center px-3 font-pixel text-sm hover:text-accent">
+    <Link href={href} className="inline-flex min-h-11 items-center px-3 font-pixel text-sm hover:text-accent-ink">
       {children}
     </Link>
   );

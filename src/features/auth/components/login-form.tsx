@@ -5,11 +5,18 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field, PasswordField } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
-import { idleState, type FormState } from "@/lib/forms";
+import { idleState } from "@/lib/forms";
+import { readSearchParam, useBrowserValue } from "@/lib/hooks/use-browser-value";
 import { logIn } from "../actions";
 
-export function LoginForm({ next, notice }: { next?: string; notice?: FormState }) {
-  const [state, action, pending] = useActionState(logIn, notice ?? idleState);
+const readNext = readSearchParam("next");
+
+export function LoginForm() {
+  const [state, action, pending] = useActionState(logIn, idleState);
+
+  // Where to go after logging in (?next=...). Read in the browser so the form
+  // itself is static. The server action re-validates it (same-site paths only).
+  const next = useBrowserValue(readNext);
 
   return (
     <form action={action} className="space-y-5" noValidate>
@@ -35,7 +42,7 @@ export function LoginForm({ next, notice }: { next?: string; notice?: FormState 
           </Link>
         }
       />
-      {next && <input type="hidden" name="next" value={next} />}
+      <input type="hidden" name="next" value={next} />
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
         {pending ? "Opening your room…" : "Log in"}
       </Button>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { AuthCard } from "@/features/auth/components/auth-card";
 import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form";
-import type { FormState } from "@/lib/forms";
+import { LinkErrorNotice } from "@/features/auth/components/link-error-notice";
 
 export const metadata: Metadata = { title: "Forgot password" };
 
@@ -18,18 +18,13 @@ export default function ForgotPasswordPage({ searchParams }: PageProps<"/forgot-
         </Link>
       }
     >
-      <Suspense fallback={<ForgotPasswordForm />}>
-        <FormWithParams searchParams={searchParams} />
+      <Suspense fallback={null}>
+        <LinkErrorNotice
+          searchParams={searchParams}
+          message="That reset link is invalid or has expired. Request a new one below. Open the link in the same browser you requested it from."
+        />
       </Suspense>
+      <ForgotPasswordForm />
     </AuthCard>
   );
-}
-
-async function FormWithParams({ searchParams }: Pick<PageProps<"/forgot-password">, "searchParams">) {
-  const params = await searchParams;
-  const notice: FormState | undefined =
-    params.error === "link_expired"
-      ? { status: "error", message: "That reset link is invalid or has expired. Request a new one below." }
-      : undefined;
-  return <ForgotPasswordForm notice={notice} />;
 }

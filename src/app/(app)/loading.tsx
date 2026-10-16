@@ -1,9 +1,7 @@
+import { PageSkeleton } from "@/components/ui/page-skeleton";
+
+// Fallback for routes without their own loading.tsx. Each page should still
+// add one so navigating between pages is instant (a boundary below the shared layout).
 export default function Loading() {
-  return (
-    <div className="space-y-4" aria-busy="true" aria-live="polite">
-      <span className="sr-only">Loading…</span>
-      <div className="h-8 w-48 animate-pulse bg-surface-2" />
-      <div className="h-40 w-full animate-pulse bg-surface-2" />
-    </div>
-  );
+  return <PageSkeleton />;
 }
