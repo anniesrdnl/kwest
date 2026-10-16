@@ -7,7 +7,7 @@ import { requireUser } from "@/lib/auth/session";
 import type { FormState } from "@/lib/forms";
 import { HOME_ROUTE } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
-import { ONBOARDING_DONE, ONBOARDING_SHELF } from "./steps";
+import { ONBOARDING_DONE, ONBOARDING_FIRST_DECK } from "./steps";
 
 /** Moves onboarding_step forward to `step`. Never moves it back. Returns an error message or null. */
 async function saveStep(step: number): Promise<string | null> {
@@ -23,7 +23,7 @@ async function saveStep(step: number): Promise<string | null> {
 
 /** Step 1 → 2: the welcome has been seen. */
 export async function finishWelcome(): Promise<FormState> {
-  const error = await saveStep(ONBOARDING_SHELF);
+  const error = await saveStep(ONBOARDING_FIRST_DECK);
   if (error) return { status: "error", message: error };
   refresh();
   return { status: "success" };
@@ -36,7 +36,7 @@ export async function startWithStarterDeck(): Promise<FormState> {
   redirect(HOME_ROUTE);
 }
 
-/** Skip, or "go to my dorm" with an empty shelf. */
+/** Skip, or start with no decks. */
 export async function finishOnboarding(): Promise<FormState> {
   const error = await saveStep(ONBOARDING_DONE);
   if (error) return { status: "error", message: error };

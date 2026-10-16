@@ -1,110 +1,86 @@
 @import "tailwindcss";
 
 /* -----------------------------------------------------------------------------
-   Kwest design tokens
-   Day = parchment (light), Night = lamplight (dark).
+   Kwest design tokens: simple, clean, warm neutral with an ink-blue accent.
    Theme follows the system unless <html data-theme="light|dark"> overrides it.
+   Contrast: text pairs are AA or better; --border-strong (inputs) is 3:1 or better.
 ----------------------------------------------------------------------------- */
 :root {
-  --bg: #f4ead5;
-  --surface: #fbf5e8;
-  --surface-2: #eadfc6;
-  --text: #1b1f3b;
-  --text-muted: #5a5a6e;
-  --border: #1b1f3b;
-  --ledge: #1b1f3b;
-  --accent: #c9852b;
-  --accent-hover: #b57422;
-  --accent-fg: #1b1f3b;
-  --correct: #3f7a3b;
-  --wrong: #b5533a;
-  --dust: #8c8474;
-  --gold: #b8922a;
-  --accent-ink: #8a5a12; /* amber for text/lines on light backgrounds (AA) */
-  --focus: #8a5a12;
-  /* Deck spines + room art (decorative; titles never sit on these colors). */
-  --spine-1: #8c3b2e;
-  --spine-2: #2f5d7c;
-  --spine-3: #3f7a3b;
-  --spine-4: #7a4a8c;
-  --spine-5: #a8821f;
-  --spine-6: #2e7a73;
-  --spine-7: #a5562b;
-  --spine-8: #4a4f7a;
-  --room-wall: #e3d3b0;
-  --room-floor: #b98e5f;
-  --room-wood: #7a5232;
-  --room-sky: #a9d3e8;
-  --room-glow: #f6d58a;
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f3f2ee;
+  --text: #1c1c1e;
+  --text-muted: #63636a;
+  --border: #e7e5e0;
+  --border-strong: #8a877f;
+  --accent: #2f4ba8;
+  --accent-hover: #263e8c;
+  --accent-fg: #ffffff;
+  --accent-ink: #2f4ba8; /* accent used as text or thin lines */
+  --accent-soft: #eef1fa; /* tinted backgrounds */
+  --correct: #2e7d4f;
+  --wrong: #b4412e;
+  --gold: #a37a12;
+  --focus: #2f4ba8;
+  --shadow-card: 0 1px 2px rgb(28 28 30 / 0.04), 0 2px 8px rgb(28 28 30 / 0.04);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1b1f3b;
-    --surface: #2e335a;
-    --surface-2: #3a4070;
-    --text: #f4ead5;
-    --text-muted: #b9b4c9;
-    --border: #8f8bb3;
-    --ledge: #0f1226;
-    --accent: #f2b45a;
-    --accent-hover: #f6c579;
-    --accent-fg: #1b1f3b;
-    --correct: #7fbf78;
-    --wrong: #e8866b;
-    --dust: #b8b0a0;
-    --gold: #e3c15c;
-    --accent-ink: #f2b45a;
-    --focus: #f2b45a;
-    --spine-1: #c96a55;
-    --spine-2: #5f93b8;
-    --spine-3: #7fbf78;
-    --spine-4: #b088c4;
-    --spine-5: #e3c15c;
-    --spine-6: #5fb8ae;
-    --spine-7: #e08a55;
-    --spine-8: #8f94c9;
-    --room-wall: #2a2f55;
-    --room-floor: #4a3a3a;
-    --room-wood: #6b4a35;
-    --room-sky: #101433;
-    --room-glow: #f2b45a;
+    --bg: #111113;
+    --surface: #1a1a1d;
+    --surface-2: #242428;
+    --text: #ededef;
+    --text-muted: #a3a3ab;
+    --border: #2e2e33;
+    --border-strong: #75757e;
+    --accent: #8fa6f0;
+    --accent-hover: #a8baf4;
+    --accent-fg: #111113;
+    --accent-ink: #9db1f2;
+    --accent-soft: #1e2440;
+    --correct: #6cc08f;
+    --wrong: #f08a75;
+    --gold: #e2b93b;
+    --focus: #8fa6f0;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #1b1f3b;
-  --surface: #2e335a;
-  --surface-2: #3a4070;
-  --text: #f4ead5;
-  --text-muted: #b9b4c9;
-  --border: #8f8bb3;
-  --ledge: #0f1226;
-  --accent: #f2b45a;
-  --accent-hover: #f6c579;
-  --accent-fg: #1b1f3b;
-  --correct: #7fbf78;
-  --wrong: #e8866b;
-  --dust: #b8b0a0;
-  --gold: #e3c15c;
-  --accent-ink: #f2b45a;
-  --focus: #f2b45a;
-  --spine-1: #c96a55;
-  --spine-2: #5f93b8;
-  --spine-3: #7fbf78;
-  --spine-4: #b088c4;
-  --spine-5: #e3c15c;
-  --spine-6: #5fb8ae;
-  --spine-7: #e08a55;
-  --spine-8: #8f94c9;
-  --room-wall: #2a2f55;
-  --room-floor: #4a3a3a;
-  --room-wood: #6b4a35;
-  --room-sky: #101433;
-  --room-glow: #f2b45a;
+  --bg: #111113;
+  --surface: #1a1a1d;
+  --surface-2: #242428;
+  --text: #ededef;
+  --text-muted: #a3a3ab;
+  --border: #2e2e33;
+  --border-strong: #75757e;
+  --accent: #8fa6f0;
+  --accent-hover: #a8baf4;
+  --accent-fg: #111113;
+  --accent-ink: #9db1f2;
+  --accent-soft: #1e2440;
+  --correct: #6cc08f;
+  --wrong: #f08a75;
+  --gold: #e2b93b;
+  --focus: #8fa6f0;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
   color-scheme: dark;
+}
+
+/* Deck colors (study_sets.color_key spine-1..8). Same in both themes:
+   white text on each is 4.5:1 or better. */
+:root {
+  --deck-1: #b4472f;
+  --deck-2: #2c68a0;
+  --deck-3: #2f7a4f;
+  --deck-4: #7449a0;
+  --deck-5: #8a6212;
+  --deck-6: #1f7470;
+  --deck-7: #a8521c;
+  --deck-8: #4752a3;
 }
 
 @theme inline {
@@ -114,59 +90,19 @@
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
   --color-border: var(--border);
-  --color-ledge: var(--ledge);
+  --color-border-strong: var(--border-strong);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
   --color-correct: var(--correct);
   --color-wrong: var(--wrong);
-  --color-dust: var(--dust);
   --color-gold: var(--gold);
-  --color-accent-ink: var(--accent-ink);
   --color-focus: var(--focus);
-  --color-spine-1: var(--spine-1);
-  --color-spine-2: var(--spine-2);
-  --color-spine-3: var(--spine-3);
-  --color-spine-4: var(--spine-4);
-  --color-spine-5: var(--spine-5);
-  --color-spine-6: var(--spine-6);
-  --color-spine-7: var(--spine-7);
-  --color-spine-8: var(--spine-8);
 
-  /* Pixel font: headings, labels, buttons, numbers only. Never paragraphs or card content. */
-  --font-pixel: var(--font-pixelify), ui-monospace, monospace;
-  /* Readable font: body text, forms, all study content. */
-  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
-
-  --radius-*: initial; /* no rounded corners in Kwest */
-}
-
-/* -----------------------------------------------------------------------------
-   Pixel utilities
------------------------------------------------------------------------------ */
-
-/* 2px border with notched corners (box-shadow, so it doesn't clip content). */
-@utility pixel-border {
-  box-shadow:
-    0 -2px 0 0 var(--border),
-    0 2px 0 0 var(--border),
-    -2px 0 0 0 var(--border),
-    2px 0 0 0 var(--border);
-}
-
-/* Same border plus a 4px "ledge" underneath, for pressable things. */
-@utility pixel-raised {
-  box-shadow:
-    0 -2px 0 0 var(--border),
-    -2px 0 0 0 var(--border),
-    2px 0 0 0 var(--border),
-    0 2px 0 0 var(--border),
-    0 6px 0 0 var(--ledge);
-}
-
-@utility pixelated {
-  image-rendering: pixelated;
-  shape-rendering: crispEdges;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: var(--shadow-card);
 }
 
 /* -----------------------------------------------------------------------------
@@ -182,17 +118,24 @@
     color: var(--text);
     font-family: var(--font-sans);
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.55;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.015em;
   }
 
   :focus-visible {
-    outline: 3px solid var(--focus);
+    outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
 
   ::selection {
-    background: var(--accent);
-    color: var(--accent-fg);
+    background: var(--accent-soft);
+    color: var(--text);
   }
 }
 

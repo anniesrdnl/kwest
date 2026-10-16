@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { ShelfStep } from "@/features/onboarding/components/shelf-step";
+import { FirstDeckStep } from "@/features/onboarding/components/first-deck-step";
 import { WelcomeStep } from "@/features/onboarding/components/welcome-step";
 import { finishOnboarding } from "@/features/onboarding/actions";
 import { ONBOARDING_STEP_COUNT, ONBOARDING_WELCOME, isOnboarded } from "@/features/onboarding/steps";
@@ -22,14 +22,14 @@ export default async function OnboardingPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
-        <p className="font-pixel text-sm text-text-muted">
+        <p className="text-sm font-medium text-text-muted">
           Step {stepNumber} of {ONBOARDING_STEP_COUNT}
         </p>
         <ActionButton action={finishOnboarding} appearance="link" pendingLabel="Skipping…">
           Skip for now
         </ActionButton>
       </div>
-      {onWelcome ? <WelcomeStep name={profile.display_name} /> : <ShelfStep />}
+      {onWelcome ? <WelcomeStep name={profile.display_name} /> : <FirstDeckStep />}
     </div>
   );
 }

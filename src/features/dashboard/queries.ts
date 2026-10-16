@@ -9,14 +9,15 @@ const SECONDS_PER_CARD = 10;
 
 export type NextUp = { deck: Deck; cards: number; minutes: number };
 
-export type Lantern = { reviewed: number; goal: number; lit: boolean };
+/** Today's cards reviewed (player's time zone) against player_stats.daily_goal. */
+export type DailyGoal = { reviewed: number; goal: number; met: boolean };
 
 export type Dashboard = {
   player: Player;
   decks: Deck[];
   /** Deck with the most due + new cards, or null when nothing needs attention. */
   nextUp: NextUp | null;
-  lantern: Lantern;
+  dailyGoal: DailyGoal;
 };
 
 export function pickNextUp(decks: Deck[]): NextUp | null {
@@ -24,7 +25,7 @@ export function pickNextUp(decks: Deck[]): NextUp | null {
   for (const deck of decks) {
     const score = deck.due + deck.fresh;
     if (score === 0) continue;
-    // Most cards wins; ties go to the one with more dust (reviews before new cards).
+    // Most cards wins; ties go to the one with more reviews due (before new cards).
     if (!best || score > best.due + best.fresh || (score === best.due + best.fresh && deck.due > best.due)) {
       best = deck;
     }
@@ -52,6 +53,6 @@ export async function getDashboard(): Promise<Dashboard> {
     player,
     decks,
     nextUp: pickNextUp(decks),
-    lantern: { reviewed, goal, lit: Boolean(activity.data?.goal_met) || reviewed >= goal },
+    dailyGoal: { reviewed, goal, met: Boolean(activity.data?.goal_met) || reviewed >= goal },
   };
 }

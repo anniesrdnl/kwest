@@ -12,8 +12,9 @@ type FieldProps = Omit<ComponentProps<"input">, "id"> & {
 };
 
 const inputClass =
-  "w-full min-h-11 bg-surface px-3 py-2 text-base text-text pixel-border placeholder:text-text-muted/70 " +
-  "focus-visible:outline-3 focus-visible:outline-focus aria-invalid:shadow-[0_0_0_2px_var(--wrong)]";
+  "w-full min-h-11 rounded-lg border border-border-strong bg-surface px-3 py-2 text-base text-text " +
+  "placeholder:text-text-muted/70 transition-colors focus-visible:border-accent focus-visible:outline-2 " +
+  "focus-visible:outline-offset-0 focus-visible:outline-focus/30 aria-invalid:border-wrong";
 
 export function Field({ label, hint, errors, labelAside, className = "", ...props }: FieldProps) {
   const id = useId();
@@ -23,7 +24,7 @@ export function Field({ label, hint, errors, labelAside, className = "", ...prop
   return (
     <div className={`space-y-2 ${className}`}>
       <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={id} className="font-pixel text-sm">
+        <label htmlFor={id} className="text-sm font-medium">
           {label}
         </label>
         {labelAside}
@@ -59,7 +60,7 @@ export function PasswordField({ label, hint, errors, labelAside, ...props }: Omi
   return (
     <div className="space-y-2">
       <div className="flex items-baseline justify-between gap-2">
-        <label htmlFor={id} className="font-pixel text-sm">
+        <label htmlFor={id} className="text-sm font-medium">
           {label}
         </label>
         {labelAside}
@@ -76,7 +77,7 @@ export function PasswordField({ label, hint, errors, labelAside, ...props }: Omi
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-text-muted hover:text-text"
+          className="absolute inset-y-0 right-0 flex w-11 rounded-r-lg items-center justify-center text-text-muted hover:text-text"
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
         >

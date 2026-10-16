@@ -1,4 +1,4 @@
-import { Wordmark } from "@/components/pixel/wordmark";
+import { Wordmark } from "@/components/brand/wordmark";
 
 export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (

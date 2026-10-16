@@ -15,7 +15,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <header className="space-y-2">
-        <h1 className="font-pixel text-3xl">{profile.display_name}</h1>
+        <h1 className="text-3xl font-semibold">{profile.display_name}</h1>
         <XpBar xpTotal={stats.xp_total} />
         <p className="text-sm text-text-muted">Studying since {joined}</p>
       </header>
@@ -26,7 +26,7 @@ export default async function ProfilePage() {
 
       <Panel title="Account">
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
-          <dt className="font-pixel text-sm">Email</dt>
+          <dt className="text-sm font-medium">Email</dt>
           <dd className="break-all">{email ?? "—"}</dd>
         </dl>
       </Panel>

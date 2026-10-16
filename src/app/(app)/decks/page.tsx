@@ -1,34 +1,34 @@
 import type { Metadata } from "next";
-import { Library } from "lucide-react";
-import { DeckSpine } from "@/components/pixel/deck-spine";
+import { Layers } from "lucide-react";
 import { ComingSoon } from "@/components/ui/coming-soon";
 import { Panel } from "@/components/ui/panel";
+import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { getDecks } from "@/features/decks/queries";
 
 export const metadata: Metadata = { title: "Decks" };
 
-// The deck editor is Phase 8. Until then this page lists the shelf read-only.
+// Making and editing decks is Phase 8. Until then this page lists decks read-only.
 export default async function DecksPage() {
   const decks = await getDecks();
 
   return (
     <ComingSoon
-      icon={Library}
+      icon={Layers}
       title="Decks"
       phase={8}
       extra={
-        <Panel title={`Your shelf (${decks.length})`}>
+        <Panel title={`Your decks (${decks.length})`}>
           {decks.length === 0 ? (
-            <p className="text-text-muted">No decks yet. You can add the starter deck from the home page.</p>
+            <p className="text-text-muted">No decks yet. You can add the ready-made deck from your home page.</p>
           ) : (
-            <ul className="divide-y-2 divide-surface-2">
+            <ul className="divide-y divide-border">
               {decks.map((deck) => (
                 <li key={deck.id} className="flex items-center gap-3 py-3">
-                  <DeckSpine colorKey={deck.colorKey} className="h-12 w-4 shrink-0" />
+                  <DeckBadge title={deck.title} colorKey={deck.colorKey} size="sm" />
                   <div className="min-w-0">
-                    <p className="font-pixel break-words">{deck.title}</p>
+                    <p className="font-medium break-words">{deck.title}</p>
                     <p className="text-sm text-text-muted">
-                      {deck.cardCount} cards · {deck.due} dusty · {deck.fresh} new
+                      {deck.cardCount} cards · {deck.due} to review · {deck.fresh} new
                     </p>
                   </div>
                 </li>
@@ -38,7 +38,7 @@ export default async function DecksPage() {
         </Panel>
       }
     >
-      <p>Creating, editing and opening decks arrives in Phase 8. Here&apos;s what&apos;s on your shelf so far.</p>
+      <p>Making, editing and opening decks comes in Phase 8. Here are the decks you have so far.</p>
     </ComingSoon>
   );
 }

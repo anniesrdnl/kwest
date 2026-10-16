@@ -24,7 +24,7 @@ export function ActionButton({ action, children, pendingLabel, appearance = "pri
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex min-h-11 items-center px-3 font-pixel text-sm text-text-muted underline underline-offset-4 hover:text-text disabled:opacity-50"
+          className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-text-muted hover:bg-surface-2 hover:text-text disabled:opacity-50"
         >
           {pending ? pendingLabel : children}
         </button>

@@ -1,33 +1,43 @@
 import { levelProgress, titleForLevel } from "@/lib/game/levels";
 
-const SEGMENTS = 10;
-
-/** Segmented XP bar. Shows level, title and XP toward the next level. */
+/** Level and a thin progress bar toward the next level. */
 export function XpBar({ xpTotal, compact = false }: { xpTotal: number; compact?: boolean }) {
   const { level, xpIntoLevel, xpNeeded, ratio } = levelProgress(xpTotal);
-  const filled = Math.floor(ratio * SEGMENTS);
+
+  const bar = (
+    <div
+      role="progressbar"
+      aria-label={`Level ${level} progress`}
+      aria-valuemin={0}
+      aria-valuemax={xpNeeded}
+      aria-valuenow={xpIntoLevel}
+      aria-valuetext={`${xpIntoLevel} of ${xpNeeded} XP to level ${level + 1}`}
+      className={`h-2 overflow-hidden rounded-full bg-surface-2 ${compact ? "w-16" : "w-full"}`}
+    >
+      <div className="h-full rounded-full bg-accent" style={{ width: `${Math.round(ratio * 100)}%` }} />
+    </div>
+  );
+
+  if (compact) {
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-medium whitespace-nowrap">Level {level}</span>
+        {bar}
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <span className="font-pixel text-sm whitespace-nowrap">Lv {level}</span>
-      <div
-        role="progressbar"
-        aria-label={`Level ${level} progress`}
-        aria-valuemin={0}
-        aria-valuemax={xpNeeded}
-        aria-valuenow={xpIntoLevel}
-        aria-valuetext={`${xpIntoLevel} of ${xpNeeded} XP to level ${level + 1}`}
-        className="flex gap-0.5"
-      >
-        {Array.from({ length: SEGMENTS }, (_, i) => (
-          <span key={i} className={`h-3 w-2.5 ${i < filled ? "bg-accent" : "bg-surface-2"} pixel-border`} />
-        ))}
-      </div>
-      {!compact && (
-        <span className="text-sm text-text-muted">
-          {titleForLevel(level)} · {xpIntoLevel}/{xpNeeded} XP
+    <div className="space-y-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="font-semibold">
+          Level {level} <span className="font-normal text-text-muted">· {titleForLevel(level)}</span>
         </span>
-      )}
+        <span className="text-sm text-text-muted tabular-nums">
+          {xpIntoLevel} / {xpNeeded} XP
+        </span>
+      </div>
+      {bar}
     </div>
   );
 }

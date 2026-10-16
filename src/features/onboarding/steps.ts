@@ -1,6 +1,6 @@
 // Values of profiles.onboarding_step (0–10 allowed, so later phases can add steps).
-export const ONBOARDING_WELCOME = 0; // not started: meet your companion
-export const ONBOARDING_SHELF = 1; // welcome seen: fill the empty shelf
+export const ONBOARDING_WELCOME = 0; // not started: welcome
+export const ONBOARDING_FIRST_DECK = 1; // welcome seen: pick a first deck
 export const ONBOARDING_DONE = 2;
 
 export const ONBOARDING_STEP_COUNT = 2;

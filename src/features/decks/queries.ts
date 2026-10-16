@@ -10,7 +10,7 @@ export type Deck = {
   colorKey: string;
   cardCount: number;
   lastStudiedAt: string | null;
-  /** Reviewed cards whose review is due now ("dust"). */
+  /** Studied cards that are due for review now. */
   due: number;
   /** Cards never studied yet. */
   fresh: number;
@@ -18,12 +18,12 @@ export type Deck = {
   nextDueAt: string | null;
 };
 
-/** The player's decks with dust counts, most recently studied first. */
+/** The player's decks with review counts, most recently studied first. */
 export const getDecks = cache(async (): Promise<Deck[]> => {
   await requireUser();
   const supabase = await createClient();
 
-  const [sets, dust] = await Promise.all([
+  const [sets, reviews] = await Promise.all([
     supabase
       .from("study_sets")
       .select("id, title, subject, color_key, card_count, last_studied_at")
@@ -32,11 +32,11 @@ export const getDecks = cache(async (): Promise<Deck[]> => {
     supabase.rpc("deck_dust"),
   ]);
   if (sets.error) throw new Error(`Could not load decks: ${sets.error.message}`);
-  if (dust.error) throw new Error(`Could not load review counts: ${dust.error.message}`);
+  if (reviews.error) throw new Error(`Could not load review counts: ${reviews.error.message}`);
 
-  const dustBySet = new Map(dust.data.map((row) => [row.set_id, row]));
+  const reviewsBySet = new Map(reviews.data.map((row) => [row.set_id, row]));
   return sets.data.map((set) => {
-    const d = dustBySet.get(set.id);
+    const d = reviewsBySet.get(set.id);
     return {
       id: set.id,
       title: set.title,

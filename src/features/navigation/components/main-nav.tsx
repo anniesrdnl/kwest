@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { DESKTOP_NAV, MOBILE_NAV, isActive } from "../nav-items";
+import { NAV_ITEMS, isActive } from "../nav-items";
 
 // usePathname can suspend on routes with dynamic params (Cache Components),
 // so the layout wraps these in <Suspense> and uses the *Links components with
@@ -15,19 +15,18 @@ export function DesktopNav() {
 export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
   return (
     <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
-      {DESKTOP_NAV.map(({ href, label }) => {
+      {NAV_ITEMS.map(({ href, label }) => {
         const active = isActive(pathname, href);
         return (
           <Link
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`relative inline-flex min-h-11 items-center px-3 font-pixel text-sm hover:text-accent-ink ${
-              active ? "text-accent-ink" : ""
+            className={`inline-flex min-h-11 items-center rounded-lg px-3 text-[15px] font-medium transition-colors ${
+              active ? "bg-surface-2 text-text" : "text-text-muted hover:bg-surface-2 hover:text-text"
             }`}
           >
             {label}
-            {active && <span aria-hidden className="absolute inset-x-3 bottom-1 h-1 bg-accent" />}
           </Link>
         );
       })}
@@ -43,22 +42,21 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
-      <ul className="mx-auto grid max-w-md grid-cols-5">
-        {MOBILE_NAV.map(({ href, label, icon: Icon }) => {
+      <ul className="mx-auto grid max-w-md grid-cols-4">
+        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = isActive(pathname, href);
           return (
             <li key={href}>
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 font-pixel text-xs ${
-                  active ? "bg-surface-2 text-accent-ink" : "text-text-muted hover:text-text"
+                className={`flex min-h-14 flex-col items-center justify-center gap-1 text-xs font-medium ${
+                  active ? "text-accent-ink" : "text-text-muted hover:text-text"
                 }`}
               >
-                {active && <span aria-hidden className="absolute inset-x-3 top-0 h-1 bg-accent" />}
-                <Icon size={20} aria-hidden />
+                <Icon size={22} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
                 {label}
               </Link>
             </li>
