@@ -22,6 +22,20 @@
   --gold: #b8922a;
   --accent-ink: #8a5a12; /* amber for text/lines on light backgrounds (AA) */
   --focus: #8a5a12;
+  /* Tome spines + room art (decorative; titles never sit on these colors). */
+  --spine-1: #8c3b2e;
+  --spine-2: #2f5d7c;
+  --spine-3: #3f7a3b;
+  --spine-4: #7a4a8c;
+  --spine-5: #a8821f;
+  --spine-6: #2e7a73;
+  --spine-7: #a5562b;
+  --spine-8: #4a4f7a;
+  --room-wall: #e3d3b0;
+  --room-floor: #b98e5f;
+  --room-wood: #7a5232;
+  --room-sky: #a9d3e8;
+  --room-glow: #f6d58a;
   color-scheme: light;
 }
 
@@ -43,6 +57,19 @@
     --gold: #e3c15c;
     --accent-ink: #f2b45a;
     --focus: #f2b45a;
+    --spine-1: #c96a55;
+    --spine-2: #5f93b8;
+    --spine-3: #7fbf78;
+    --spine-4: #b088c4;
+    --spine-5: #e3c15c;
+    --spine-6: #5fb8ae;
+    --spine-7: #e08a55;
+    --spine-8: #8f94c9;
+    --room-wall: #2a2f55;
+    --room-floor: #4a3a3a;
+    --room-wood: #6b4a35;
+    --room-sky: #101433;
+    --room-glow: #f2b45a;
     color-scheme: dark;
   }
 }
@@ -64,6 +91,19 @@
   --gold: #e3c15c;
   --accent-ink: #f2b45a;
   --focus: #f2b45a;
+  --spine-1: #c96a55;
+  --spine-2: #5f93b8;
+  --spine-3: #7fbf78;
+  --spine-4: #b088c4;
+  --spine-5: #e3c15c;
+  --spine-6: #5fb8ae;
+  --spine-7: #e08a55;
+  --spine-8: #8f94c9;
+  --room-wall: #2a2f55;
+  --room-floor: #4a3a3a;
+  --room-wood: #6b4a35;
+  --room-sky: #101433;
+  --room-glow: #f2b45a;
   color-scheme: dark;
 }
 
@@ -84,6 +124,14 @@
   --color-gold: var(--gold);
   --color-accent-ink: var(--accent-ink);
   --color-focus: var(--focus);
+  --color-spine-1: var(--spine-1);
+  --color-spine-2: var(--spine-2);
+  --color-spine-3: var(--spine-3);
+  --color-spine-4: var(--spine-4);
+  --color-spine-5: var(--spine-5);
+  --color-spine-6: var(--spine-6);
+  --color-spine-7: var(--spine-7);
+  --color-spine-8: var(--spine-8);
 
   /* Pixel font: headings, labels, buttons, numbers only. Never paragraphs or card content. */
   --font-pixel: var(--font-pixelify), ui-monospace, monospace;

@@ -5,6 +5,7 @@ export const AUTH_ROUTES = ["/login", "/signup", "/forgot-password"] as const;
 export const PUBLIC_ROUTES = ["/", "/auth", "/reset-password"] as const;
 
 export const HOME_ROUTE = "/home";
+export const ONBOARDING_ROUTE = "/onboarding";
 export const LOGIN_ROUTE = "/login";
 
 function matches(pathname: string, routes: readonly string[]) {

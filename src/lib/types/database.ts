@@ -358,6 +358,10 @@ export type Database = {
         Args: Record<string, never>;
         Returns: string;
       };
+      tome_dust: {
+        Args: Record<string, never>;
+        Returns: { set_id: string; due_count: number; new_count: number; next_due_at: Timestamp | null }[];
+      };
     };
     Enums: {
       card_kind: CardKind;

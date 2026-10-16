@@ -8,7 +8,7 @@ export function XpBar({ xpTotal, compact = false }: { xpTotal: number; compact?:
   const filled = Math.floor(ratio * SEGMENTS);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
       <span className="font-pixel text-sm whitespace-nowrap">Lv {level}</span>
       <div
         role="progressbar"

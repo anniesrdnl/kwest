@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { env } from "@/lib/env";
 import { formValue, validationError, type FormState } from "@/lib/forms";
 import { getUser, safeNextPath } from "@/lib/auth/session";
-import { HOME_ROUTE } from "@/lib/routes";
+import { HOME_ROUTE, ONBOARDING_ROUTE } from "@/lib/routes";
 import { createClient } from "@/lib/supabase/server";
 import { authErrorMessage } from "./errors";
 import { forgotPasswordSchema, logInSchema, resetPasswordSchema, signUpSchema } from "./schemas";
@@ -45,7 +45,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
     await supabase.from("profiles").update({ timezone }).eq("id", data.user.id);
   }
 
-  redirect(HOME_ROUTE);
+  redirect(ONBOARDING_ROUTE);
 }
 
 export async function logIn(_prev: FormState, formData: FormData): Promise<FormState> {
