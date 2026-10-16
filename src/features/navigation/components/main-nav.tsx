@@ -22,11 +22,12 @@ export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`inline-flex min-h-11 items-center rounded-lg px-3 text-[15px] font-medium transition-colors ${
-              active ? "bg-surface-2 text-text" : "text-text-muted hover:bg-surface-2 hover:text-text"
+            className={`relative inline-flex h-16 items-center px-3 text-[15px] transition-colors ${
+              active ? "font-semibold text-text" : "font-medium text-text-muted hover:text-text"
             }`}
           >
             {label}
+            {active && <span aria-hidden className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-progress" />}
           </Link>
         );
       })}
@@ -52,11 +53,12 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 text-xs font-medium ${
-                  active ? "text-accent-ink" : "text-text-muted hover:text-text"
+                className={`relative flex min-h-14 flex-col items-center justify-center gap-1 text-xs ${
+                  active ? "font-semibold text-text" : "font-medium text-text-muted"
                 }`}
               >
-                <Icon size={22} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
+                {active && <span aria-hidden className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-progress" />}
+                <Icon size={20} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
                 {label}
               </Link>
             </li>

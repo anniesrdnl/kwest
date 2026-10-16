@@ -21,7 +21,7 @@ export function DeleteDeckButton({ deckId, title }: { deckId: string; title: str
       <dialog
         ref={dialogRef}
         aria-labelledby="delete-deck-title"
-        className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-border bg-surface p-6 text-text shadow-card backdrop:bg-black/40"
+        className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-border bg-surface p-6 text-text backdrop:bg-black/40"
       >
         <form action={formAction} className="space-y-4">
           <h2 id="delete-deck-title" className="text-xl font-semibold">
@@ -33,10 +33,10 @@ export function DeleteDeckButton({ deckId, title }: { deckId: string; title: str
           </p>
           <FormMessage state={state} />
           <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <Button variant="secondary" onClick={() => dialogRef.current?.close()} autoFocus>
+            <Button variant="outline" onClick={() => dialogRef.current?.close()} autoFocus>
               Keep deck
             </Button>
-            <Button type="submit" disabled={pending} className="bg-wrong text-white hover:bg-wrong/90">
+            <Button type="submit" disabled={pending} className="bg-wrong text-surface hover:bg-wrong/90">
               {pending ? "Deleting…" : "Delete deck"}
             </Button>
           </div>

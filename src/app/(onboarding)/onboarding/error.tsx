@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 
 export default function OnboardingError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <div role="alert" className="mx-auto max-w-md space-y-4 rounded-xl border border-border bg-surface p-6 text-center shadow-card">
-      <h1 className="text-xl font-semibold">Something went wrong</h1>
+    <div role="alert" className="mx-auto max-w-md space-y-4 rounded-xl border border-border bg-surface p-6 text-center">
+      <h1 className="text-xl font-bold">Something went wrong</h1>
       <p className="text-text-muted">We couldn&apos;t load this step. Nothing was lost.</p>
       {error.digest && <p className="text-sm text-text-muted">Error code: {error.digest}</p>}
       <Button onClick={reset}>Try again</Button>

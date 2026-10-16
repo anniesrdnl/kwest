@@ -1,86 +1,134 @@
 @import "tailwindcss";
 
 /* -----------------------------------------------------------------------------
-   Kwest design tokens: simple, clean, warm neutral with an ink-blue accent.
+   Kwest design tokens. Brand: Espresso Brown #3E2723 + Butter Yellow #FFEDA2.
+   Light: cream page, white cards, espresso text and primary buttons, butter for
+   highlights (selected states, progress, rewards).
+   Dark: deep espresso surfaces, cream text, butter primary buttons.
    Theme follows the system unless <html data-theme="light|dark"> overrides it.
    Contrast: text pairs are AA or better; --border-strong (inputs) is 3:1 or better.
 ----------------------------------------------------------------------------- */
 :root {
-  --bg: #fafaf7;
+  --espresso: #3e2723;
+  --butter: #ffeda2;
+
+  --bg: #fbf8f1;
   --surface: #ffffff;
-  --surface-2: #f3f2ee;
-  --text: #1c1c1e;
-  --text-muted: #63636a;
-  --border: #e7e5e0;
-  --border-strong: #8a877f;
-  --accent: #2f4ba8;
-  --accent-hover: #263e8c;
-  --accent-fg: #ffffff;
-  --accent-ink: #2f4ba8; /* accent used as text or thin lines */
-  --accent-soft: #eef1fa; /* tinted backgrounds */
+  --surface-2: #f5efe3;
+  --text: #3e2723;
+  --text-muted: #6d5d57;
+  --border: #ede5d6;
+  --border-strong: #958178;
+  /* Primary action (buttons, links): espresso */
+  --accent: #3e2723;
+  --accent-hover: #2b1a17;
+  --accent-fg: #fffbea;
+  --accent-ink: #3e2723;
+  /* Brand highlight: butter */
+  --highlight: #ffeda2;
+  --highlight-hover: #ffe27a;
+  --highlight-fg: #3e2723;
+  /* Secondary buttons and selected states (nav), plus the dashboard hero card */
+  --secondary: #ffeda2;
+  --secondary-hover: #ffe27a;
+  --secondary-fg: #3e2723;
+  --hero: #fff8dc;
+  --hero-border: #f3e2a2;
+  --hero-fg: #3e2723;
+  --hero-muted: #5e4a43;
+  --accent-soft: #fff6d1; /* light butter tint for chips and icon tiles */
+  --progress: #f6cd4a; /* deeper butter so bars read on light tracks */
+  --track: #f1eadb;
   --correct: #2e7d4f;
   --wrong: #b4412e;
   --gold: #a37a12;
-  --focus: #2f4ba8;
-  --shadow-card: 0 1px 2px rgb(28 28 30 / 0.04), 0 2px 8px rgb(28 28 30 / 0.04);
+  --focus: #3e2723;
+  --shadow-card: 0 1px 2px rgb(62 39 35 / 0.04), 0 2px 8px rgb(62 39 35 / 0.05);
+  --shadow-hover: 0 2px 4px rgb(62 39 35 / 0.06), 0 8px 20px rgb(62 39 35 / 0.08);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #111113;
-    --surface: #1a1a1d;
-    --surface-2: #242428;
-    --text: #ededef;
-    --text-muted: #a3a3ab;
-    --border: #2e2e33;
-    --border-strong: #75757e;
-    --accent: #8fa6f0;
-    --accent-hover: #a8baf4;
-    --accent-fg: #111113;
-    --accent-ink: #9db1f2;
-    --accent-soft: #1e2440;
-    --correct: #6cc08f;
-    --wrong: #f08a75;
-    --gold: #e2b93b;
-    --focus: #8fa6f0;
+    --bg: #1e1513;
+    --surface: #2a1f1c;
+    --surface-2: #352824;
+    --text: #fbf3e4;
+    --text-muted: #c9b8ae;
+    --border: #43332e;
+    --border-strong: #9a857c;
+    --accent: #ffeda2;
+    --accent-hover: #ffe27a;
+    --accent-fg: #3e2723;
+    --accent-ink: #ffeda2;
+    --highlight: #ffeda2;
+    --highlight-hover: #ffe27a;
+    --highlight-fg: #3e2723;
+    --accent-soft: #3d2f22;
+    --secondary: #3d2f22;
+    --secondary-hover: #4a3828;
+    --secondary-fg: #ffeda2;
+    --hero: #33261f;
+    --hero-border: #4d3a2a;
+    --hero-fg: #fbf3e4;
+    --hero-muted: #d6c6b8;
+    --progress: #ffe27a;
+    --track: #4a3a33;
+    --correct: #7fcb9a;
+    --wrong: #f29580;
+    --gold: #e9c75a;
+    --focus: #ffeda2;
     --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-hover: 0 4px 16px rgb(0 0 0 / 0.35);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #111113;
-  --surface: #1a1a1d;
-  --surface-2: #242428;
-  --text: #ededef;
-  --text-muted: #a3a3ab;
-  --border: #2e2e33;
-  --border-strong: #75757e;
-  --accent: #8fa6f0;
-  --accent-hover: #a8baf4;
-  --accent-fg: #111113;
-  --accent-ink: #9db1f2;
-  --accent-soft: #1e2440;
-  --correct: #6cc08f;
-  --wrong: #f08a75;
-  --gold: #e2b93b;
-  --focus: #8fa6f0;
+  --bg: #1e1513;
+  --surface: #2a1f1c;
+  --surface-2: #352824;
+  --text: #fbf3e4;
+  --text-muted: #c9b8ae;
+  --border: #43332e;
+  --border-strong: #9a857c;
+  --accent: #ffeda2;
+  --accent-hover: #ffe27a;
+  --accent-fg: #3e2723;
+  --accent-ink: #ffeda2;
+  --highlight: #ffeda2;
+  --highlight-hover: #ffe27a;
+  --highlight-fg: #3e2723;
+  --accent-soft: #3d2f22;
+  --secondary: #3d2f22;
+  --secondary-hover: #4a3828;
+  --secondary-fg: #ffeda2;
+  --hero: #33261f;
+  --hero-border: #4d3a2a;
+  --hero-fg: #fbf3e4;
+  --hero-muted: #d6c6b8;
+  --progress: #ffe27a;
+  --track: #4a3a33;
+  --correct: #7fcb9a;
+  --wrong: #f29580;
+  --gold: #e9c75a;
+  --focus: #ffeda2;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-hover: 0 4px 16px rgb(0 0 0 / 0.35);
   color-scheme: dark;
 }
 
 /* Deck colors (study_sets.color_key spine-1..8). Same in both themes:
    white text on each is 4.5:1 or better. */
 :root {
-  --deck-1: #b4472f;
-  --deck-2: #2c68a0;
-  --deck-3: #2f7a4f;
-  --deck-4: #7449a0;
+  --deck-1: #a8432c;
+  --deck-2: #2f6188;
+  --deck-3: #3d7149;
+  --deck-4: #7a4a7e;
   --deck-5: #8a6212;
-  --deck-6: #1f7470;
-  --deck-7: #a8521c;
-  --deck-8: #4752a3;
+  --deck-6: #2d6e68;
+  --deck-7: #9c5420;
+  --deck-8: #5a4a8a;
 }
 
 @theme inline {
@@ -96,6 +144,20 @@
   --color-accent-fg: var(--accent-fg);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-highlight: var(--highlight);
+  --color-highlight-hover: var(--highlight-hover);
+  --color-highlight-fg: var(--highlight-fg);
+  --color-progress: var(--progress);
+  --color-track: var(--track);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-fg: var(--secondary-fg);
+  --color-hero: var(--hero);
+  --color-hero-border: var(--hero-border);
+  --color-hero-fg: var(--hero-fg);
+  --color-hero-muted: var(--hero-muted);
+  --color-espresso: var(--espresso);
+  --color-butter: var(--butter);
   --color-correct: var(--correct);
   --color-wrong: var(--wrong);
   --color-gold: var(--gold);
@@ -103,6 +165,7 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --shadow-card: var(--shadow-card);
+  --shadow-hover: var(--shadow-hover);
 }
 
 /* -----------------------------------------------------------------------------
@@ -134,8 +197,8 @@
   }
 
   ::selection {
-    background: var(--accent-soft);
-    color: var(--text);
+    background: var(--butter);
+    color: var(--espresso);
   }
 }
 

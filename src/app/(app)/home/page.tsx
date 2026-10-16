@@ -14,8 +14,8 @@ import { ONBOARDING_ROUTE } from "@/lib/routes";
 export const metadata: Metadata = { title: "Home" };
 
 // Renders inside home/loading.tsx's Suspense.
-// Mobile: one column (Next up, daily goal, progress, recent decks).
-// Desktop: Next up on the left, daily goal and progress on the right.
+// Hierarchy: the "Continue studying" card is the one main action (full width),
+// then daily goal and progress side by side, then recent decks.
 export default async function HomePage() {
   const { profile } = await getPlayer();
   if (!isOnboarded(profile.onboarding_step)) redirect(ONBOARDING_ROUTE);
@@ -24,10 +24,10 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-semibold md:text-3xl">Hi, {player.profile.display_name}</h1>
+      <h1 className="text-2xl font-bold md:text-3xl">Hi, {player.profile.display_name}</h1>
 
-      <div className="grid gap-4 md:grid-cols-[3fr_2fr] md:gap-6">
-        <div className="md:row-span-2">
+      <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+        <div className="md:col-span-2">
           {decks.length === 0 ? (
             <NoDecksCard />
           ) : nextUp ? (

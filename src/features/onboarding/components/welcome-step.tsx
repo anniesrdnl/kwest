@@ -12,7 +12,7 @@ export function WelcomeStep({ name }: { name: string }) {
   return (
     <section aria-labelledby="welcome-heading" className="space-y-8">
       <div className="space-y-2">
-        <h1 id="welcome-heading" className="text-3xl font-semibold">
+        <h1 id="welcome-heading" className="text-3xl font-bold">
           Welcome, {name}
         </h1>
         <p className="text-lg text-text-muted">Here&apos;s how Kwest works. It takes a minute.</p>
@@ -20,7 +20,7 @@ export function WelcomeStep({ name }: { name: string }) {
 
       <ul className="space-y-3">
         {IDEAS.map(({ icon: Icon, name: idea, text }) => (
-          <li key={idea} className="flex items-start gap-4 rounded-xl border border-border bg-surface p-4 shadow-card">
+          <li key={idea} className="flex items-start gap-4 rounded-xl border border-border bg-surface p-4">
             <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-ink">
               <Icon size={20} aria-hidden />
             </span>

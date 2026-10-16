@@ -5,10 +5,10 @@ type PanelProps = ComponentProps<"section"> & {
   actions?: ReactNode;
 };
 
-/** Main container: white card with a thin border and a soft shadow. */
+/** Main container: white card with a thin border. */
 export function Panel({ title, actions, className = "", children, ...props }: PanelProps) {
   return (
-    <section className={`rounded-xl border border-border bg-surface shadow-card ${className}`} {...props}>
+    <section className={`rounded-xl border border-border bg-surface ${className}`} {...props}>
       {(title || actions) && (
         <header className="flex min-h-11 items-center justify-between gap-3 px-5 pt-4">
           {title && <h2 className="text-sm font-medium text-text-muted">{title}</h2>}

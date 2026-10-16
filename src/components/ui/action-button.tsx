@@ -10,7 +10,7 @@ type ActionButtonProps = {
   children: ReactNode;
   pendingLabel: string;
   /** "link" renders a quiet text button (e.g. "Skip"). */
-  appearance?: "primary" | "secondary" | "link";
+  appearance?: "primary" | "secondary" | "outline" | "link";
   className?: string;
 };
 
@@ -24,7 +24,7 @@ export function ActionButton({ action, children, pendingLabel, appearance = "pri
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-text-muted hover:bg-surface-2 hover:text-text disabled:opacity-50"
+          className="inline-flex min-h-11 items-center px-3 text-sm font-medium text-text-muted underline-offset-4 transition-colors hover:text-text hover:underline disabled:opacity-50"
         >
           {pending ? pendingLabel : children}
         </button>

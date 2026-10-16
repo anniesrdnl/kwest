@@ -19,7 +19,7 @@ export default async function DecksPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold md:text-3xl">Decks</h1>
+        <h1 className="text-2xl font-bold md:text-3xl">Decks</h1>
         <ButtonLink href="/decks/new">
           <Plus size={18} aria-hidden />
           New deck
@@ -43,7 +43,7 @@ export default async function DecksPage() {
             <li key={deck.id}>
               <Link
                 href={`/decks/${deck.id}`}
-                className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 shadow-card transition-colors hover:border-border-strong/50"
+                className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 transition-colors duration-150 hover:border-border-strong/60"
               >
                 <DeckBadge title={deck.title} colorKey={deck.colorKey} />
                 <div className="min-w-0">

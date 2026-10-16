@@ -18,7 +18,7 @@ export function RecentDecks({ decks }: { decks: Deck[] }) {
         <h2 id="recent-decks-heading" className="text-lg font-semibold">
           Recent decks
         </h2>
-        <Link href="/decks" className="inline-flex min-h-11 items-center text-sm font-medium text-accent-ink hover:underline">
+        <Link href="/decks" className="inline-flex min-h-11 items-center text-sm font-semibold underline decoration-progress decoration-2 underline-offset-4 hover:decoration-text">
           See all
         </Link>
       </div>
@@ -27,7 +27,7 @@ export function RecentDecks({ decks }: { decks: Deck[] }) {
           <li key={deck.id}>
             <Link
               href={`/decks/${deck.id}`}
-              className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 shadow-card transition-colors hover:border-border-strong/50"
+              className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 transition-colors duration-150 hover:border-border-strong/60"
             >
               <DeckBadge title={deck.title} colorKey={deck.colorKey} />
               <div className="min-w-0">

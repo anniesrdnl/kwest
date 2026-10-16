@@ -15,7 +15,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-semibold">{profile.display_name}</h1>
+        <h1 className="text-3xl font-bold">{profile.display_name}</h1>
         <XpBar xpTotal={stats.xp_total} />
         <p className="text-sm text-text-muted">Studying since {joined}</p>
       </header>

@@ -6,8 +6,8 @@ export default function Loading() {
         Loading your dashboard…
       </span>
       <div className="h-8 w-40 animate-pulse rounded-lg bg-surface-2" />
-      <div className="grid gap-4 md:grid-cols-[3fr_2fr] md:gap-6">
-        <div className="h-56 animate-pulse rounded-2xl bg-surface-2 md:row-span-2 md:h-auto" />
+      <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+        <div className="h-52 animate-pulse rounded-2xl bg-surface-2 md:col-span-2" />
         <div className="h-36 animate-pulse rounded-xl bg-surface-2" />
         <div className="h-32 animate-pulse rounded-xl bg-surface-2" />
       </div>

@@ -35,7 +35,7 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
         <div className="flex items-start gap-4">
           <DeckBadge title={deck.title} colorKey={deck.colorKey} size="lg" />
           <div className="min-w-0 space-y-1">
-            <h1 className="text-2xl font-semibold break-words md:text-3xl">{deck.title}</h1>
+            <h1 className="text-2xl font-bold break-words md:text-3xl">{deck.title}</h1>
             {deck.subject && <p className="text-text-muted">{deck.subject}</p>}
           </div>
         </div>
@@ -43,7 +43,7 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
 
         <dl className="grid grid-cols-3 gap-3">
           {stats.map(([value, label]) => (
-            <div key={label} className="rounded-xl border border-border bg-surface p-4 shadow-card">
+            <div key={label} className="rounded-xl border border-border bg-surface p-4">
               <dt className="sr-only">{label}</dt>
               <dd>
                 <span className="block text-2xl font-semibold tabular-nums">{value}</span>
@@ -74,7 +74,7 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
         {deck.cards.length === 0 ? (
           <p className="text-text-muted">This deck has no cards yet. Use Edit to add some.</p>
         ) : (
-          <ol className="divide-y divide-border rounded-xl border border-border bg-surface shadow-card">
+          <ol className="divide-y divide-border rounded-xl border border-border bg-surface">
             {deck.cards.map((card, i) => (
               <li key={card.id} className="grid gap-1 p-4 md:grid-cols-[2rem_1fr_1fr] md:gap-4">
                 <span className="text-sm text-text-muted tabular-nums">{i + 1}</span>

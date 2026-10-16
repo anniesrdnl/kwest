@@ -6,13 +6,13 @@ export function FirstDeckStep() {
   return (
     <section aria-labelledby="first-deck-heading" className="space-y-8">
       <div className="space-y-2">
-        <h1 id="first-deck-heading" className="text-3xl font-semibold">
+        <h1 id="first-deck-heading" className="text-3xl font-bold">
           Pick your first deck
         </h1>
         <p className="text-lg text-text-muted">You can add more any time.</p>
       </div>
 
-      <div className="space-y-4 rounded-xl border border-border bg-surface p-5 shadow-card">
+      <div className="space-y-4 rounded-xl border border-border bg-surface p-5">
         <div className="flex items-start gap-4">
           <DeckBadge title="How to Write a Research Paper" colorKey="spine-3" size="lg" />
           <div>
@@ -26,7 +26,7 @@ export function FirstDeckStep() {
         </ActionButton>
       </div>
 
-      <div className="space-y-4 rounded-xl border border-border bg-surface p-5 shadow-card">
+      <div className="space-y-4 rounded-xl border border-border bg-surface p-5">
         <div>
           <h2 className="text-lg font-semibold">Make my own</h2>
           <p className="text-text-muted">Type your own cards, or paste a list from your notes or Quizlet.</p>

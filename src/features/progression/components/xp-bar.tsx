@@ -12,9 +12,12 @@ export function XpBar({ xpTotal, compact = false }: { xpTotal: number; compact?:
       aria-valuemax={xpNeeded}
       aria-valuenow={xpIntoLevel}
       aria-valuetext={`${xpIntoLevel} of ${xpNeeded} XP to level ${level + 1}`}
-      className={`h-2 overflow-hidden rounded-full bg-surface-2 ${compact ? "w-16" : "w-full"}`}
+      className={`h-2 overflow-hidden rounded-full bg-track ${compact ? "w-16" : "w-full"}`}
     >
-      <div className="h-full rounded-full bg-accent" style={{ width: `${Math.round(ratio * 100)}%` }} />
+      <div
+        className="h-full rounded-full bg-progress transition-[width] duration-700 ease-out"
+        style={{ width: `${Math.round(ratio * 100)}%` }}
+      />
     </div>
   );
 

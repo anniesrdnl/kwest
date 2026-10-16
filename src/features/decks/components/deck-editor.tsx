@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowUp, ClipboardPaste, Plus, StickyNote, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { TextArea, textAreaClass } from "@/components/ui/text-area";
@@ -37,8 +37,31 @@ function blankRow(key: string, card?: Partial<Row>): Row {
 
 const isBlank = (r: Row) => !r.prompt.trim() && !r.answer.trim() && !r.explanation.trim();
 
-/** Create or edit a deck: details, color and an ordered list of cards. Saves everything at once. */
-export function DeckEditor({ initial, cancelHref }: EditorProps) {
+/**
+ * Create or edit a deck: details, color and an ordered list of cards. Saves everything at once.
+ *
+ * Next.js keeps pages you leave hidden (React <Activity>), so form state survives navigation.
+ * That's good for an unsaved draft, but after a successful save the editor must start fresh
+ * next time (otherwise "New deck" would still show the last deck). So after a save, the form
+ * remounts with a new key when the page is hidden.
+ */
+export function DeckEditor(props: EditorProps) {
+  const [generation, setGeneration] = useState(0);
+  const saved = useRef(false);
+
+  useLayoutEffect(() => {
+    return () => {
+      if (saved.current) {
+        saved.current = false;
+        setGeneration((g) => g + 1);
+      }
+    };
+  }, []);
+
+  return <EditorForm key={generation} {...props} onSaving={(v) => (saved.current = v)} />;
+}
+
+function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving: (saving: boolean) => void }) {
   const [title, setTitle] = useState(initial.title);
   const [subject, setSubject] = useState(initial.subject);
   const [description, setDescription] = useState(initial.description);
@@ -100,8 +123,14 @@ export function DeckEditor({ initial, cancelHref }: EditorProps) {
     (first ?? document.getElementById("deck-editor-message"))?.focus();
   }, [message, errors]);
 
-  const update = (key: string, patch: Partial<Row>) =>
+  /** Clears a field's error as soon as the user changes it. */
+  const clearError = (...names: string[]) =>
+    setErrors((e) => (names.some((n) => n in e) ? Object.fromEntries(Object.entries(e).filter(([k]) => !names.includes(k))) : e));
+
+  const update = (key: string, patch: Partial<Row>) => {
     setRows((rs) => rs.map((r) => (r.key === key ? { ...r, ...patch } : r)));
+    clearError(...Object.keys(patch).map((field) => `${key}.${field}`), "cards");
+  };
 
   const move = (index: number, by: -1 | 1) =>
     setRows((rs) => {
@@ -136,6 +165,7 @@ export function DeckEditor({ initial, cancelHref }: EditorProps) {
 
     startTransition(async () => {
       savingRef.current = true;
+      onSaving(true);
       const result = await saveDeck({
         id: initial.id,
         title,
@@ -145,8 +175,9 @@ export function DeckEditor({ initial, cancelHref }: EditorProps) {
         cards: kept.map((r) => ({ id: r.id, kind: r.kind, prompt: r.prompt, answer: r.answer, explanation: r.explanation })),
       });
       // On success the action redirects, so only failures come back here.
-      savingRef.current = false;
       if (result && !result.ok) {
+        savingRef.current = false;
+        onSaving(false);
         setErrors(Object.fromEntries(Object.entries(result.errors ?? {}).map(([k, v]) => [keyFor(k), v])));
         setMessage(result.message);
       }
@@ -157,14 +188,17 @@ export function DeckEditor({ initial, cancelHref }: EditorProps) {
 
   return (
     <form ref={formRef} onSubmit={save} noValidate className="space-y-8">
-      <section aria-labelledby="details-heading" className="space-y-5 rounded-xl border border-border bg-surface p-5 shadow-card sm:p-6">
+      <section aria-labelledby="details-heading" className="space-y-5 rounded-xl border border-border bg-surface p-5 sm:p-6">
         <h2 id="details-heading" className="text-lg font-semibold">
           Details
         </h2>
         <Field
           label="Name"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            clearError("title");
+          }}
           maxLength={LIMITS.title}
           placeholder="e.g. Biology: The Cell"
           errors={errors.title ? [errors.title] : undefined}
@@ -173,7 +207,10 @@ export function DeckEditor({ initial, cancelHref }: EditorProps) {
         <Field
           label="Subject (optional)"
           value={subject}
-          onChange={(e) => setSubject(e.target.value)}
+          onChange={(e) => {
+            setSubject(e.target.value);
+            clearError("subject");
+          }}
           maxLength={LIMITS.subject}
           placeholder="e.g. Biology"
           errors={errors.subject ? [errors.subject] : undefined}
@@ -181,7 +218,10 @@ export function DeckEditor({ initial, cancelHref }: EditorProps) {
         <TextArea
           label="Description (optional)"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            clearError("description");
+          }}
           maxLength={LIMITS.description}
           error={errors.description}
         />
@@ -287,10 +327,10 @@ type CardRowProps = {
 function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRemove }: CardRowProps) {
   const labels = LABELS[row.kind];
   const iconButton =
-    "inline-flex size-11 items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface-2 hover:text-text disabled:opacity-30";
+    "inline-flex size-11 items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text disabled:opacity-30";
 
   return (
-    <li data-row={row.key} className="space-y-3 rounded-xl border border-border bg-surface p-4 shadow-card">
+    <li data-row={row.key} className="space-y-3 rounded-xl border border-border bg-surface p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <span className="text-sm font-semibold text-text-muted tabular-nums">{number}</span>
@@ -375,7 +415,7 @@ function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRem
         <button
           type="button"
           onClick={() => onChange({ showNote: true })}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-medium text-text-muted hover:bg-surface-2 hover:text-text"
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-medium text-text-muted hover:text-text"
         >
           <StickyNote size={16} aria-hidden />
           Add a note<span className="sr-only"> to card {number}</span>
