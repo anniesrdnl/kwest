@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, CircleCheck, Layers } from "lucide-react";
 import { ActionButton } from "@/components/ui/action-button";
 import { ButtonLink } from "@/components/ui/button";
@@ -22,7 +23,9 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
       <div className="flex items-start gap-4">
         <DeckBadge title={deck.title} colorKey={deck.colorKey} size="lg" />
         <div className="min-w-0 flex-1">
-          <p className="text-xl font-semibold break-words">{deck.title}</p>
+          <Link href={`/decks/${deck.id}`} className="text-xl font-semibold break-words hover:underline">
+            {deck.title}
+          </Link>
           <p className="text-text-muted">{parts.join(" · ")}</p>
         </div>
       </div>
@@ -83,13 +86,16 @@ export function NoDecksCard() {
         <div>
           <p className="text-xl font-semibold">No decks yet</p>
           <p className="text-text-muted">
-            Start with a ready-made deck: How to Write a Research Paper. Making your own decks opens soon.
+            Make your own deck, or start with a ready-made one: How to Write a Research Paper.
           </p>
         </div>
       </div>
-      <ActionButton action={addStarterDeck} pendingLabel="Adding…">
-        Add starter deck
-      </ActionButton>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        <ButtonLink href="/decks/new">Make a deck</ButtonLink>
+        <ActionButton action={addStarterDeck} appearance="secondary" pendingLabel="Adding…">
+          Add ready-made deck
+        </ActionButton>
+      </div>
     </NextUpShell>
   );
 }

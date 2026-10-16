@@ -1,7 +1,6 @@
-import { ChevronDown } from "lucide-react";
 import { ActionButton } from "@/components/ui/action-button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
-import { finishOnboarding, startWithStarterDeck } from "../actions";
+import { startWithOwnDeck, startWithStarterDeck } from "../actions";
 
 export function FirstDeckStep() {
   return (
@@ -27,22 +26,15 @@ export function FirstDeckStep() {
         </ActionButton>
       </div>
 
-      {/* Making decks is Phase 8. Say so rather than open a fake editor. */}
-      <details className="group rounded-xl border border-border bg-surface shadow-card">
-        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-5 py-4 text-lg font-semibold [&::-webkit-details-marker]:hidden">
-          Make my own
-          <ChevronDown size={20} aria-hidden className="text-text-muted transition-transform group-open:rotate-180" />
-        </summary>
-        <div className="space-y-4 border-t border-border px-5 py-5">
-          <p>
-            Making your own decks isn&apos;t ready yet. It&apos;s the next thing being built. For now you can start
-            with no decks and add the ready-made one later from your home page.
-          </p>
-          <ActionButton action={finishOnboarding} appearance="secondary" pendingLabel="Opening…">
-            Go to home
-          </ActionButton>
+      <div className="space-y-4 rounded-xl border border-border bg-surface p-5 shadow-card">
+        <div>
+          <h2 className="text-lg font-semibold">Make my own</h2>
+          <p className="text-text-muted">Type your own cards, or paste a list from your notes or Quizlet.</p>
         </div>
-      </details>
+        <ActionButton action={startWithOwnDeck} appearance="secondary" pendingLabel="Opening…">
+          Make a deck
+        </ActionButton>
+      </div>
     </section>
   );
 }

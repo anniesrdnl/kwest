@@ -42,3 +42,10 @@ export async function finishOnboarding(): Promise<FormState> {
   if (error) return { status: "error", message: error };
   redirect(HOME_ROUTE);
 }
+
+/** "Make my own": finish onboarding and open the deck editor. */
+export async function startWithOwnDeck(): Promise<FormState> {
+  const error = await saveStep(ONBOARDING_DONE);
+  if (error) return { status: "error", message: error };
+  redirect("/decks/new");
+}

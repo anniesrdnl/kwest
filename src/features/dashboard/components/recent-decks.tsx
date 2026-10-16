@@ -22,17 +22,21 @@ export function RecentDecks({ decks }: { decks: Deck[] }) {
           See all
         </Link>
       </div>
-      {/* Deck pages arrive with the editor (Phase 8), so these aren't links yet. */}
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {decks.slice(0, SHOWN).map((deck) => (
-          <li key={deck.id} className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4 shadow-card">
-            <DeckBadge title={deck.title} colorKey={deck.colorKey} />
-            <div className="min-w-0">
-              <p className="truncate font-medium">{deck.title}</p>
-              <p className="text-sm text-text-muted">
-                {deck.cardCount} cards · {status(deck)}
-              </p>
-            </div>
+          <li key={deck.id}>
+            <Link
+              href={`/decks/${deck.id}`}
+              className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 shadow-card transition-colors hover:border-border-strong/50"
+            >
+              <DeckBadge title={deck.title} colorKey={deck.colorKey} />
+              <div className="min-w-0">
+                <p className="truncate font-medium">{deck.title}</p>
+                <p className="text-sm text-text-muted">
+                  {deck.cardCount} cards · {status(deck)}
+                </p>
+              </div>
+            </Link>
           </li>
         ))}
       </ul>

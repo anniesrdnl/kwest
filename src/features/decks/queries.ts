@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { requireUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
+import type { CardKind } from "@/lib/types/database";
 
 export type Deck = {
   id: string;
@@ -49,4 +50,40 @@ export const getDecks = cache(async (): Promise<Deck[]> => {
       nextDueAt: d?.next_due_at ?? null,
     };
   });
+});
+
+export type DeckCard = {
+  id: string;
+  kind: CardKind;
+  prompt: string;
+  answer: string;
+  explanation: string | null;
+};
+
+export type DeckDetail = Deck & { description: string | null; cards: DeckCard[] };
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** One deck with its cards in order, or null if it doesn't exist or isn't the player's. */
+export const getDeck = cache(async (id: string): Promise<DeckDetail | null> => {
+  if (!UUID.test(id)) return null;
+  await requireUser();
+  const supabase = await createClient();
+
+  const [decks, set, cards] = await Promise.all([
+    getDecks(),
+    supabase.from("study_sets").select("description").eq("id", id).maybeSingle(),
+    supabase
+      .from("cards")
+      .select("id, kind, prompt, answer, explanation")
+      .eq("set_id", id)
+      .order("position")
+      .order("created_at"),
+  ]);
+  if (set.error) throw new Error(`Could not load deck: ${set.error.message}`);
+  if (cards.error) throw new Error(`Could not load cards: ${cards.error.message}`);
+
+  const deck = decks.find((d) => d.id === id);
+  if (!deck || !set.data) return null;
+  return { ...deck, description: set.data.description, cards: cards.data };
 });

@@ -358,6 +358,17 @@ export type Database = {
         Args: Record<string, never>;
         Returns: string;
       };
+      save_deck: {
+        Args: {
+          p_deck_id: string | null;
+          p_title: string;
+          p_subject: string;
+          p_description: string;
+          p_color_key: string;
+          p_cards: Json; // SaveDeckCard[]
+        };
+        Returns: string;
+      };
       deck_dust: {
         Args: Record<string, never>;
         Returns: { set_id: string; due_count: number; new_count: number; next_due_at: Timestamp | null }[];
