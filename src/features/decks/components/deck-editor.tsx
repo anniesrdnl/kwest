@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowDown, ArrowUp, ClipboardPaste, Plus, StickyNote, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, FileUp, ListPlus, Plus, StickyNote, Trash2 } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { TextArea, textAreaClass } from "@/components/ui/text-area";
 import type { CardKind } from "@/lib/types/database";
 import { saveDeck } from "../actions";
-import { DECK_COLORS, LIMITS, parseCardText, type DeckInput } from "../schemas";
+import { DECK_COLORS, LIMITS, csvToTabText, parseCardText, type DeckInput, type ParsedCard } from "../schemas";
 import { deckColor } from "./deck-badge";
 
 type Row = {
@@ -149,8 +149,14 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
     setRows((rs) => [...rs, row]);
   };
 
-  const importCards = (cards: { prompt: string; answer: string }[]) => {
-    setRows((rs) => [...rs.filter((r) => !isBlank(r)), ...cards.map((c) => makeRow(c))].slice(0, LIMITS.cards));
+  const importCards = (cards: ParsedCard[]) => {
+    setRows((rs) =>
+      [
+        ...rs.filter((r) => !isBlank(r)),
+        ...cards.map((c) => makeRow({ ...c, explanation: c.explanation ?? "", showNote: Boolean(c.explanation) })),
+      ].slice(0, LIMITS.cards),
+    );
+    clearError("cards");
     setShowImport(false);
   };
 
@@ -256,12 +262,12 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
             Cards <span className="font-normal text-text-muted">({cardCount})</span>
           </h2>
           <Button variant="secondary" onClick={() => setShowImport((v) => !v)} aria-expanded={showImport}>
-            <ClipboardPaste size={18} aria-hidden />
-            Paste a list
+            <ListPlus size={18} aria-hidden />
+            Add many cards
           </Button>
         </div>
 
-        {showImport && <ImportPanel onImport={importCards} onCancel={() => setShowImport(false)} />}
+        {showImport && <ImportPanel room={LIMITS.cards - cardCount} onImport={importCards} onCancel={() => setShowImport(false)} />}
         {errors.cards && <p className="text-sm text-wrong">{errors.cards}</p>}
 
         <ol className="space-y-3">
@@ -425,24 +431,114 @@ function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRem
   );
 }
 
+const MAX_FILE_BYTES = 1024 * 1024;
+
+/**
+ * Reads a card file in the browser. Nothing is uploaded: the text goes into the
+ * import box, and cards are only saved with the deck.
+ */
+async function readCardFile(file: File): Promise<{ text: string } | { error: string }> {
+  const ext = file.name.toLowerCase().split(".").pop() ?? "";
+  if (!["txt", "csv", "tsv"].includes(ext)) {
+    return {
+      error:
+        ext === "xlsx" || ext === "xls"
+          ? "Excel files can't be read yet. In Excel, choose File > Save As > CSV, then upload that."
+          : "Use a .txt, .csv or .tsv file.",
+    };
+  }
+  if (file.size > MAX_FILE_BYTES) return { error: "That file is too big. Keep it under 1 MB." };
+
+  const bytes = await file.arrayBuffer();
+  let text: string;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    // Older Excel saves CSV in the Windows encoding instead of UTF-8.
+    text = new TextDecoder("windows-1252").decode(bytes);
+  }
+  return { text: ext === "csv" ? csvToTabText(text) : text };
+}
+
 function ImportPanel({
+  room,
   onImport,
   onCancel,
 }: {
-  onImport: (cards: { prompt: string; answer: string }[]) => void;
+  /** How many more cards fit in the deck. */
+  room: number;
+  onImport: (cards: ParsedCard[]) => void;
   onCancel: () => void;
 }) {
   const [text, setText] = useState("");
+  const [fileNote, setFileNote] = useState<{ ok: boolean; message: string } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
   const found = parseCardText(text);
+  const adding = found.slice(0, Math.max(room, 0));
+
+  const loadFile = async (file: File | undefined) => {
+    if (!file) return;
+    const result = await readCardFile(file);
+    if ("error" in result) {
+      setFileNote({ ok: false, message: result.error });
+      return;
+    }
+    const count = parseCardText(result.text).length;
+    setText(result.text);
+    setFileNote(
+      count
+        ? { ok: true, message: `Loaded ${file.name}. Check the cards below, then add them.` }
+        : { ok: false, message: `No cards found in ${file.name}. Put the front and back in two columns, or one card per line.` },
+    );
+  };
 
   return (
-    <div className="space-y-3 rounded-xl border border-border bg-surface-2 p-4">
-      <label htmlFor="import-text" className="block text-sm font-medium">
-        Paste one card per line
-      </label>
-      <p id="import-help" className="text-sm text-text-muted">
-        Put a tab, &quot; - &quot; or &quot;:&quot; between the front and the back. Lists copied from Quizlet work as they are.
-      </p>
+    <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragging(false);
+        void loadFile(e.dataTransfer.files[0]);
+      }}
+      className={`space-y-3 rounded-xl border bg-surface-2 p-4 ${dragging ? "border-dashed border-text" : "border-border"}`}
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <label htmlFor="import-text" className="block text-sm font-medium">
+            Paste one card per line, or upload a file
+          </label>
+          <div id="import-help" className="space-y-1 text-sm text-text-muted">
+            <p>Put a tab, &quot; - &quot; or &quot;:&quot; between the front and the back. Quizlet lists work as they are.</p>
+            <p>Files: .txt, .csv or .tsv (save from Excel or Google Sheets). Column 1 is the front, column 2 the back, column 3 an optional note.</p>
+          </div>
+        </div>
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".txt,.csv,.tsv,text/plain,text/csv,text/tab-separated-values"
+          className="sr-only"
+          tabIndex={-1}
+          aria-hidden
+          onChange={(e) => {
+            void loadFile(e.target.files?.[0]);
+            e.target.value = "";
+          }}
+        />
+        <Button variant="outline" onClick={() => fileInput.current?.click()}>
+          <FileUp size={18} aria-hidden />
+          Upload a file
+        </Button>
+      </div>
+      <div aria-live="polite">
+        {fileNote && <p className={`text-sm ${fileNote.ok ? "text-correct" : "text-wrong"}`}>{fileNote.message}</p>}
+      </div>
       <textarea
         id="import-text"
         rows={6}
@@ -455,13 +551,15 @@ function ImportPanel({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p id="import-count" aria-live="polite" className="text-sm text-text-muted">
           {found.length === 1 ? "1 card found" : `${found.length} cards found`}
+          {found.length > adding.length &&
+            (adding.length ? `. Only the first ${adding.length} fit (a deck holds up to ${LIMITS.cards}).` : `. This deck is full (${LIMITS.cards} cards).`)}
         </p>
         <div className="flex gap-2">
           <Button variant="ghost" onClick={onCancel}>
             Cancel
           </Button>
-          <Button onClick={() => onImport(found)} disabled={found.length === 0}>
-            Add {found.length || ""} cards
+          <Button onClick={() => onImport(adding)} disabled={adding.length === 0}>
+            Add {adding.length || ""} cards
           </Button>
         </div>
       </div>

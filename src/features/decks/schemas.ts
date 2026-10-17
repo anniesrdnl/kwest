@@ -62,21 +62,79 @@ export type DeckInput = z.input<typeof deckSchema>;
 /** Result of saveDeck. `errors` keys are paths like "title" or "cards.3.prompt". */
 export type SaveDeckResult = { ok: false; message: string; errors?: Record<string, string> };
 
+export type ParsedCard = { prompt: string; answer: string; explanation?: string };
+
+// A first row like "Term<tab>Definition" is a header from a spreadsheet, not a card.
+const HEADER_WORDS = /^(front|back|term|terms|definition|definitions|word|words|meaning|meanings|question|questions|answer|answers|note|notes)$/i;
+
 /**
  * Turns pasted text into cards. One card per line; the front and back are split
- * by a tab (what Quizlet exports), or by " - " or ":" when there's no tab.
+ * by a tab (what Quizlet and spreadsheets export), or by " - " or ":" when there's no tab.
+ * With tabs, a third column becomes the card's note.
  */
-export function parseCardText(text: string): { prompt: string; answer: string }[] {
-  const cards: { prompt: string; answer: string }[] = [];
+export function parseCardText(text: string): ParsedCard[] {
+  const cards: ParsedCard[] = [];
+  let first = true;
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
     if (!line) continue;
-    const sep = raw.includes("\t") ? "\t" : line.includes(" - ") ? " - " : line.includes(":") ? ":" : null;
+    const isFirst = first;
+    first = false;
+
+    if (raw.includes("\t")) {
+      const [prompt = "", answer = "", ...rest] = raw.split("\t").map((s) => s.trim());
+      if (isFirst && HEADER_WORDS.test(prompt) && HEADER_WORDS.test(answer)) continue;
+      const explanation = rest.filter(Boolean).join(" ");
+      if (prompt && answer) cards.push(explanation ? { prompt, answer, explanation } : { prompt, answer });
+      continue;
+    }
+
+    const sep = line.includes(" - ") ? " - " : line.includes(":") ? ":" : null;
     if (!sep) continue;
-    const at = raw.indexOf(sep);
-    const prompt = raw.slice(0, at).trim();
-    const answer = raw.slice(at + sep.length).trim();
+    const at = line.indexOf(sep);
+    const prompt = line.slice(0, at).trim();
+    const answer = line.slice(at + sep.length).trim();
     if (prompt && answer) cards.push({ prompt, answer });
   }
   return cards;
+}
+
+/**
+ * Turns a CSV file (what Excel and Google Sheets save) into tab-separated lines,
+ * so it can go through parseCardText. Handles quoted cells with commas, quotes and line breaks.
+ */
+export function csvToTabText(csv: string): string {
+  // Excel in some regions saves with ";" instead of ",".
+  const firstLine = csv.split(/\r?\n/, 1)[0] ?? "";
+  const delimiter = (firstLine.match(/;/g)?.length ?? 0) > (firstLine.match(/,/g)?.length ?? 0) ? ";" : ",";
+
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let cell = "";
+  let quoted = false;
+  for (let i = 0; i < csv.length; i++) {
+    const ch = csv[i];
+    if (quoted) {
+      if (ch === '"' && csv[i + 1] === '"') {
+        cell += '"';
+        i++;
+      } else if (ch === '"') quoted = false;
+      else cell += ch;
+    } else if (ch === '"' && cell === "") quoted = true;
+    else if (ch === delimiter) {
+      row.push(cell);
+      cell = "";
+    } else if (ch === "\n" || ch === "\r") {
+      if (ch === "\r" && csv[i + 1] === "\n") i++;
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = "";
+    } else cell += ch;
+  }
+  row.push(cell);
+  rows.push(row);
+
+  // Line breaks and tabs inside a cell would split the card, so they become spaces.
+  return rows.map((r) => r.map((c) => c.replace(/\s+/g, " ").trim()).join("\t")).join("\n");
 }
