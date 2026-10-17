@@ -51,7 +51,7 @@ export function AchievementList({ achievements, timeZone }: { achievements: Achi
           const Icon = ICONS[a.icon] ?? Trophy;
           const earned = Boolean(a.earnedAt);
           return (
-            <li key={a.key} className={`flex gap-3 rounded-xl border p-4 ${earned ? "border-hero-border bg-hero" : "border-border bg-surface"}`}>
+            <li key={a.key} className={`flex gap-3 rounded-xl border p-4 ${earned ? "border-hero-border bg-hero text-hero-fg" : "border-border bg-surface"}`}>
               <span
                 className={`inline-flex size-11 shrink-0 items-center justify-center rounded-xl ${
                   earned ? "bg-secondary text-secondary-fg" : "bg-surface-2 text-text-muted"
@@ -64,7 +64,7 @@ export function AchievementList({ achievements, timeZone }: { achievements: Achi
                   {a.name}
                   <span className="sr-only">{earned ? " (earned)" : " (locked)"}</span>
                 </p>
-                <p className="text-sm text-text-muted">{a.description}</p>
+                <p className={`text-sm ${earned ? "text-hero-muted" : "text-text-muted"}`}>{a.description}</p>
                 {earned ? (
                   <p className="text-xs font-medium text-hero-muted">Earned {formatDate(a.earnedAt!)}</p>
                 ) : a.comingLater ? (

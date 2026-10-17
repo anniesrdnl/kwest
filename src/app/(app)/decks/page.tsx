@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Layers, Plus } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
-import { DeckBadge } from "@/features/decks/components/deck-badge";
-import { getDecks, type Deck } from "@/features/decks/queries";
+import { DeckList } from "@/features/decks/components/deck-list";
+import { getDecks } from "@/features/decks/queries";
 
 export const metadata: Metadata = { title: "Decks" };
-
-function status(deck: Deck): string {
-  if (deck.due > 0) return `${deck.due} to review`;
-  if (deck.fresh > 0) return `${deck.fresh} new`;
-  return "All caught up";
-}
 
 export default async function DecksPage() {
   const decks = await getDecks();
@@ -38,24 +31,7 @@ export default async function DecksPage() {
           <ButtonLink href="/decks/new">Make a deck</ButtonLink>
         </div>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {decks.map((deck) => (
-            <li key={deck.id}>
-              <Link
-                href={`/decks/${deck.id}`}
-                className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 transition-colors duration-150 hover:border-border-strong/60"
-              >
-                <DeckBadge title={deck.title} colorKey={deck.colorKey} />
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{deck.title}</p>
-                  <p className="text-sm text-text-muted">
-                    {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"} · {status(deck)}
-                  </p>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <DeckList decks={decks} />
       )}
     </div>
   );

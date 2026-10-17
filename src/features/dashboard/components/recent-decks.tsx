@@ -33,7 +33,7 @@ export function RecentDecks({ decks }: { decks: Deck[] }) {
               <div className="min-w-0">
                 <p className="truncate font-medium">{deck.title}</p>
                 <p className="text-sm text-text-muted">
-                  {deck.cardCount} cards · {status(deck)}
+                  {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"} · {status(deck)}
                 </p>
               </div>
             </Link>

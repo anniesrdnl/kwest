@@ -1,120 +1,126 @@
 @import "tailwindcss";
 
 /* -----------------------------------------------------------------------------
-   Kwest design tokens. Brand: Espresso Brown #3E2723 + Butter Yellow #FFEDA2.
-   Light: cream page, white cards, espresso text and primary buttons, butter for
-   highlights (selected states, progress, rewards).
-   Dark: deep espresso surfaces, cream text, butter primary buttons.
+   Kwest design tokens: pixel picture-book look.
+   Palette: Lavender Blush #FFE6ED, Blush #CF7486, Black #111111.
+   Thick black outlines, square corners, hard pixel shadows, pixel headings.
+   Light: lavender blush page, white cards, blush primary buttons, black secondary.
+   Dark: black page, lavender blush text and outlines, blush primary buttons.
+   Blush is too light for white text (3.2:1), so text on blush is black (5.8:1);
+   blush text on light uses the deeper #9E3F55 (6.4:1 on white).
    Theme follows the system unless <html data-theme="light|dark"> overrides it.
-   Contrast: text pairs are AA or better; --border-strong (inputs) is 3:1 or better.
 ----------------------------------------------------------------------------- */
 :root {
-  --espresso: #3e2723;
-  --butter: #ffeda2;
+  --espresso: #111111;
+  --butter: #cf7486;
 
-  --bg: #fbf8f1;
+  --bg: #ffe6ed;
   --surface: #ffffff;
-  --surface-2: #f5efe3;
-  --text: #3e2723;
-  --text-muted: #6d5d57;
-  --border: #ede5d6;
-  --border-strong: #958178;
-  /* Primary action (buttons, links): espresso */
-  --accent: #3e2723;
-  --accent-hover: #2b1a17;
-  --accent-fg: #fffbea;
-  --accent-ink: #3e2723;
-  /* Brand highlight: butter */
-  --highlight: #ffeda2;
-  --highlight-hover: #ffe27a;
-  --highlight-fg: #3e2723;
-  /* Secondary buttons and selected states (nav), plus the dashboard hero card */
-  --secondary: #ffeda2;
-  --secondary-hover: #ffe27a;
-  --secondary-fg: #3e2723;
-  --hero: #fff8dc;
-  --hero-border: #f3e2a2;
-  --hero-fg: #3e2723;
-  --hero-muted: #5e4a43;
-  --accent-soft: #fff6d1; /* light butter tint for chips and icon tiles */
-  --progress: #f6cd4a; /* deeper butter so bars read on light tracks */
-  --track: #f1eadb;
-  --correct: #2e7d4f;
-  --wrong: #b4412e;
-  --gold: #a37a12;
-  --focus: #3e2723;
-  --shadow-card: 0 1px 2px rgb(62 39 35 / 0.04), 0 2px 8px rgb(62 39 35 / 0.05);
-  --shadow-hover: 0 2px 4px rgb(62 39 35 / 0.06), 0 8px 20px rgb(62 39 35 / 0.08);
+  --surface-2: #fff3f6;
+  --text: #111111;
+  --text-muted: #5c4248;
+  --ink: #111111;
+  --border: #111111;
+  --border-strong: #111111;
+  /* Primary action (buttons): blush with black text */
+  --accent: #cf7486;
+  --accent-hover: #da8b9b;
+  --accent-fg: #111111;
+  --accent-ink: #9e3f55; /* deeper blush for text and icons on light */
+  /* Highlight: blush */
+  --highlight: #cf7486;
+  --highlight-hover: #da8b9b;
+  --highlight-fg: #111111;
+  /* Secondary buttons and selected states (nav): black with lavender blush text */
+  --secondary: #111111;
+  --secondary-hover: #2e2a2b;
+  --secondary-fg: #ffe6ed;
+  /* Dashboard hero card */
+  --hero: #cf7486;
+  --hero-border: #111111;
+  --hero-fg: #111111;
+  --hero-muted: #3a1a22;
+  --accent-soft: #ffe6ed; /* chips and icon tiles */
+  --progress: #cf7486;
+  --track: #f6d3dc;
+  --correct: #1e6b3a;
+  --wrong: #b0261a;
+  --gold: #8a5a00;
+  --focus: #111111;
+  --shadow-card: 4px 4px 0 0 var(--ink);
+  --shadow-hover: 4px 4px 0 0 var(--accent);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1e1513;
-    --surface: #2a1f1c;
-    --surface-2: #352824;
-    --text: #fbf3e4;
-    --text-muted: #c9b8ae;
-    --border: #43332e;
-    --border-strong: #9a857c;
-    --accent: #ffeda2;
-    --accent-hover: #ffe27a;
-    --accent-fg: #3e2723;
-    --accent-ink: #ffeda2;
-    --highlight: #ffeda2;
-    --highlight-hover: #ffe27a;
-    --highlight-fg: #3e2723;
-    --accent-soft: #3d2f22;
-    --secondary: #3d2f22;
-    --secondary-hover: #4a3828;
-    --secondary-fg: #ffeda2;
-    --hero: #33261f;
-    --hero-border: #4d3a2a;
-    --hero-fg: #fbf3e4;
-    --hero-muted: #d6c6b8;
-    --progress: #ffe27a;
-    --track: #4a3a33;
-    --correct: #7fcb9a;
-    --wrong: #f29580;
-    --gold: #e9c75a;
-    --focus: #ffeda2;
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow-hover: 0 4px 16px rgb(0 0 0 / 0.35);
+    --bg: #111111;
+    --surface: #1c1a1b;
+    --surface-2: #2a2427;
+    --text: #ffe6ed;
+    --text-muted: #d9b8c1;
+    --ink: #cf7486;
+    --border: #ffe6ed;
+    --border-strong: #ffe6ed;
+    --accent: #cf7486;
+    --accent-hover: #da8b9b;
+    --accent-fg: #111111;
+    --accent-ink: #e59aab;
+    --highlight: #cf7486;
+    --highlight-hover: #da8b9b;
+    --highlight-fg: #111111;
+    --accent-soft: #3a2229;
+    --secondary: #ffe6ed;
+    --secondary-hover: #ffd2de;
+    --secondary-fg: #111111;
+    --hero: #cf7486;
+    --hero-border: #ffe6ed;
+    --hero-fg: #111111;
+    --hero-muted: #3a1a22;
+    --progress: #e59aab;
+    --track: #3a2f33;
+    --correct: #7fd394;
+    --wrong: #ff8f80;
+    --gold: #f2c94c;
+    --focus: #ffe6ed;
+    --shadow-card: 4px 4px 0 0 var(--ink);
+    --shadow-hover: 4px 4px 0 0 var(--accent);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg: #1e1513;
-  --surface: #2a1f1c;
-  --surface-2: #352824;
-  --text: #fbf3e4;
-  --text-muted: #c9b8ae;
-  --border: #43332e;
-  --border-strong: #9a857c;
-  --accent: #ffeda2;
-  --accent-hover: #ffe27a;
-  --accent-fg: #3e2723;
-  --accent-ink: #ffeda2;
-  --highlight: #ffeda2;
-  --highlight-hover: #ffe27a;
-  --highlight-fg: #3e2723;
-  --accent-soft: #3d2f22;
-  --secondary: #3d2f22;
-  --secondary-hover: #4a3828;
-  --secondary-fg: #ffeda2;
-  --hero: #33261f;
-  --hero-border: #4d3a2a;
-  --hero-fg: #fbf3e4;
-  --hero-muted: #d6c6b8;
-  --progress: #ffe27a;
-  --track: #4a3a33;
-  --correct: #7fcb9a;
-  --wrong: #f29580;
-  --gold: #e9c75a;
-  --focus: #ffeda2;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
-  --shadow-hover: 0 4px 16px rgb(0 0 0 / 0.35);
+  --bg: #111111;
+  --surface: #1c1a1b;
+  --surface-2: #2a2427;
+  --text: #ffe6ed;
+  --text-muted: #d9b8c1;
+  --ink: #cf7486;
+  --border: #ffe6ed;
+  --border-strong: #ffe6ed;
+  --accent: #cf7486;
+  --accent-hover: #da8b9b;
+  --accent-fg: #111111;
+  --accent-ink: #e59aab;
+  --highlight: #cf7486;
+  --highlight-hover: #da8b9b;
+  --highlight-fg: #111111;
+  --accent-soft: #3a2229;
+  --secondary: #ffe6ed;
+  --secondary-hover: #ffd2de;
+  --secondary-fg: #111111;
+  --hero: #cf7486;
+  --hero-border: #ffe6ed;
+  --hero-fg: #111111;
+  --hero-muted: #3a1a22;
+  --progress: #e59aab;
+  --track: #3a2f33;
+  --correct: #7fd394;
+  --wrong: #ff8f80;
+  --gold: #f2c94c;
+  --focus: #ffe6ed;
+  --shadow-card: 4px 4px 0 0 var(--ink);
+  --shadow-hover: 4px 4px 0 0 var(--accent);
   color-scheme: dark;
 }
 
@@ -177,6 +183,17 @@
   --color-focus: var(--focus);
 
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-pixel: var(--font-pixelify), ui-monospace, monospace;
+  --color-ink: var(--ink);
+
+  /* Square, pixel corners everywhere (rounded-full stays round). */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
   --shadow-card: var(--shadow-card);
   --shadow-hover: var(--shadow-hover);
 }
@@ -200,7 +217,14 @@
   h1,
   h2,
   h3 {
-    letter-spacing: -0.015em;
+    font-family: var(--font-pixel);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  /* Crisp, stair-stepped edges on icons and drawings. */
+  svg {
+    shape-rendering: crispEdges;
   }
 
   :focus-visible {
@@ -211,6 +235,18 @@
   ::selection {
     background: var(--butter);
     color: var(--espresso);
+  }
+}
+
+/* Thick picture-book outlines: every 1px border becomes 2px.
+   Pills, dots and progress bars are square too, like pixels. */
+@layer utilities {
+  .border {
+    border-width: 2px;
+  }
+
+  .rounded-full {
+    border-radius: 0;
   }
 }
 

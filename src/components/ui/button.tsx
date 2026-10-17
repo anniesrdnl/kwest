@@ -5,20 +5,20 @@ type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex select-none items-center justify-center gap-2 rounded-lg font-medium " +
+  "inline-flex select-none items-center justify-center gap-2 rounded-lg font-pixel font-semibold tracking-wide " +
   "transition-colors duration-150 " +
   "disabled:pointer-events-none disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-accent text-accent-fg hover:bg-accent-hover",
-  secondary: "bg-secondary text-secondary-fg hover:bg-secondary-hover",
-  outline: "border border-border-strong/50 bg-surface text-text hover:border-text",
+  primary: "border-2 border-ink bg-accent text-accent-fg shadow-[3px_3px_0_0_var(--ink)] hover:bg-accent-hover",
+  secondary: "border-2 border-ink bg-secondary text-secondary-fg shadow-[3px_3px_0_0_var(--ink)] hover:bg-secondary-hover",
+  outline: "border-2 border-border bg-surface text-text hover:bg-surface-2",
   ghost: "text-text-muted hover:text-text",
 };
 
 const sizes: Record<Size, string> = {
-  md: "min-h-11 px-4 text-[15px]",
-  lg: "min-h-12 px-5 text-base",
+  md: "min-h-11 px-4 text-base",
+  lg: "min-h-12 px-5 text-lg",
 };
 
 type StyleProps = { variant?: Variant; size?: Size; className?: string };

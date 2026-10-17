@@ -28,6 +28,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 **Decks**
 - Create, edit and delete decks of flashcards. Each card is either a *word → meaning* or a *question → answer*, with an optional note.
 - Reorder cards and give each deck a color.
+- Search decks by name or subject, filter by "to review", "has new cards" or "caught up", and sort by recently studied or A to Z.
 - Upload cards from a `.txt`, `.csv` or `.tsv` file (for example saved from Excel or Google Sheets). Column 1 is the front, column 2 the back, and an optional column 3 is the note. Text files can use one card per line with a tab, ` - ` or `:` between front and back. A header row is skipped. Files are read in the browser and nothing is sent until you save the deck.
 - Saving is atomic: a deck and all its cards are written in one database transaction.
 
@@ -73,7 +74,7 @@ All grading, XP and coin rewards happen in Postgres functions, so the browser ca
 | Area | Choice |
 |---|---|
 | Framework | [Next.js 16](https://nextjs.org) App Router with Turbopack, Cache Components and Partial Prefetching |
-| UI | React 19, TypeScript (strict), Tailwind CSS 4, [lucide-react](https://lucide.dev) icons, Poppins |
+| UI | React 19, TypeScript (strict), Tailwind CSS 4, [lucide-react](https://lucide.dev) icons, Pixelify Sans and Poppins |
 | Backend | [Supabase](https://supabase.com): Postgres, Auth and Row Level Security, accessed with `@supabase/ssr` |
 | Validation | [zod](https://zod.dev) 4, shared by the browser and Server Actions |
 
@@ -179,13 +180,15 @@ Each feature keeps its data access in a server-only `queries.ts` and its mutatio
 
 ## Design system
 
+Kwest has a pixel picture-book look: flat colors, thick black outlines, square corners, hard pixel shadows, and a pixel font (Pixelify Sans) for headings and buttons. Body text uses Poppins so cards stay easy to read.
+
 Design tokens live in [`src/app/globals.css`](src/app/globals.css) and are exposed as Tailwind colors (`bg-surface`, `text-text-muted`, `bg-secondary`, ...).
 
-| Token | Light | Dark | Used for |
-|---|---|---|---|
-| Espresso Brown | `#3E2723` | text | Text, primary buttons |
-| Butter Yellow | `#FFEDA2` | primary buttons | Highlights, selected states, progress |
-| Background | `#FBF8F1` | `#1E1513` | Page background |
+| Color | Hex | Used for |
+|---|---|---|
+| Lavender Blush | `#FFE6ED` | Light page background, dark-mode text and outlines |
+| Blush | `#CF7486` | Primary buttons, highlights, progress (always with black text) |
+| Black | `#111111` | Text, outlines and shadows, dark-mode background |
 
 All text and background pairs meet WCAG AA contrast.
 
@@ -198,4 +201,6 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Profile stats, 7-day activity chart, achievements and daily goal setting
 - [x] Coin shop: avatar icons, colors and frames
 - [x] Challenge mode (solo study game)
+- [x] Deck search, filters and sort
+- [x] Pixel picture-book redesign
 - [ ] Multiplayer study game
