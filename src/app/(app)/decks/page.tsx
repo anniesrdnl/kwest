@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { Compass, Layers, Plus } from "lucide-react";
+import { Compass, Plus } from "lucide-react";
+import { PixelIcon } from "@/components/brand/pixel";
 import { ButtonLink } from "@/components/ui/button";
+import { Panel } from "@/components/ui/panel";
 import { DeckList } from "@/features/decks/components/deck-list";
 import { getDecks } from "@/features/decks/queries";
 
@@ -11,8 +13,8 @@ export default async function DecksPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold md:text-3xl">Decks</h1>
+      <div className="rise flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl sm:text-[2rem] sm:leading-tight">Decks</h1>
         <div className="flex flex-wrap gap-2">
           <ButtonLink href="/explore" variant="outline">
             <Compass size={18} aria-hidden />
@@ -26,18 +28,22 @@ export default async function DecksPage() {
       </div>
 
       {decks.length === 0 ? (
-        <div className="space-y-4 rounded-2xl border border-dashed border-border-strong/50 p-10 text-center">
-          <span className="mx-auto inline-flex size-12 items-center justify-center rounded-xl bg-accent-soft text-accent-ink">
-            <Layers size={24} aria-hidden />
-          </span>
-          <div className="space-y-1">
-            <h2 className="text-lg font-semibold">No decks yet</h2>
-            <p className="text-text-muted">A deck is a set of flashcards about one topic. Make your first one.</p>
+        <Panel className="rise" style={{ animationDelay: "0.1s" }}>
+          <div className="flex flex-col items-center gap-4 py-6 text-center">
+            <PixelIcon name="decks" scale={8} className="float-y text-accent-ink" />
+            <div className="space-y-1">
+              <h2 className="text-2xl">No decks yet</h2>
+              <p className="text-text-muted">A deck is a set of flashcards about one topic. Make your first one.</p>
+            </div>
+            <ButtonLink href="/decks/new" size="lg">
+              Make a deck
+            </ButtonLink>
           </div>
-          <ButtonLink href="/decks/new">Make a deck</ButtonLink>
-        </div>
+        </Panel>
       ) : (
-        <DeckList decks={decks} />
+        <div className="rise" style={{ animationDelay: "0.1s" }}>
+          <DeckList decks={decks} />
+        </div>
       )}
     </div>
   );

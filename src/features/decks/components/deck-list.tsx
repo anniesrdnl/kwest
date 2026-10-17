@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { useDeferredValue, useState } from "react";
+import { inputBase } from "@/components/ui/field";
 import type { Deck } from "../queries";
-import { DeckBadge } from "./deck-badge";
+import { DeckTile } from "./deck-tile";
 
 type Filter = "all" | "review" | "new" | "done";
 type Sort = "recent" | "az";
@@ -15,12 +15,6 @@ const FILTERS: { key: Filter; label: string; test: (deck: Deck) => boolean }[] =
   { key: "new", label: "Has new cards", test: (d) => d.fresh > 0 },
   { key: "done", label: "Caught up", test: (d) => d.due === 0 && d.fresh === 0 },
 ];
-
-function status(deck: Deck): string {
-  if (deck.due > 0) return `${deck.due} to review`;
-  if (deck.fresh > 0) return `${deck.fresh} new`;
-  return "All caught up";
-}
 
 /** Lowercase and drop accents, so "cafe" finds "Café". */
 function fold(text: string): string {
@@ -63,13 +57,13 @@ export function DeckList({ decks }: { decks: Deck[] }) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search decks"
             aria-label="Search decks"
-            className="w-full min-h-11 rounded-lg border border-border-strong bg-surface py-2 pr-11 pl-10 text-base text-text placeholder:text-text-muted/70 transition-colors focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-focus/30 [&::-webkit-search-cancel-button]:hidden"
+            className={`${inputBase} pr-11 pl-10 [&::-webkit-search-cancel-button]:hidden`}
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-lg text-text-muted hover:text-text"
+              className="absolute inset-y-[2px] right-[2px] flex w-11 items-center justify-center text-text-muted transition-colors hover:bg-track hover:text-text active:bg-accent active:text-accent-fg"
               aria-label="Clear search"
             >
               <X size={18} aria-hidden />
@@ -81,7 +75,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as Sort)}
-            className="min-h-11 flex-1 rounded-lg border border-border-strong bg-surface px-3 text-base text-text transition-colors focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-focus/30 sm:flex-none"
+            className={`${inputBase} flex-1 px-3 sm:w-auto sm:flex-none`}
           >
             <option value="recent">Recently studied</option>
             <option value="az">Name (A to Z)</option>
@@ -99,10 +93,10 @@ export function DeckList({ decks }: { decks: Deck[] }) {
               type="button"
               aria-pressed={active}
               onClick={() => setFilter(f.key)}
-              className={`inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors duration-150 ${
+              className={`inline-flex min-h-9 items-center gap-1.5 border px-3 text-sm font-medium transition-colors duration-150 active:translate-y-px ${
                 active
-                  ? "border-accent bg-accent-soft text-accent-ink"
-                  : "border-border bg-surface text-text-muted hover:border-border-strong/60 hover:text-text"
+                  ? "border-border-strong bg-accent-soft text-text"
+                  : "border-border bg-surface text-text-muted hover:bg-accent-soft hover:text-text"
               }`}
             >
               {f.label}
@@ -117,7 +111,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
       </p>
 
       {shown.length === 0 ? (
-        <div className="space-y-3 rounded-2xl border border-dashed border-border-strong/50 p-8 text-center">
+        <div className="space-y-3 border-2 border-dashed border-border p-8 text-center">
           <p className="font-medium">No decks match</p>
           <p className="text-sm text-text-muted">Try a different word or filter.</p>
           <button type="button" onClick={clear} className="text-sm font-medium underline underline-offset-4">
@@ -125,22 +119,10 @@ export function DeckList({ decks }: { decks: Deck[] }) {
           </button>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {shown.map((deck) => (
             <li key={deck.id}>
-              <Link
-                href={`/decks/${deck.id}`}
-                className="flex h-full items-center gap-3 rounded-xl border border-border bg-surface p-4 transition-colors duration-150 hover:border-border-strong/60"
-              >
-                <DeckBadge title={deck.title} colorKey={deck.colorKey} />
-                <div className="min-w-0">
-                  <p className="truncate font-medium">{deck.title}</p>
-                  <p className="text-sm text-text-muted">
-                    {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"} · {status(deck)}
-                    {deck.visibility === "public" ? " · Public" : deck.shared ? " · Shared" : ""}
-                  </p>
-                </div>
-              </Link>
+              <DeckTile deck={deck} extra={deck.visibility === "public" ? " · Public" : deck.shared ? " · Shared" : ""} />
             </li>
           ))}
         </ul>

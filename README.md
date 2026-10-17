@@ -54,6 +54,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 - A one-screen welcome page with an animated pixel background (graph paper, drifting clouds, floating cards) and sign-up and log-in buttons. Decoration stops when the visitor prefers reduced motion.
 - Navigation is a top bar with pixel-icon tabs, your level, coins and avatar, and Log out. Tabs are light: on hover the icon turns blush and a soft line slides in underneath; the page you are on keeps a blush line. On phones the tabs move to a bar at the bottom.
 - Home is a quest board: a time-of-day greeting, today's quest with the number of cards waiting, and three tiles (daily goal, level, coins) that each open the page where you can act on them, then recent decks. Everything rises in one after another; bars fill block by block. It sits on a calm version of the animated backdrop.
+- The Decks list and the deck page use the same light pixel style: deck cards are small pixel frames that tint on hover, the deck page is one frame with a thin-lined stats row, and the card list and Share box are single frames with thin dividers instead of boxes inside boxes.
 - Log in, sign up and password pages share the same animated pixel backdrop. The form sits in a small pixel window; its fields rise in one after another, inputs glow with a pixel shadow when focused, and an error message gives one small shake.
 - Install on a phone: Kwest has a web app manifest and icons, so it can be added to the home screen and opens full screen like an app. The Profile page has an "Install Kwest" button (Chrome and Edge) or steps for iPhone Safari. There is no offline mode: it still needs the internet.
 - WCAG AA color contrast, visible focus states, 44 px touch targets, labelled form fields and reduced-motion support.
@@ -226,4 +227,6 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Install on phone (web app manifest and icons)
 - [x] Pixel redesign phase 2: stepped frames, block progress bars, pixel icons on Home, Study and Profile
 - [x] Upload cards from Word, PowerPoint and PDF files
+- [x] Pixel redesign phase 3: Decks list and deck page
+- [ ] Pixel redesign phase 3, still to do: deck editor, Study picker, Shop, Explore, shared-deck page, Challenge and link-game screens, Profile, onboarding
 - [ ] Multiplayer study game

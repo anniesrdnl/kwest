@@ -21,10 +21,10 @@ export function DeleteDeckButton({ deckId, title }: { deckId: string; title: str
       <dialog
         ref={dialogRef}
         aria-labelledby="delete-deck-title"
-        className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-border bg-surface p-6 text-text backdrop:bg-black/40"
+        className="m-auto w-[calc(100%-2rem)] max-w-md border-2 border-border-strong bg-surface p-6 text-text shadow-[4px_4px_0_0_var(--shadow-soft)] backdrop:bg-black/40"
       >
         <form action={formAction} className="space-y-4">
-          <h2 id="delete-deck-title" className="text-xl font-semibold">
+          <h2 id="delete-deck-title" className="text-2xl">
             Delete this deck?
           </h2>
           <p className="text-text-muted">
