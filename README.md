@@ -27,8 +27,8 @@ Kwest is a study web app built around spaced repetition, with light game element
 
 **Decks**
 - Create, edit and delete decks of flashcards. Each card is either a *word → meaning* or a *question → answer*, with an optional note.
-- Reorder cards, give each deck a color, and paste a whole list at once (tab, ` - ` or `:` separated; lists copied from Quizlet work as they are).
-- Upload cards from a `.txt`, `.csv` or `.tsv` file (for example saved from Excel or Google Sheets). Column 1 is the front, column 2 the back, and an optional column 3 is the note. A header row is skipped. Files are read in the browser and nothing is sent until you save the deck.
+- Reorder cards and give each deck a color.
+- Upload cards from a `.txt`, `.csv` or `.tsv` file (for example saved from Excel or Google Sheets). Column 1 is the front, column 2 the back, and an optional column 3 is the note. Text files can use one card per line with a tab, ` - ` or `:` between front and back. A header row is skipped. Files are read in the browser and nothing is sent until you save the deck.
 - Saving is atomic: a deck and all its cards are written in one database transaction.
 
 **Studying**
