@@ -1,13 +1,13 @@
 import { ArrowRight } from "lucide-react";
+import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
 import { ButtonLink } from "@/components/ui/button";
-import { LandingBackground } from "@/features/landing/components/landing-background";
 import { PixelTitle } from "@/features/landing/components/pixel-title";
 
 // One screen: the welcome page does not scroll.
 export default function LandingPage() {
   return (
     <div className="relative isolate flex min-h-dvh flex-col overflow-hidden">
-      <LandingBackground />
+      <PixelBackdrop />
 
       <main className="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
         <PixelTitle />

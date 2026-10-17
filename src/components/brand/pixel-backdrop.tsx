@@ -1,4 +1,4 @@
-import { Cloud, PixelIcon } from "@/components/brand/pixel";
+import { Cloud, PixelIcon } from "./pixel";
 
 /** Floating mini flashcards: letter, position, delay (seconds), blush fill or white fill. */
 const CARDS = [
@@ -25,8 +25,11 @@ const SPARKS = [
   { left: "4%", top: "44%", delay: 1.4, hide: false },
 ] as const;
 
-/** The hero backdrop: graph paper, drifting clouds, bobbing cards and twinkles. Decoration only. */
-export function LandingBackground() {
+/**
+ * The animated page backdrop: graph paper, drifting clouds, bobbing cards and twinkles.
+ * Decoration only. Put it first inside a `relative isolate` wrapper; it fills that wrapper.
+ */
+export function PixelBackdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <div className="landing-grid absolute inset-0" />

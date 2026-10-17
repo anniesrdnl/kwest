@@ -11,10 +11,14 @@ type FieldProps = Omit<ComponentProps<"input">, "id"> & {
   labelAside?: ReactNode;
 };
 
+// Hover tints the box. Focus adds a hard blush shadow (red when invalid), like a pixel glow.
+// The transparent outline only shows in Windows high-contrast mode.
 const inputClass =
   "w-full min-h-11 rounded-lg border border-border-strong bg-surface px-3 py-2 text-base text-text " +
-  "placeholder:text-text-muted/70 transition-colors focus-visible:border-accent focus-visible:outline-2 " +
-  "focus-visible:outline-offset-0 focus-visible:outline-focus/30 aria-invalid:border-wrong";
+  "placeholder:text-text-muted/70 transition-[background-color,box-shadow,border-color] duration-150 " +
+  "hover:bg-surface-2 focus-visible:bg-surface focus-visible:shadow-[4px_4px_0_0_var(--accent)] " +
+  "focus-visible:outline-2 focus-visible:outline-transparent " +
+  "aria-invalid:border-wrong aria-invalid:focus-visible:shadow-[4px_4px_0_0_var(--wrong)]";
 
 export function Field({ label, hint, errors, labelAside, className = "", ...props }: FieldProps) {
   const id = useId();
@@ -77,7 +81,7 @@ export function PasswordField({ label, hint, errors, labelAside, ...props }: Omi
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          className="absolute inset-y-0 right-0 flex w-11 rounded-r-lg items-center justify-center text-text-muted hover:text-text"
+          className="absolute inset-y-[2px] right-[2px] flex w-11 items-center justify-center text-text-muted transition-colors hover:bg-track hover:text-text active:bg-accent active:text-accent-fg"
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
         >

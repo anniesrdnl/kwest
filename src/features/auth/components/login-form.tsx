@@ -37,7 +37,7 @@ export function LoginForm() {
         required
         errors={state.fieldErrors?.password}
         labelAside={
-          <Link href="/forgot-password" className="text-sm text-text-muted underline underline-offset-4 hover:text-text">
+          <Link href="/forgot-password" className="px-1 text-sm text-text-muted underline decoration-accent decoration-2 underline-offset-4 transition-colors hover:bg-track hover:text-text active:bg-accent">
             Forgot password?
           </Link>
         }

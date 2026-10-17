@@ -1,10 +1,10 @@
-import { Wordmark } from "@/components/brand/wordmark";
+import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
 
 export default function AuthLayout({ children }: LayoutProps<"/">) {
   return (
-    <div className="flex flex-1 flex-col items-center px-4 py-10 sm:py-16">
-      <Wordmark />
-      <main className="mt-8 w-full max-w-md">{children}</main>
+    <div className="relative isolate flex min-h-dvh flex-1 flex-col items-center justify-center overflow-x-clip px-4 py-10">
+      <PixelBackdrop />
+      <main className="w-full max-w-md">{children}</main>
     </div>
   );
 }

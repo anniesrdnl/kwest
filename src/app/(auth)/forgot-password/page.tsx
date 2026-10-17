@@ -13,7 +13,7 @@ export default function ForgotPasswordPage({ searchParams }: PageProps<"/forgot-
       title="Forgot your password?"
       subtitle="Enter your email and we'll send you a link to choose a new one."
       footer={
-        <Link href="/login" className="text-text underline underline-offset-4">
+        <Link href="/login" className="px-1 py-0.5 text-text underline decoration-accent decoration-2 underline-offset-4 transition-colors hover:bg-track active:bg-accent">
           Back to log in
         </Link>
       }

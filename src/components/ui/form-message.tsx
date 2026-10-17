@@ -11,7 +11,7 @@ export function FormMessage({ state }: { state: FormState }) {
     <div
       role={isError ? "alert" : "status"}
       className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-sm ${
-        isError ? "border-wrong/30 bg-wrong/10 text-wrong" : "border-correct/30 bg-correct/10 text-correct"
+        isError ? "shake border-wrong/30 bg-wrong/10 text-wrong" : "border-correct/30 bg-correct/10 text-correct"
       }`}
     >
       {isError ? (

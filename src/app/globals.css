@@ -371,6 +371,35 @@
   .twinkle {
     animation: twinkle 2.4s ease-in-out infinite;
   }
+
+  /* An error message gives one small shake. */
+  .shake {
+    animation: shake 0.4s ease-in-out;
+  }
+
+  /* A form's fields rise in one after another. React puts hidden inputs at the start of a form,
+     so fields are picked by type: the first div is the message area (skipped, so .shake can play),
+     the next divs are fields, and the button comes last. "backwards" (not "both") so finished
+     fields go back to their normal styles, such as a dimmed button while saving. */
+  .stagger form > div:nth-of-type(n + 2),
+  .stagger form > button {
+    animation:
+      fade-in 0.5s ease-out backwards,
+      rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: 0.3s;
+  }
+
+  .stagger form > div:nth-of-type(3) {
+    animation-delay: 0.38s;
+  }
+
+  .stagger form > div:nth-of-type(n + 4) {
+    animation-delay: 0.46s;
+  }
+
+  .stagger form > button {
+    animation-delay: 0.54s;
+  }
 }
 
 @keyframes fade-in {
@@ -403,6 +432,21 @@
 @keyframes float-y {
   to {
     transform: translateY(-12px);
+  }
+}
+
+@keyframes shake {
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
   }
 }
 

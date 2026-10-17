@@ -9,7 +9,7 @@ const readNext = readSearchParam("next");
 export function AuthSwitchLink({ href, children }: { href: "/login" | "/signup"; children: React.ReactNode }) {
   const next = useBrowserValue(readNext);
   return (
-    <Link href={next ? `${href}?next=${encodeURIComponent(next)}` : href} className="text-text underline underline-offset-4">
+    <Link href={next ? `${href}?next=${encodeURIComponent(next)}` : href} className="px-1 py-0.5 text-text underline decoration-accent decoration-2 underline-offset-4 transition-colors hover:bg-track active:bg-accent">
       {children}
     </Link>
   );

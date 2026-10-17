@@ -52,6 +52,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 - Responsive from 375 px phones to desktop, with a bottom tab bar on mobile.
 - Light and dark themes that follow the system setting.
 - A one-screen welcome page with an animated pixel background (graph paper, drifting clouds, floating cards) and sign-up and log-in buttons. Decoration stops when the visitor prefers reduced motion.
+- Log in, sign up and password pages share the same animated pixel backdrop. The form sits in a small pixel window; its fields rise in one after another, inputs glow with a pixel shadow when focused, and an error message gives one small shake.
 - Install on a phone: Kwest has a web app manifest and icons, so it can be added to the home screen and opens full screen like an app. The Profile page has an "Install Kwest" button (Chrome and Edge) or steps for iPhone Safari. There is no offline mode: it still needs the internet.
 - WCAG AA color contrast, visible focus states, 44 px touch targets, labelled form fields and reduced-motion support.
 
