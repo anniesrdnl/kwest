@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { LandingBackground } from "@/features/landing/components/landing-background";
@@ -11,20 +10,7 @@ export default function LandingPage() {
     <div className="relative isolate flex min-h-dvh flex-col overflow-hidden">
       <LandingBackground />
 
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
-        <span className="font-pixel text-2xl">Kwest</span>
-        <nav aria-label="Account" className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href="/login"
-            className="inline-flex min-h-11 items-center px-3 font-pixel text-base text-text-muted transition-colors hover:bg-track hover:text-text active:bg-accent"
-          >
-            Log in
-          </Link>
-          <ButtonLink href="/signup">Get started</ButtonLink>
-        </nav>
-      </header>
-
-      <main className="flex flex-1 flex-col items-center justify-center px-4 pb-16 text-center">
+      <main className="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
         <h1 aria-label="Kwest" className="flex text-7xl sm:text-9xl">
           {TITLE.map((letter, i) => (
             <span
