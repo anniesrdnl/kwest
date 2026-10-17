@@ -38,6 +38,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 **Progress**
 - A dashboard that shows the next best thing to study, with an estimated time.
 - XP, levels (New Student → Scholar), coins and a daily goal. Missing a day resets nothing; there are no streaks.
+- A profile with lifetime stats, a 7-day activity chart, achievements (with progress toward locked ones) and an adjustable daily goal.
 - A short onboarding flow with a ready-made starter deck.
 
 **Quality**
@@ -110,6 +111,7 @@ In **Supabase → SQL Editor**, run these files in this order:
 5. `supabase/migrations/0004_dashboard.sql`: review counts per deck
 6. `supabase/migrations/0005_rename_tome_to_deck.sql`: renames two functions
 7. `supabase/migrations/0006_save_deck.sql`: atomic deck saving
+8. `supabase/migrations/0007_achievement_copy.sql`: plain-language achievement names
 
 For local development, turn off **Authentication → Providers → Email → Confirm email** so new accounts can sign in right away.
 
@@ -188,6 +190,6 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Dashboard with next best action and daily goal
 - [x] Deck editor
 - [x] Quiz and flashcard study modes
-- [ ] Progression polish: achievements page and profile stats
+- [x] Profile stats, 7-day activity chart, achievements and daily goal setting
 - [ ] Avatar and room customization, coin shop
 - [ ] Multiplayer study game
