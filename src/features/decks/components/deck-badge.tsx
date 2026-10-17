@@ -13,11 +13,21 @@ const SIZES = {
 };
 
 /** Colored square with the deck's first letter. Decorative: show the title next to it. */
-export function DeckBadge({ title, colorKey, size = "md" }: { title: string; colorKey: string; size?: keyof typeof SIZES }) {
+export function DeckBadge({
+  title,
+  colorKey,
+  size = "md",
+  className = "",
+}: {
+  title: string;
+  colorKey: string;
+  size?: keyof typeof SIZES;
+  className?: string;
+}) {
   return (
     <span
       aria-hidden
-      className={`inline-flex shrink-0 items-center justify-center font-semibold text-white ${SIZES[size]}`}
+      className={`inline-flex shrink-0 items-center justify-center font-semibold text-white ${SIZES[size]} ${className}`}
       style={{ backgroundColor: deckColor(colorKey) }}
     >
       {title.trim().charAt(0).toUpperCase() || "?"}

@@ -9,6 +9,17 @@ const CARDS = [
   { face: "!", left: "48%", top: "8%", delay: 2.2, blush: false, hide: true },
 ] as const;
 
+/** Calm backdrop (busy pages): a few pieces, only in the side margins of wide screens. */
+const CALM_CARDS = [
+  { face: "A", left: "2%", top: "26%", delay: 0, blush: true, hide: true },
+  { face: "?", left: "95%", top: "58%", delay: 0.8, blush: false, hide: true },
+] as const;
+
+const CALM_SPARKS = [
+  { left: "4%", top: "62%", delay: 0.4, hide: true },
+  { left: "96%", top: "24%", delay: 1, hide: true },
+] as const;
+
 /** Kept to the top and bottom bands so a cloud never drifts through the title. */
 const CLOUDS = [
   { top: "9%", delay: -10, scale: 6, duration: 95 },
@@ -29,7 +40,9 @@ const SPARKS = [
  * The animated page backdrop: graph paper, drifting clouds, bobbing cards and twinkles.
  * Decoration only. Put it first inside a `relative isolate` wrapper; it fills that wrapper.
  */
-export function PixelBackdrop() {
+export function PixelBackdrop({ calm = false }: { calm?: boolean }) {
+  const cards = calm ? CALM_CARDS : CARDS;
+  const sparks = calm ? CALM_SPARKS : SPARKS;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <div className="landing-grid absolute inset-0" />
@@ -43,10 +56,10 @@ export function PixelBackdrop() {
         />
       ))}
 
-      {CARDS.map((c) => (
+      {cards.map((c) => (
         <span
           key={c.face}
-          className={`float-y absolute ${c.hide ? "hidden md:block" : ""}`}
+          className={`float-y absolute ${c.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}`}
           style={{ left: c.left, top: c.top, animationDelay: `${c.delay}s` }}
         >
           <span className="pixel-lift block">
@@ -61,10 +74,10 @@ export function PixelBackdrop() {
         </span>
       ))}
 
-      {SPARKS.map((s, i) => (
+      {sparks.map((s, i) => (
         <span
           key={i}
-          className={`twinkle absolute text-accent-ink ${s.hide ? "hidden md:block" : ""}`}
+          className={`twinkle absolute text-accent-ink ${s.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}`}
           style={{ left: s.left, top: s.top, animationDelay: `${s.delay}s` }}
         >
           <PixelIcon name="spark" scale={3} />

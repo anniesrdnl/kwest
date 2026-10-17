@@ -1,59 +1,72 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { PixelIcon } from "@/components/brand/pixel";
-import { Panel } from "@/components/ui/panel";
-import { DailyGoalCard } from "@/features/dashboard/components/daily-goal-card";
+import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
 import { AllCaughtUpCard, NextUpCard, NoDecksCard } from "@/features/dashboard/components/next-up-card";
 import { RecentDecks } from "@/features/dashboard/components/recent-decks";
+import { CoinsTile, GoalTile, LevelTile } from "@/features/dashboard/components/stat-tiles";
 import { getDashboard } from "@/features/dashboard/queries";
 import { isOnboarded } from "@/features/onboarding/steps";
 import { getPlayer } from "@/features/profile/queries";
-import { UserAvatar, lookOf } from "@/features/shop/avatar";
-import { XpBar } from "@/features/progression/components/xp-bar";
 import { ONBOARDING_ROUTE } from "@/lib/routes";
 
 export const metadata: Metadata = { title: "Home" };
 
-// Renders inside home/loading.tsx's Suspense.
-// Hierarchy: the "Continue studying" card is the one main action (full width),
-// then daily goal and progress side by side, then recent decks.
+/** "Good morning" and so on, by the hour in the player's own time zone. Late at night it just says Hi. */
+function greeting(timeZone: string): string {
+  let hour: number;
+  try {
+    hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone }).format(new Date()));
+  } catch {
+    hour = new Date().getHours();
+  }
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour >= 12 && hour < 18) return "Good afternoon";
+  if (hour >= 18 && hour < 23) return "Good evening";
+  return "Hi";
+}
+
+function today(timeZone: string): string {
+  try {
+    return new Intl.DateTimeFormat("en", { weekday: "long", month: "long", day: "numeric", timeZone }).format(new Date());
+  } catch {
+    return new Date().toDateString();
+  }
+}
+
+// Renders inside home/loading.tsx's Suspense. A quest board: greeting, today's quest (the one main
+// action), three stat tiles that each open the page where you can act on them, then recent decks.
+// The animated backdrop is fixed behind the whole screen and hides with the page.
 export default async function HomePage() {
   const { profile } = await getPlayer();
   if (!isOnboarded(profile.onboarding_step)) redirect(ONBOARDING_ROUTE);
 
   const { player, decks, nextUp, dailyGoal } = await getDashboard();
+  const timeZone = player.profile.timezone;
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center gap-3">
-        <UserAvatar name={player.profile.display_name} look={lookOf(player.profile)} size="md" />
-        <h1 className="text-2xl font-bold md:text-3xl">Hi, {player.profile.display_name}</h1>
+    <>
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+        <PixelBackdrop calm />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 md:gap-6">
-        <div className="md:col-span-2">
-          {decks.length === 0 ? (
-            <NoDecksCard />
-          ) : nextUp ? (
-            <NextUpCard nextUp={nextUp} />
-          ) : (
-            <AllCaughtUpCard decks={decks} timeZone={player.profile.timezone} />
-          )}
+      <div className="space-y-8">
+        <header className="rise min-w-0 space-y-1">
+          <h1 className="text-2xl break-words sm:text-[2rem] sm:leading-tight">
+            {greeting(timeZone)}, {player.profile.display_name}
+          </h1>
+          <p className="text-text-muted">{today(timeZone)}</p>
+        </header>
+
+        {decks.length === 0 ? <NoDecksCard /> : nextUp ? <NextUpCard nextUp={nextUp} /> : <AllCaughtUpCard decks={decks} timeZone={timeZone} />}
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <GoalTile dailyGoal={dailyGoal} delay={0.2} />
+          <LevelTile xpTotal={player.stats.xp_total} delay={0.3} />
+          <CoinsTile coins={player.stats.coins} delay={0.4} />
         </div>
-        <DailyGoalCard dailyGoal={dailyGoal} />
-        <Panel title="Progress">
-          <div className="space-y-4">
-            <XpBar xpTotal={player.stats.xp_total} />
-            <p className="flex items-center gap-2 text-sm">
-              <PixelIcon name="coin" scale={2} className="text-gold" />
-              <span className="font-semibold tabular-nums">{player.stats.coins}</span>
-              <span className="text-text-muted">coins</span>
-            </p>
-          </div>
-        </Panel>
-      </div>
 
-      {decks.length > 0 && <RecentDecks decks={decks} />}
-    </div>
+        {decks.length > 0 && <RecentDecks decks={decks} />}
+      </div>
+    </>
   );
 }

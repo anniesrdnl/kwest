@@ -1,16 +1,5 @@
 import { PixelArt } from "@/components/brand/pixel";
-
-/**
- * "Kwest" in hand-drawn 5 x 7 pixel letters. The pixel font is only 5 pixels tall,
- * so at this size its e and s turn into blocks; these letters keep their shape.
- */
-const GLYPHS = [
-  ["#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#"], // K
-  [".....", ".....", "#...#", "#...#", "#.#.#", "#.#.#", ".#.#."], // w
-  [".....", ".....", ".###.", "#...#", "#####", "#....", ".####"], // e
-  [".....", ".....", ".####", "#....", ".###.", "....#", "####."], // s
-  [".#...", ".#...", "####.", ".#...", ".#...", ".#..#", "..##."], // t
-] as const;
+import { KWEST_GLYPHS } from "@/components/brand/pixel-word";
 
 /**
  * The animated title: each letter pops in, turns blush on hover and sinks when pressed.
@@ -20,7 +9,7 @@ const GLYPHS = [
 export function PixelTitle() {
   return (
     <h1 aria-label="Kwest" className="flex items-end gap-[var(--u)] [--u:10px] sm:[--u:12px]">
-      {GLYPHS.map((rows, i) => (
+      {KWEST_GLYPHS.map((rows, i) => (
         <span
           key={i}
           aria-hidden
