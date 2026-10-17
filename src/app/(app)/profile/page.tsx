@@ -5,6 +5,7 @@ import { Panel } from "@/components/ui/panel";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
 import { DailyGoalForm } from "@/features/profile/components/daily-goal-form";
+import { InstallApp } from "@/features/profile/components/install-app";
 import { ProfileForm } from "@/features/profile/components/profile-form";
 import { getPlayer } from "@/features/profile/queries";
 import { UserAvatar, lookOf } from "@/features/shop/avatar";
@@ -89,6 +90,7 @@ export default async function ProfilePage() {
             <dd className="break-all">{email ?? "—"}</dd>
           </dl>
         </Panel>
+        <InstallApp />
         <Panel title="Change password">
           <ResetPasswordForm />
         </Panel>
