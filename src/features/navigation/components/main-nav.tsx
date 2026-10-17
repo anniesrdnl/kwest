@@ -28,9 +28,7 @@ export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`group relative inline-flex h-16 items-center gap-2 px-3 font-pixel text-base tracking-wide transition-[color,translate] duration-150 active:translate-y-px ${
-              active ? "text-text" : "text-text-muted hover:text-text"
-            }`}
+            className="group relative inline-flex h-16 items-center gap-2 px-3 font-pixel text-base tracking-wide text-text transition-[translate] duration-150 active:translate-y-px"
           >
             <PixelIcon
               name={icon}
@@ -60,7 +58,7 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-border bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 bg-bg pb-[env(safe-area-inset-bottom)] before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-linear-to-t before:from-bg before:to-transparent md:hidden"
     >
       <ul className="mx-auto grid max-w-md grid-cols-5">
         {NAV_ITEMS.map(({ href, label, icon }) => {
@@ -70,8 +68,8 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-xs transition-[color,translate] duration-150 active:translate-y-px ${
-                  active ? "font-semibold text-text" : "font-medium text-text-muted"
+                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-xs text-text transition-[translate] duration-150 active:translate-y-px ${
+                  active ? "font-semibold" : "font-medium"
                 }`}
               >
                 <span

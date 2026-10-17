@@ -373,10 +373,6 @@ export type Database = {
         Args: { p_item_key: string };
         Returns: Json; // see BuyItemResult
       };
-      create_starter_deck: {
-        Args: Record<string, never>;
-        Returns: string;
-      };
       save_deck: {
         Args: {
           p_deck_id: string | null;

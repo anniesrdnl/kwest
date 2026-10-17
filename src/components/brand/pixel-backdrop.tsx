@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Cloud, PixelIcon } from "./pixel";
 
 /** Floating mini flashcards: letter, position, delay (seconds), blush fill or white fill. */
@@ -36,17 +37,52 @@ const SPARKS = [
   { left: "4%", top: "44%", delay: 1.4, hide: false },
 ] as const;
 
+/** A mini flashcard that bobs up and down. Place it with `className` and `style` (it is absolutely positioned). */
+export function FloatingCard({
+  face,
+  blush = false,
+  className = "",
+  style,
+}: {
+  face: string;
+  blush?: boolean;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  return (
+    <span aria-hidden className={`float-y absolute ${className}`} style={style}>
+      <span className="pixel-lift block">
+        <span
+          className={`pixel-frame flex size-14 items-center justify-center font-pixel text-[2rem] text-text ${
+            blush ? "[--frame-bg:var(--accent)] text-accent-fg" : ""
+          }`}
+        >
+          {face}
+        </span>
+      </span>
+    </span>
+  );
+}
+
+/** A small star that fades in and out. Place it with `className` and `style` (it is absolutely positioned). */
+export function Sparkle({ className = "", style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <span aria-hidden className={`twinkle absolute text-accent-ink ${className}`} style={style}>
+      <PixelIcon name="spark" scale={3} />
+    </span>
+  );
+}
+
 /**
  * The animated page backdrop: graph paper, drifting clouds, bobbing cards and twinkles.
- * `quiet` keeps only the drifting clouds on the plain page color.
  * Decoration only. Put it first inside a `relative isolate` wrapper; it fills that wrapper.
  */
-export function PixelBackdrop({ calm = false, quiet = false }: { calm?: boolean; quiet?: boolean }) {
+export function PixelBackdrop({ calm = false }: { calm?: boolean }) {
   const cards = calm ? CALM_CARDS : CARDS;
   const sparks = calm ? CALM_SPARKS : SPARKS;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      {!quiet && <div className="landing-grid absolute inset-0" />}
+      <div className="landing-grid absolute inset-0" />
 
       {CLOUDS.map((c, i) => (
         <Cloud
@@ -57,32 +93,22 @@ export function PixelBackdrop({ calm = false, quiet = false }: { calm?: boolean;
         />
       ))}
 
-      {!quiet && cards.map((c) => (
-        <span
+      {cards.map((c) => (
+        <FloatingCard
           key={c.face}
-          className={`float-y absolute ${c.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}`}
+          face={c.face}
+          blush={c.blush}
+          className={c.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}
           style={{ left: c.left, top: c.top, animationDelay: `${c.delay}s` }}
-        >
-          <span className="pixel-lift block">
-            <span
-              className={`pixel-frame flex size-14 items-center justify-center font-pixel text-3xl text-text ${
-                c.blush ? "[--frame-bg:var(--accent)] text-accent-fg" : ""
-              }`}
-            >
-              {c.face}
-            </span>
-          </span>
-        </span>
+        />
       ))}
 
-      {!quiet && sparks.map((s, i) => (
-        <span
+      {sparks.map((s, i) => (
+        <Sparkle
           key={i}
-          className={`twinkle absolute text-accent-ink ${s.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}`}
+          className={s.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}
           style={{ left: s.left, top: s.top, animationDelay: `${s.delay}s` }}
-        >
-          <PixelIcon name="spark" scale={3} />
-        </span>
+        />
       ))}
     </div>
   );

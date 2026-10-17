@@ -46,14 +46,14 @@ Kwest is a study web app built around spaced repetition, with light game element
 - XP, levels (New Student → Scholar), coins and a daily goal. Missing a day resets nothing; there are no streaks.
 - A profile with lifetime stats, a 7-day activity chart, achievements (with progress toward locked ones) and an adjustable daily goal.
 - A coin shop to customize your avatar with icons, colors and frames. Some items are free once you reach a level.
-- A short onboarding flow with a ready-made starter deck.
+- A short onboarding flow that ends with making your first deck.
 
 **Quality**
 - Responsive from 375 px phones to desktop, with a bottom tab bar on mobile.
 - Light and dark themes that follow the system setting.
 - A one-screen welcome page with an animated pixel background (graph paper, drifting clouds, floating cards) and sign-up and log-in buttons. Decoration stops when the visitor prefers reduced motion.
-- Navigation is a top bar with pixel-icon tabs, your level, coins and avatar, and Log out. Tabs are light: on hover the icon turns blush and a soft line slides in underneath; the page you are on keeps a blush line. On phones the tabs move to a bar at the bottom.
-- Home is a quest board: a time-of-day greeting, today's quest with the number of cards waiting, and three tiles (daily goal, level, coins) that each open the page where you can act on them, then recent decks. Everything rises in one after another; bars fill block by block. It sits on a calm version of the animated backdrop. With no decks yet, Home is a short welcome instead: a greeting with your name, one sentence about decks, and two buttons (make a deck, or add the ready-made one). It sits on the plain page color with only a few slow clouds.
+- Navigation is a top bar with pixel-icon tabs, your level, coins and avatar, and Log out. Tabs are light: on hover the icon turns blush and a soft line slides in underneath; the page you are on keeps a blush line. On phones the tabs move to a bar at the bottom. Both bars use the same color as the page, with no line under them; a short fade shows where the page scrolls beneath.
+- Home is a quest board: a time-of-day greeting, today's quest with the number of cards waiting, and three tiles (daily goal, level, coins) that each open the page where you can act on them, then recent decks. Everything rises in one after another; bars fill block by block. It sits on a calm version of the animated backdrop. With no decks yet, Home is a short welcome instead: a greeting with your name, one sentence about decks and one button (make a deck). It sits on a soft scene: a pale sun, slow clouds, tiny twinkling stars, and hills with little pine trees (`PixelMeadow`).
 - The Decks list and the deck page use the same light pixel style: deck cards are small pixel frames that tint on hover, the deck page is one frame with a thin-lined stats row, and the card list and Share box are single frames with thin dividers instead of boxes inside boxes.
 - Log in, sign up and password pages share the same animated pixel backdrop. The form sits in a small pixel window; its fields rise in one after another, inputs glow with a pixel shadow when focused, and an error message gives one small shake.
 - Install on a phone: Kwest has a web app manifest and icons, so it can be added to the home screen and opens full screen like an app. The Profile page has an "Install Kwest" button (Chrome and Edge) or steps for iPhone Safari. There is no offline mode: it still needs the internet.
@@ -120,7 +120,7 @@ In **Supabase → SQL Editor**, run these files in this order:
 1. `supabase/migrations/0001_schema.sql`: tables, enums and indexes
 2. `supabase/migrations/0002_functions.sql`: study sessions, grading, rewards and triggers
 3. `supabase/migrations/0003_security.sql`: permissions and Row Level Security
-4. `supabase/seed.sql`: items, achievements and the starter deck
+4. `supabase/seed.sql`: items and achievements
 5. `supabase/migrations/0004_dashboard.sql`: review counts per deck
 6. `supabase/migrations/0005_rename_tome_to_deck.sql`: renames two functions
 7. `supabase/migrations/0006_save_deck.sql`: atomic deck saving
@@ -174,7 +174,7 @@ src/
 └── proxy.ts                Session refresh and route protection
 supabase/
 ├── migrations/             Schema, functions, security and later changes
-└── seed.sql                Catalog data and the starter deck
+└── seed.sql                Catalog data (items and achievements)
 ```
 
 Each feature keeps its data access in a server-only `queries.ts` and its mutations in `actions.ts`, so pages stay thin.

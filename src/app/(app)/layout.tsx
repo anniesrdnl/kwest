@@ -18,7 +18,7 @@ import { XpBar } from "@/features/progression/components/xp-bar";
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="sticky top-0 z-30 border-b-2 border-border bg-surface">
+      <header className="sticky top-0 z-30 bg-bg before:pointer-events-none before:absolute before:inset-x-0 before:top-full before:h-4 before:bg-linear-to-b before:from-bg before:to-transparent">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-6 px-4 md:h-16">
           <Suspense fallback={<DesktopNavLinks pathname={null} />}>
             <DesktopNav />

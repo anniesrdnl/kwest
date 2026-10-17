@@ -5,7 +5,7 @@ import { HOME_ROUTE } from "@/lib/routes";
 export default function OnboardingLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-border bg-surface">
+      <header>
         <div className="mx-auto flex w-full max-w-2xl items-center h-14 px-4">
           <Wordmark href={HOME_ROUTE} />
         </div>

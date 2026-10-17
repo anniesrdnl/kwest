@@ -6,7 +6,7 @@
 type Palette = Record<string, string>;
 
 /** Merges neighbouring cells of one color in a row into one rectangle. */
-function Bitmap({
+export function Bitmap({
   rows,
   palette,
   scale,

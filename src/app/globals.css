@@ -353,6 +353,15 @@
     background-size: 32px 32px;
   }
 
+  /* Soft hills for the welcome scene: a little blush mixed into the page color, so they work in light and dark. */
+  .hills-far {
+    color: color-mix(in srgb, var(--accent) 10%, var(--bg));
+  }
+
+  .hills-near {
+    color: color-mix(in srgb, var(--accent) 20%, var(--bg));
+  }
+
   /* The fade and the movement have their own timing, so the fade stays gentle. */
   .rise {
     animation:

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
+import { PixelMeadow } from "@/components/brand/pixel-meadow";
 import { AllCaughtUpCard, NextUpCard } from "@/features/dashboard/components/next-up-card";
 import { RecentDecks } from "@/features/dashboard/components/recent-decks";
 import { CoinsTile, GoalTile, LevelTile } from "@/features/dashboard/components/stat-tiles";
@@ -48,7 +49,7 @@ export default async function HomePage() {
   return (
     <>
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <PixelBackdrop calm quiet={decks.length === 0} />
+        {decks.length === 0 ? <PixelMeadow /> : <PixelBackdrop calm />}
       </div>
 
       {decks.length === 0 ? (

@@ -2,7 +2,6 @@
 
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
-import { createStarterDeck } from "@/features/decks/starter";
 import { requireUser } from "@/lib/auth/session";
 import type { FormState } from "@/lib/forms";
 import { HOME_ROUTE } from "@/lib/routes";
@@ -27,13 +26,6 @@ export async function finishWelcome(): Promise<FormState> {
   if (error) return { status: "error", message: error };
   refresh();
   return { status: "success" };
-}
-
-/** Step 2 choice: add the starter deck, then go to the dashboard. */
-export async function startWithStarterDeck(): Promise<FormState> {
-  const error = (await createStarterDeck()) ?? (await saveStep(ONBOARDING_DONE));
-  if (error) return { status: "error", message: error };
-  redirect(HOME_ROUTE);
 }
 
 /** Skip, or start with no decks. */

@@ -1,6 +1,6 @@
 -- =============================================================================
 -- Kwest · seed.sql
--- Catalog data (items, achievements) + starter tome RPC.
+-- Catalog data (items, achievements).
 -- Safe to re-run: upserts by key.
 -- =============================================================================
 
@@ -79,59 +79,3 @@ insert into public.achievements (key, name, description, icon_key, xp_reward, co
 on conflict (key) do update set
   name = excluded.name, description = excluded.description, icon_key = excluded.icon_key,
   xp_reward = excluded.xp_reward, coin_reward = excluded.coin_reward, sort = excluded.sort;
-
--- -----------------------------------------------------------------------------
--- Starter tome: "How to Write a Research Paper"
--- Runs as the calling user (RLS applies). Returns the existing copy if present.
--- -----------------------------------------------------------------------------
-create or replace function public.create_starter_tome()
-returns uuid
-language plpgsql
-security invoker
-set search_path = ''
-as $$
-declare
-  v_set_id uuid;
-begin
-  if auth.uid() is null then
-    raise exception 'not_authenticated' using errcode = '28000';
-  end if;
-
-  select id into v_set_id
-  from public.study_sets
-  where owner_id = auth.uid() and title = 'How to Write a Research Paper'
-  limit 1;
-  if found then
-    return v_set_id;
-  end if;
-
-  insert into public.study_sets (title, subject, description, color_key)
-  values ('How to Write a Research Paper', 'Academic Writing',
-          'Core terms and steps for planning, sourcing, writing and citing a research paper.', 'spine-3')
-  returning id into v_set_id;
-
-  insert into public.cards (set_id, position, kind, prompt, answer, explanation) values
-    (v_set_id, 1,  'term', 'Thesis statement', 'A one-to-two sentence claim the paper argues or answers', 'Usually placed at the end of the introduction.'),
-    (v_set_id, 2,  'term', 'Research question', 'The focused question the paper sets out to answer', 'Narrow enough to answer within the paper''s scope.'),
-    (v_set_id, 3,  'term', 'Scope', 'The boundaries of what the paper will and will not cover', null),
-    (v_set_id, 4,  'term', 'Primary source', 'Original, firsthand evidence such as data, experiments, interviews, or historical documents', null),
-    (v_set_id, 5,  'term', 'Secondary source', 'A work that analyzes or interprets primary sources', 'Examples: review articles, textbooks.'),
-    (v_set_id, 6,  'term', 'Peer review', 'Evaluation of a manuscript by experts in the field before publication', 'A signal of a source''s credibility.'),
-    (v_set_id, 7,  'term', 'Annotated bibliography', 'A list of sources, each followed by a short summary and evaluation', null),
-    (v_set_id, 8,  'term', 'Literature review', 'A synthesis of existing research on a topic that identifies gaps', 'A synthesis, not a list of summaries.'),
-    (v_set_id, 9,  'term', 'Abstract', 'A brief summary of a paper''s purpose, methods, results, and conclusions', 'Usually 150–250 words.'),
-    (v_set_id, 10, 'term', 'IMRaD', 'Introduction, Methods, Results, and Discussion', 'The standard structure for empirical papers.'),
-    (v_set_id, 11, 'term', 'Methods section', 'Describes how the research was done in enough detail to replicate it', null),
-    (v_set_id, 12, 'term', 'Paraphrase', 'Restating a source''s idea in your own words and structure', 'A paraphrase still requires a citation.'),
-    (v_set_id, 13, 'term', 'Plagiarism', 'Presenting someone else''s words or ideas as your own without credit', null),
-    (v_set_id, 14, 'term', 'In-text citation', 'A brief reference in the text that points to a full entry in the reference list', null),
-    (v_set_id, 15, 'question', 'Which citation style uses author–date and is common in the social sciences?', 'APA', 'MLA (author–page) is common in the humanities.'),
-    (v_set_id, 16, 'question', 'Should you write an outline before or after the first draft?', 'Before', 'An outline organizes the argument before you write prose.'),
-    (v_set_id, 17, 'question', 'Why revise before proofreading?', 'Revision fixes structure and argument; proofreading fixes surface errors', 'Fixing typos first wastes effort on text you may cut.');
-
-  return v_set_id;
-end;
-$$;
-
-revoke all on function public.create_starter_tome() from public, anon;
-grant execute on function public.create_starter_tome() to authenticated;
