@@ -172,74 +172,63 @@ export function PixelIcon({ name, scale = 2, className }: { name: PixelIconName;
 }
 
 /* -----------------------------------------------------------------------------
-   Kip: Kwest's mascot, a pixel bunny in a pink dress.
-   "#" outline, "o" fur, "D" dress, "P" cheeks, "T" tear. Eyes and mouth are "#".
+   Kip: Kwest's mascot, an original pixel bunny with tall ears and a blush bow tie.
+   "#" outline, "o" fur, "P" inner ear and cheeks, "B" bow, "K" eyes and mouth.
 ----------------------------------------------------------------------------- */
 export type KipMood = "happy" | "cheer" | "sad" | "think";
 
-/** The head row with some cells replaced (column to letter). */
-const HEAD = ".#ooooooooooooooo#.";
+/** A head row with some cells replaced (column to letter). */
+const HEAD = "#oooooooooooo#";
 const put = (marks: Record<number, string>) => [...HEAD].map((c, i) => marks[i] ?? c).join("");
 
 const KIP_EARS = [
-  "...###.......###...",
-  "..#ooo#.....#ooo#..",
-  "..#ooo#.....#ooo#..",
-  "..#ooo#.....#ooo#..",
-  "...#ooo#...#ooo#...",
-  "...#ooo#...#ooo#...",
-  "...#ooo#...#ooo#...",
-  "...#ooo#...#ooo#...",
-  "...#ooo#####ooo#...",
-  "..#ooooooooooooo#..",
-  HEAD,
+  "..###....###..",
+  ".#ooo#..#ooo#.",
+  ".#oPo#..#oPo#.",
+  ".#oPo#..#oPo#.",
+  ".#ooo#..#ooo#.",
+  "..#oo####oo#..",
+  ".#oooooooooo#.",
   HEAD,
 ];
 
-/** Face rows: two rows of eyes, a spacer, then the 3 x 3 cross mouth. */
-const MOUTH = [put({ 8: "#", 10: "#" }), put({ 9: "#" }), put({ 8: "#", 10: "#" })];
-const faceWith = (eyes: Record<number, string>) => [put(eyes), put(eyes), HEAD, ...MOUTH];
-const EYES = { 5: "#", 6: "#", 12: "#", 13: "#" };
+const EYES = { 3: "K", 4: "K", 9: "K", 10: "K" };
+const CHEEKS = { 1: "P", 12: "P" };
 const KIP_FACE: Record<KipMood, string[]> = {
-  happy: faceWith(EYES),
+  happy: [put(EYES), put(EYES), put(CHEEKS), put({ 5: "K", 8: "K" }), put({ 6: "K", 7: "K" })],
   cheer: [
-    put({ 5: "#", 6: "#", 12: "#", 13: "#" }),
-    put({ 4: "#", 7: "#", 11: "#", 14: "#" }),
-    put({ 3: "P", 15: "P" }),
-    ...MOUTH,
+    put({ 4: "K", 9: "K" }),
+    put({ 3: "K", 5: "K", 8: "K", 10: "K" }),
+    put(CHEEKS),
+    put({ 5: "K", 6: "K", 7: "K", 8: "K" }),
+    put({ 5: "K", 6: "K", 7: "K", 8: "K" }),
   ],
-  sad: [put(EYES), put(EYES), put({ 5: "T" }), ...MOUTH],
-  think: faceWith({ 6: "#", 7: "#", 13: "#", 14: "#" }),
+  sad: [put(EYES), put(EYES), put(CHEEKS), put({ 5: "K", 6: "K", 7: "K", 8: "K" }), put({ 4: "K", 9: "K" })],
+  think: [put({ 4: "K", 5: "K", 10: "K", 11: "K" }), put({ 4: "K", 5: "K", 10: "K", 11: "K" }), put(CHEEKS), put({ 6: "K", 7: "K", 8: "K", 9: "K" }), HEAD],
 };
 
 const KIP_BODY = [
-  HEAD,
-  "..#ooooooooooooo#..",
-  "...#############...",
-  "...#DDDDDDDDDDD#...",
-  "..#DDDDDDDDDDDDD#..",
-  ".#o#DDDDDDDDDDD#o#.",
-  ".###DDDDDDDDDDD###.",
-  "...#DDDDDDDDDDD#...",
-  "..#DDDDDDDDDDDDD#..",
-  "..#DDDDDDDDDDDDD#..",
-  "..###############..",
-  "....#ooo#.#ooo#....",
-  "....#####.#####....",
+  ".#oooooooooo#.",
+  "..##########..",
+  "..#oooooooo#..",
+  "..#ooBBBBoo#..",
+  "..#oooooooo#..",
+  "..##########..",
+  "..###....###..",
 ];
 
 const KIP_PALETTE: Palette = {
   "#": "#111111",
-  o: "#ffffff",
-  D: "#e59aab",
-  P: "#f2b3c0",
-  T: "#8ec5e8",
+  o: "#ffe6ed",
+  P: "#e59aab",
+  B: "#cf7486",
+  K: "#111111",
 };
 
 /** The mascot. `bob` makes it hop gently (switched off by reduced motion). */
 export function Kip({
   mood = "happy",
-  scale = 3,
+  scale = 5,
   bob = false,
   className = "",
 }: {

@@ -110,7 +110,7 @@ function Session({ deck, mode, cards, onFinished, onRestart }: SessionProps & { 
     return (
       <div className="pixel-lift mx-auto max-w-xl">
         <section className="pixel-frame space-y-6 p-6 text-center sm:p-8">
-          <Kip mood="think" scale={4} bob className="mx-auto" />
+          <Kip mood="think" scale={5} bob className="mx-auto" />
           <div className="space-y-2">
             <h1 className="text-3xl">{mode === "quiz" ? "Quiz" : "Flashcards"}</h1>
             <p className="flex items-center justify-center gap-2 text-text-muted">
@@ -342,7 +342,7 @@ function Results({
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-3 text-center">
-        <Kip mood={great ? "cheer" : "happy"} scale={4} bob className="mx-auto" />
+        <Kip mood={great ? "cheer" : "happy"} scale={5} bob className="mx-auto" />
         <h1 ref={headingRef} tabIndex={-1} className="text-3xl outline-none sm:text-4xl">
           Session complete
         </h1>
