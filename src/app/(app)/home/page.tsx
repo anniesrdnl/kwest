@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
-import { AllCaughtUpCard, NextUpCard, NoDecksCard } from "@/features/dashboard/components/next-up-card";
+import { AllCaughtUpCard, NextUpCard } from "@/features/dashboard/components/next-up-card";
 import { RecentDecks } from "@/features/dashboard/components/recent-decks";
 import { CoinsTile, GoalTile, LevelTile } from "@/features/dashboard/components/stat-tiles";
 import { getDashboard } from "@/features/dashboard/queries";
+import { WelcomeCard } from "@/features/dashboard/components/welcome-card";
 import { isOnboarded } from "@/features/onboarding/steps";
 import { getPlayer } from "@/features/profile/queries";
 import { ONBOARDING_ROUTE } from "@/lib/routes";
@@ -33,8 +34,9 @@ function today(timeZone: string): string {
   }
 }
 
-// Renders inside home/loading.tsx's Suspense. A quest board: greeting, today's quest (the one main
-// action), three stat tiles that each open the page where you can act on them, then recent decks.
+// Renders inside home/loading.tsx's Suspense. With no decks it is a short welcome page. Otherwise a quest board:
+// greeting, today's quest (the one main action), three stat tiles that each open the page where you can act on them,
+// then recent decks.
 // The animated backdrop is fixed behind the whole screen and hides with the page.
 export default async function HomePage() {
   const { profile } = await getPlayer();
@@ -46,27 +48,31 @@ export default async function HomePage() {
   return (
     <>
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <PixelBackdrop calm />
+        <PixelBackdrop calm quiet={decks.length === 0} />
       </div>
 
-      <div className="space-y-8">
-        <header className="rise min-w-0 space-y-1">
-          <h1 className="text-2xl break-words sm:text-[2rem] sm:leading-tight">
-            {greeting(timeZone)}, {player.profile.display_name}
-          </h1>
-          <p className="text-text-muted">{today(timeZone)}</p>
-        </header>
+      {decks.length === 0 ? (
+        <WelcomeCard name={player.profile.display_name} />
+      ) : (
+        <div className="space-y-8">
+          <header className="rise min-w-0 space-y-1">
+            <h1 className="text-2xl break-words sm:text-[2rem] sm:leading-tight">
+              {greeting(timeZone)}, {player.profile.display_name}
+            </h1>
+            <p className="text-text-muted">{today(timeZone)}</p>
+          </header>
 
-        {decks.length === 0 ? <NoDecksCard /> : nextUp ? <NextUpCard nextUp={nextUp} /> : <AllCaughtUpCard decks={decks} timeZone={timeZone} />}
+          {nextUp ? <NextUpCard nextUp={nextUp} /> : <AllCaughtUpCard decks={decks} timeZone={timeZone} />}
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <GoalTile dailyGoal={dailyGoal} delay={0.2} />
-          <LevelTile xpTotal={player.stats.xp_total} delay={0.3} />
-          <CoinsTile coins={player.stats.coins} delay={0.4} />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <GoalTile dailyGoal={dailyGoal} delay={0.2} />
+            <LevelTile xpTotal={player.stats.xp_total} delay={0.3} />
+            <CoinsTile coins={player.stats.coins} delay={0.4} />
+          </div>
+
+          <RecentDecks decks={decks} />
         </div>
-
-        {decks.length > 0 && <RecentDecks decks={decks} />}
-      </div>
+      )}
     </>
   );
 }

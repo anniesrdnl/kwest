@@ -38,14 +38,15 @@ const SPARKS = [
 
 /**
  * The animated page backdrop: graph paper, drifting clouds, bobbing cards and twinkles.
+ * `quiet` keeps only the drifting clouds on the plain page color.
  * Decoration only. Put it first inside a `relative isolate` wrapper; it fills that wrapper.
  */
-export function PixelBackdrop({ calm = false }: { calm?: boolean }) {
+export function PixelBackdrop({ calm = false, quiet = false }: { calm?: boolean; quiet?: boolean }) {
   const cards = calm ? CALM_CARDS : CARDS;
   const sparks = calm ? CALM_SPARKS : SPARKS;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <div className="landing-grid absolute inset-0" />
+      {!quiet && <div className="landing-grid absolute inset-0" />}
 
       {CLOUDS.map((c, i) => (
         <Cloud
@@ -56,7 +57,7 @@ export function PixelBackdrop({ calm = false }: { calm?: boolean }) {
         />
       ))}
 
-      {cards.map((c) => (
+      {!quiet && cards.map((c) => (
         <span
           key={c.face}
           className={`float-y absolute ${c.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}`}
@@ -74,7 +75,7 @@ export function PixelBackdrop({ calm = false }: { calm?: boolean }) {
         </span>
       ))}
 
-      {sparks.map((s, i) => (
+      {!quiet && sparks.map((s, i) => (
         <span
           key={i}
           className={`twinkle absolute text-accent-ink ${s.hide ? (calm ? "hidden xl:block" : "hidden md:block") : ""}`}

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Compass, Plus } from "lucide-react";
-import { PixelIcon } from "@/components/brand/pixel";
 import { ButtonLink } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
 import { DeckList } from "@/features/decks/components/deck-list";
@@ -30,7 +29,6 @@ export default async function DecksPage() {
       {decks.length === 0 ? (
         <Panel className="rise" style={{ animationDelay: "0.1s" }}>
           <div className="flex flex-col items-center gap-4 py-6 text-center">
-            <PixelIcon name="decks" scale={8} className="float-y text-accent-ink" />
             <div className="space-y-1">
               <h2 className="text-2xl">No decks yet</h2>
               <p className="text-text-muted">A deck is a set of flashcards about one topic. Make your first one.</p>

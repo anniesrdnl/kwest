@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PixelIcon, type PixelIconName } from "@/components/brand/pixel";
-import { ActionButton } from "@/components/ui/action-button";
 import { ButtonLink } from "@/components/ui/button";
-import { addStarterDeck } from "@/features/decks/actions";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import type { Deck } from "@/features/decks/queries";
 import type { NextUp } from "../queries";
@@ -83,28 +81,6 @@ export function AllCaughtUpCard({ decks, timeZone }: { decks: Deck[]; timeZone: 
         <p className="text-xl font-bold sm:text-2xl">All caught up</p>
         <p className="text-text-muted">Nothing to review right now.</p>
         {nextLabel && <p className="text-sm text-text-muted">Next review: {nextLabel}</p>}
-      </div>
-    </NextUpShell>
-  );
-}
-
-/** A player with no decks yet. */
-export function NoDecksCard() {
-  return (
-    <NextUpShell label="Your first quest" aside={<PixelIcon name="decks" scale={8} className="float-y text-accent-ink" />}>
-      <div>
-        <p className="text-xl font-bold sm:text-2xl">No decks yet</p>
-        <p className="text-text-muted">
-          Make your own deck, or start with a ready-made one: How to Write a Research Paper.
-        </p>
-      </div>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <ButtonLink href="/decks/new" size="lg">
-          Make a deck
-        </ButtonLink>
-        <ActionButton action={addStarterDeck} appearance="outline" pendingLabel="Adding…">
-          Add ready-made deck
-        </ActionButton>
       </div>
     </NextUpShell>
   );

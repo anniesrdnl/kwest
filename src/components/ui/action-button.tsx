@@ -11,11 +11,19 @@ type ActionButtonProps = {
   pendingLabel: string;
   /** "link" renders a quiet text button (e.g. "Skip"). */
   appearance?: "primary" | "secondary" | "outline" | "link";
+  size?: "md" | "lg";
   className?: string;
 };
 
 /** A one-button form for a Server Action, with a pending label and an announced error. */
-export function ActionButton({ action, children, pendingLabel, appearance = "primary", className = "" }: ActionButtonProps) {
+export function ActionButton({
+  action,
+  children,
+  pendingLabel,
+  appearance = "primary",
+  size,
+  className = "",
+}: ActionButtonProps) {
   const [state, formAction, pending] = useActionState(action, idleState);
 
   return (
@@ -29,7 +37,7 @@ export function ActionButton({ action, children, pendingLabel, appearance = "pri
           {pending ? pendingLabel : children}
         </button>
       ) : (
-        <Button type="submit" variant={appearance} disabled={pending} className="w-full sm:w-auto">
+        <Button type="submit" variant={appearance} size={size} disabled={pending} className="w-full sm:w-auto">
           {pending ? pendingLabel : children}
         </Button>
       )}
