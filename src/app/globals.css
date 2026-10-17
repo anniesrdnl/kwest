@@ -335,7 +335,7 @@
 
 /* -----------------------------------------------------------------------------
    Landing page: graph-paper grid and stepped animations.
-   Movement uses steps() so it ticks like a sprite instead of gliding.
+   Movement is eased, so it glides.
 ----------------------------------------------------------------------------- */
 @layer components {
   .landing-grid {
@@ -344,37 +344,49 @@
     background-size: 32px 32px;
   }
 
+  /* The fade and the movement have their own timing, so the fade stays gentle. */
   .rise {
-    animation: rise 0.7s steps(7, end) both;
+    animation:
+      fade-in 0.7s ease-out both,
+      rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
+  /* A little overshoot, so each letter settles into place. */
   .letter-pop {
-    animation: letter-pop 0.6s steps(6, end) both;
+    animation:
+      fade-in 0.5s ease-out both,
+      letter-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
 
   .cloud {
     animation: cloud 90s linear infinite;
+    will-change: transform;
   }
 
   .float-y {
-    animation: float-y 3.2s steps(6, end) infinite alternate;
+    animation: float-y 3.2s ease-in-out infinite alternate;
+    will-change: transform;
   }
 
   .twinkle {
-    animation: twinkle 1.8s steps(1, end) infinite;
+    animation: twinkle 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
 }
 
 @keyframes rise {
   from {
-    opacity: 0;
     transform: translateY(16px);
   }
 }
 
 @keyframes letter-pop {
   from {
-    opacity: 0;
     transform: translateY(28px);
   }
 }

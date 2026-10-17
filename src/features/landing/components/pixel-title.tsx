@@ -24,7 +24,7 @@ export function PixelTitle() {
         <span
           key={i}
           aria-hidden
-          className="letter-pop block cursor-default transition-colors duration-100 select-none hover:text-accent-ink active:translate-y-1"
+          className="letter-pop block cursor-default transition-[color,translate] duration-150 ease-out select-none hover:text-accent-ink active:translate-y-1"
           style={{ animationDelay: `${i * 0.08}s` }}
         >
           <PixelArt rows={rows} className="h-[calc(7*var(--u))] w-[calc(5*var(--u))]" />
