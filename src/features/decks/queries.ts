@@ -112,3 +112,13 @@ export async function listPublicDecks(query: string): Promise<PublicDeck[]> {
   if (error) throw new Error(`Could not load public decks: ${error.message}`);
   return data as unknown as PublicDeck[];
 }
+
+/** Owner only: true when reports have hidden this deck from Explore. */
+export async function isHiddenFromExplore(id: string): Promise<boolean> {
+  if (!UUID.test(id)) return false;
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("deck_hidden_from_explore", { p_set_id: id });
+  if (error) throw new Error(`Could not load deck status: ${error.message}`);
+  return Boolean(data);
+}

@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { DeleteDeckButton } from "@/features/decks/components/delete-deck-button";
 import { ShareDeck } from "@/features/decks/components/share-deck";
-import { getDeck } from "@/features/decks/queries";
+import { getDeck, isHiddenFromExplore } from "@/features/decks/queries";
 
 export async function generateMetadata({ params }: PageProps<"/decks/[id]">): Promise<Metadata> {
   const deck = await getDeck((await params).id);
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: PageProps<"/decks/[id]">): Pr
 // Renders inside loading.tsx's Suspense (params are request-time data).
 export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
   const { id } = await params;
-  const deck = await getDeck(id);
+  const [deck, hidden] = await Promise.all([getDeck(id), isHiddenFromExplore(id)]);
   if (!deck) notFound();
 
   const stats = [
@@ -79,7 +79,7 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
         </div>
       </header>
 
-      <ShareDeck deckId={deck.id} title={deck.title} visibility={deck.visibility} />
+      <ShareDeck deckId={deck.id} title={deck.title} visibility={deck.visibility} hiddenFromExplore={hidden} />
 
       <section aria-labelledby="cards-heading" className="space-y-3">
         <h2 id="cards-heading" className="text-lg font-semibold">

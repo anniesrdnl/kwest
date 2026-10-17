@@ -13,7 +13,18 @@ const OPTIONS: { value: SetVisibility; label: string; hint: string }[] = [
 ];
 
 /** Owner's choice of who can see a deck, plus the link while it's shared. */
-export function ShareDeck({ deckId, title, visibility }: { deckId: string; title: string; visibility: SetVisibility }) {
+export function ShareDeck({
+  deckId,
+  title,
+  visibility,
+  hiddenFromExplore,
+}: {
+  deckId: string;
+  title: string;
+  visibility: SetVisibility;
+  /** Several people reported it, so Explore doesn't list it for now. */
+  hiddenFromExplore: boolean;
+}) {
   const [current, setCurrent] = useOptimistic(visibility);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -68,6 +79,11 @@ export function ShareDeck({ deckId, title, visibility }: { deckId: string; title
         ))}
       </fieldset>
 
+      {current === "public" && hiddenFromExplore && (
+        <p className="rounded-lg border border-wrong/30 bg-wrong/10 px-3 py-2 text-sm text-wrong">
+          Some people reported this deck, so it&apos;s hidden from Explore while we check it. Your link still works.
+        </p>
+      )}
       {current !== "private" && (
         <ShareLink path={`/shared/${deckId}`} text={`Study "${title}" with me on Kwest.`} label="Deck link" />
       )}

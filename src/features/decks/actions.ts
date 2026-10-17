@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import type { FormState } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
-import type { SetVisibility } from "@/lib/types/database";
+import type { DeckReportReason, SetVisibility } from "@/lib/types/database";
 import { deckSchema, type DeckInput, type SaveDeckResult } from "./schemas";
 import { createStarterDeck } from "./starter";
 
@@ -98,4 +98,20 @@ export async function copyDeck(id: string): Promise<FormState> {
     return { status: "error", message: "Couldn't copy this deck. Please try again." };
   }
   redirect(`/decks/${data}`);
+}
+
+const REPORT_REASONS: DeckReportReason[] = ["wrong", "offensive", "spam", "other"];
+
+/** Reports a deck someone else shared. One report per person per deck. */
+export async function reportDeck(id: string, reason: DeckReportReason, note: string): Promise<FormState> {
+  await requireUser();
+  if (!REPORT_REASONS.includes(reason)) return { status: "error", message: "Pick a reason." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("report_deck", { p_set_id: id, p_reason: reason, p_note: note.slice(0, 300) || null });
+  if (error) {
+    if (error.message === "not_found") return { status: "error", message: "This deck can't be reported." };
+    return { status: "error", message: "Couldn't send your report. Please try again." };
+  }
+  refresh();
+  return { status: "success", message: "Thanks for telling us. We'll take a look." };
 }

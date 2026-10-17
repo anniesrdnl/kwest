@@ -400,6 +400,14 @@ export type Database = {
         Args: { p_query?: string; p_limit?: number };
         Returns: Json; // see PublicDeck[]
       };
+      report_deck: {
+        Args: { p_set_id: string; p_reason: DeckReportReason; p_note?: string | null };
+        Returns: undefined;
+      };
+      deck_hidden_from_explore: {
+        Args: { p_set_id: string };
+        Returns: boolean;
+      };
       copy_deck: {
         Args: { p_set_id: string };
         Returns: string;
@@ -456,6 +464,8 @@ export type SubmitAnswerResult = {
   levelAfter: number;
 };
 
+export type DeckReportReason = "wrong" | "offensive" | "spam" | "other";
+
 export type PublicDeck = {
   id: string;
   title: string;
@@ -475,6 +485,7 @@ export type SharedDeck = {
   shared: boolean;
   isOwner: boolean;
   ownerName: string;
+  reportedByYou: boolean;
   cards: { id: string; kind: CardKind; prompt: string; answer: string; explanation: string | null }[];
 };
 

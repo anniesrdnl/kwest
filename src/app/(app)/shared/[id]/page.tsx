@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { CopyDeckButton } from "@/features/decks/components/copy-deck-button";
+import { ReportDeckButton } from "@/features/decks/components/report-deck-button";
 import { getSharedDeck } from "@/features/decks/queries";
 
 export const metadata: Metadata = { title: "Shared deck" };
@@ -41,7 +42,10 @@ export default async function SharedDeckPage({ params }: PageProps<"/shared/[id]
         </div>
         {deck.description && <p className="whitespace-pre-line">{deck.description}</p>}
         <div className="space-y-2">
-          <CopyDeckButton deckId={deck.id} label={deck.isOwner ? "Make a copy" : "Copy to my decks"} />
+          <div className="flex flex-wrap items-start gap-3">
+            <CopyDeckButton deckId={deck.id} label={deck.isOwner ? "Make a copy" : "Copy to my decks"} />
+            {!deck.isOwner && <ReportDeckButton deckId={deck.id} reported={deck.reportedByYou} />}
+          </div>
           <p className="text-sm text-text-muted">
             {deck.isOwner
               ? "The copy is a new private deck."
