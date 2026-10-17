@@ -334,7 +334,7 @@
 }
 
 /* -----------------------------------------------------------------------------
-   Landing page: graph-paper grid, dither divider and stepped animations.
+   Landing page: graph-paper grid and stepped animations.
    Movement uses steps() so it ticks like a sprite instead of gliding.
 ----------------------------------------------------------------------------- */
 @layer components {
@@ -342,13 +342,6 @@
     background-image:
       linear-gradient(var(--grid) 2px, transparent 2px), linear-gradient(90deg, var(--grid) 2px, transparent 2px);
     background-size: 32px 32px;
-    mask-image: linear-gradient(to bottom, black 60%, transparent);
-  }
-
-  .dither {
-    height: 16px;
-    background-image: conic-gradient(var(--grid) 25%, transparent 0 50%, var(--grid) 0 75%, transparent 0);
-    background-size: 8px 8px;
   }
 
   .rise {
@@ -369,14 +362,6 @@
 
   .twinkle {
     animation: twinkle 1.8s steps(1, end) infinite;
-  }
-
-  .ticker {
-    animation: ticker 45s linear infinite;
-  }
-
-  .ticker-pause:hover .ticker {
-    animation-play-state: paused;
   }
 }
 
@@ -415,12 +400,6 @@
   }
 }
 
-@keyframes ticker {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -433,8 +412,7 @@
 
   .cloud,
   .float-y,
-  .twinkle,
-  .ticker {
+  .twinkle {
     animation: none !important;
   }
 }

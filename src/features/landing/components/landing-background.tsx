@@ -27,7 +27,7 @@ const SPARKS = [
 /** The hero backdrop: graph paper, drifting clouds, bobbing cards and twinkles. Decoration only. */
 export function LandingBackground() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[46rem] overflow-hidden">
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       <div className="landing-grid absolute inset-0" />
 
       {CLOUDS.map((c, i) => (
