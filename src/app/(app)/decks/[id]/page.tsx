@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Layers, ListChecks, Pencil } from "lucide-react";
+import { ArrowLeft, Layers, ListChecks, Pencil, Trophy } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { DeleteDeckButton } from "@/features/decks/components/delete-deck-button";
@@ -63,6 +63,10 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
               <ButtonLink href={`/decks/${deck.id}/flashcards`} variant="secondary" size="lg">
                 <Layers size={18} aria-hidden />
                 Flashcards
+              </ButtonLink>
+              <ButtonLink href={`/decks/${deck.id}/challenge`} variant="outline" size="lg">
+                <Trophy size={18} aria-hidden />
+                Challenge
               </ButtonLink>
             </>
           )}

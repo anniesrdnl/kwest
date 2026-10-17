@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Layers, ListChecks } from "lucide-react";
+import { Layers, ListChecks, Trophy } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { getDecks, type Deck } from "@/features/decks/queries";
@@ -24,7 +24,8 @@ export default async function StudyPage() {
         <h1 className="text-2xl font-bold md:text-3xl">Study</h1>
         <p className="text-text-muted">
           <strong className="font-semibold text-text">Quiz</strong> moves cards to a later review when you get them right.{" "}
-          <strong className="font-semibold text-text">Flashcards</strong> are for learning new cards.
+          <strong className="font-semibold text-text">Flashcards</strong> are for learning new cards.{" "}
+          <strong className="font-semibold text-text">Challenge</strong> is a game: get 8 right before you miss 3.
         </p>
       </div>
 
@@ -48,14 +49,18 @@ export default async function StudyPage() {
                   <span className="block text-sm text-text-muted">{waiting(deck)}</span>
                 </span>
               </Link>
-              <div className="grid shrink-0 grid-cols-2 gap-2">
+              <div className="grid shrink-0 grid-cols-3 gap-2 *:px-2 sm:*:px-4">
                 <ButtonLink href={`/decks/${deck.id}/quiz`} aria-label={`Quiz: ${deck.title}`}>
-                  <ListChecks size={18} aria-hidden />
+                  <ListChecks size={18} aria-hidden className="hidden sm:block" />
                   Quiz
                 </ButtonLink>
                 <ButtonLink href={`/decks/${deck.id}/flashcards`} variant="secondary" aria-label={`Flashcards: ${deck.title}`}>
-                  <Layers size={18} aria-hidden />
+                  <Layers size={18} aria-hidden className="hidden sm:block" />
                   Flashcards
+                </ButtonLink>
+                <ButtonLink href={`/decks/${deck.id}/challenge`} variant="outline" aria-label={`Challenge: ${deck.title}`}>
+                  <Trophy size={18} aria-hidden className="hidden sm:block" />
+                  Challenge
                 </ButtonLink>
               </div>
             </li>

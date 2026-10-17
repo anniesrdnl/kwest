@@ -22,6 +22,18 @@ export async function startStudySession(deckId: string, mode: StudyMode): Promis
   return { ok: true, sessionId: data };
 }
 
+/** Challenge mode is the database's "dust-duel" game: the server checks the win and pays the game bonus. */
+export async function startChallenge(deckId: string): Promise<{ ok: true; sessionId: string } | Fail> {
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("start_session", { p_set_id: deckId, p_mode: "game", p_game_key: "dust-duel" });
+  if (error) {
+    if (error.message === "no_cards") return { ok: false, message: "This deck has no cards yet." };
+    return { ok: false, message: "Couldn't start the challenge. Please try again." };
+  }
+  return { ok: true, sessionId: data };
+}
+
 export type AnswerInput = {
   sessionId: string;
   cardId: string;

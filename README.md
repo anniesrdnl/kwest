@@ -34,6 +34,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 **Studying**
 - **Quiz**: multiple choice, true/false and typed answers. New cards get easier formats; familiar cards ask you to type. Missed cards come back once at the end of the session.
 - **Flashcards**: flip each card and mark it *Still learning* or *I knew it*. Keyboard shortcuts included (Space, 1, 2).
+- **Challenge**: a game. Get 8 right before you miss 3 (three hearts), with an optional 15-second timer per question (25 seconds for typed answers). Winning earns bonus XP and an award; the win is checked on the server.
 - Instant feedback with the correct answer, your card's note, and which card your wrong pick belonged to.
 
 **Progress**
@@ -196,4 +197,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Quiz and flashcard study modes
 - [x] Profile stats, 7-day activity chart, achievements and daily goal setting
 - [x] Coin shop: avatar icons, colors and frames
+- [x] Challenge mode (solo study game)
 - [ ] Multiplayer study game

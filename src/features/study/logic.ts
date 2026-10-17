@@ -64,7 +64,7 @@ export type QuizQuestion =
   | { type: "id"; card: StudyCard };
 
 /** Other cards' answers that don't look like this card's answer. */
-function wrongAnswers(card: StudyCard, pool: StudyCard[]): string[] {
+export function wrongAnswers(card: StudyCard, pool: StudyCard[]): string[] {
   const seen = new Set([normalize(card.answer)]);
   const out: string[] = [];
   for (const c of shuffle(pool)) {
