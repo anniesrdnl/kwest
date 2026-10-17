@@ -1,10 +1,14 @@
 import { csvToTabText } from "./schemas";
 import { officeXmlToLines } from "./office-text";
 
-const MAX_FILE_BYTES = 1024 * 1024;
+const MB = 1024 * 1024;
+// Files are read in the browser and never uploaded, so these only guard the tab's memory. They are generous.
+const MAX_FILE_BYTES = 100 * MB;
 /** Zipped or formatted files carry extra data, so they get more room. */
-const MAX_BIG_BYTES = 10 * 1024 * 1024;
-const MAX_PDF_PAGES = 150;
+const MAX_BIG_BYTES = 500 * MB;
+const MAX_PDF_PAGES = 2000;
+
+const tooBig = (bytes: number): Read => ({ error: `That file is too big. Keep it under ${bytes / MB} MB.` });
 
 export const CARD_FILE_ACCEPT = [
   ".txt,.csv,.tsv,.md,.xlsx,.docx,.pptx,.pdf",
@@ -42,7 +46,7 @@ export async function readCardFile(file: File): Promise<Read> {
         OLD_FORMATS[ext] ?? "Use a Word (.docx), PowerPoint (.pptx), PDF, Excel (.xlsx), .csv, .tsv or .txt file.",
     };
   }
-  if (file.size > MAX_FILE_BYTES) return { error: "That file is too big. Keep it under 1 MB." };
+  if (file.size > MAX_FILE_BYTES) return tooBig(MAX_FILE_BYTES);
 
   const bytes = await file.arrayBuffer();
   let text: string;
@@ -57,7 +61,7 @@ export async function readCardFile(file: File): Promise<Read> {
 
 /** First sheet of an .xlsx file as tab-separated lines, ready for parseCardText. */
 async function readExcel(file: File): Promise<Read> {
-  if (file.size > MAX_BIG_BYTES) return { error: "That file is too big. Keep it under 10 MB." };
+  if (file.size > MAX_BIG_BYTES) return tooBig(MAX_BIG_BYTES);
   try {
     // Loaded only when someone uploads an Excel file.
     const { readSheet } = await import("read-excel-file/browser");
@@ -72,7 +76,7 @@ async function readExcel(file: File): Promise<Read> {
 
 /** Word or PowerPoint: unzip, then read the text and tables from the XML parts. */
 async function readOffice(file: File, part: string | RegExp, label: string): Promise<Read> {
-  if (file.size > MAX_BIG_BYTES) return { error: "That file is too big. Keep it under 10 MB." };
+  if (file.size > MAX_BIG_BYTES) return tooBig(MAX_BIG_BYTES);
   try {
     // Loaded only when someone uploads one of these files.
     const { unzipSync, strFromU8 } = await import("fflate");
@@ -118,7 +122,7 @@ function pdfLines(items: PdfItem[]): string[] {
 
 /** PDF: read the text page by page. */
 async function readPdf(file: File): Promise<Read> {
-  if (file.size > MAX_BIG_BYTES) return { error: "That file is too big. Keep it under 10 MB." };
+  if (file.size > MAX_BIG_BYTES) return tooBig(MAX_BIG_BYTES);
   try {
     // Loaded only when someone uploads a PDF.
     const pdfjs = await import("pdfjs-dist");
