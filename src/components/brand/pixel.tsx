@@ -170,3 +170,20 @@ export type PixelIconName = keyof typeof ICONS;
 export function PixelIcon({ name, scale = 2, className }: { name: PixelIconName; scale?: number; className?: string }) {
   return <Bitmap rows={ICONS[name]} palette={{ "#": "currentColor" }} scale={scale} className={className} />;
 }
+
+/** A pixel cloud. Outline and fill follow the theme. */
+export function Cloud({ scale = 6, className, style }: { scale?: number; className?: string; style?: React.CSSProperties }) {
+  const rows = [
+    ".......####.......",
+    ".....##oooo##.....",
+    "...##oooooooo##...",
+    "..#oooooooooooo#..",
+    ".#oooooooooooooo#.",
+    ".################.",
+  ];
+  return (
+    <span className={className} style={style}>
+      <Bitmap rows={rows} palette={{ "#": "var(--border)", o: "var(--surface)" }} scale={scale} />
+    </span>
+  );
+}

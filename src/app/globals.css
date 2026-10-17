@@ -23,6 +23,7 @@
   --border: #e2a8b8; /* soft outline for cards */
   --border-strong: #111111; /* buttons, inputs: strong outline */
   --shadow-soft: #efc3cf;
+  --grid: rgb(207 116 134 / 0.18); /* landing page graph paper */
   /* Primary action (buttons): blush with black text */
   --accent: #cf7486;
   --accent-hover: #da8b9b;
@@ -64,6 +65,7 @@
     --border: #5a454c;
     --border-strong: #ffe6ed;
     --shadow-soft: #2a2125;
+    --grid: rgb(255 230 237 / 0.07);
     --accent: #cf7486;
     --accent-hover: #da8b9b;
     --accent-fg: #111111;
@@ -101,6 +103,7 @@
   --border: #5a454c;
   --border-strong: #ffe6ed;
   --shadow-soft: #2a2125;
+  --grid: rgb(255 230 237 / 0.07);
   --accent: #cf7486;
   --accent-hover: #da8b9b;
   --accent-fg: #111111;
@@ -330,6 +333,94 @@
 
 }
 
+/* -----------------------------------------------------------------------------
+   Landing page: graph-paper grid, dither divider and stepped animations.
+   Movement uses steps() so it ticks like a sprite instead of gliding.
+----------------------------------------------------------------------------- */
+@layer components {
+  .landing-grid {
+    background-image:
+      linear-gradient(var(--grid) 2px, transparent 2px), linear-gradient(90deg, var(--grid) 2px, transparent 2px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, black 60%, transparent);
+  }
+
+  .dither {
+    height: 16px;
+    background-image: conic-gradient(var(--grid) 25%, transparent 0 50%, var(--grid) 0 75%, transparent 0);
+    background-size: 8px 8px;
+  }
+
+  .rise {
+    animation: rise 0.7s steps(7, end) both;
+  }
+
+  .letter-pop {
+    animation: letter-pop 0.6s steps(6, end) both;
+  }
+
+  .cloud {
+    animation: cloud 90s linear infinite;
+  }
+
+  .float-y {
+    animation: float-y 3.2s steps(6, end) infinite alternate;
+  }
+
+  .twinkle {
+    animation: twinkle 1.8s steps(1, end) infinite;
+  }
+
+  .ticker {
+    animation: ticker 45s linear infinite;
+  }
+
+  .ticker-pause:hover .ticker {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes letter-pop {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+@keyframes cloud {
+  from {
+    transform: translateX(-30vw);
+  }
+  to {
+    transform: translateX(130vw);
+  }
+}
+
+@keyframes float-y {
+  to {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -338,5 +429,12 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .cloud,
+  .float-y,
+  .twinkle,
+  .ticker {
+    animation: none !important;
   }
 }
