@@ -9,10 +9,11 @@ const CARDS = [
   { face: "!", left: "48%", top: "8%", delay: 2.2, blush: false, hide: true },
 ] as const;
 
+/** Kept to the top and bottom bands so a cloud never drifts through the title. */
 const CLOUDS = [
   { top: "9%", delay: -10, scale: 6, duration: 95 },
-  { top: "36%", delay: -55, scale: 4, duration: 120 },
-  { top: "72%", delay: -30, scale: 5, duration: 105 },
+  { top: "21%", delay: -55, scale: 4, duration: 120 },
+  { top: "82%", delay: -30, scale: 5, duration: 105 },
 ] as const;
 
 /** `hide`: only shown from tablet up, where there is room beside the text. */
