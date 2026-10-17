@@ -18,7 +18,7 @@ const variants: Record<Variant, string> = {
 
 const sizes: Record<Size, string> = {
   md: "min-h-11 px-4 text-base",
-  lg: "min-h-14 px-6 text-2xl",
+  lg: "min-h-12 px-6 text-base",
 };
 
 type StyleProps = { variant?: Variant; size?: Size; className?: string };

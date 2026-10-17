@@ -14,10 +14,10 @@ export default function LandingPage() {
         <p className="rise mx-auto mt-10 max-w-md text-lg text-text-muted" style={{ animationDelay: "0.5s" }}>
           Turn your notes into flashcard decks. Study a little every day, and remember more.
         </p>
-        <div className="rise mt-8 flex w-full max-w-xs flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row" style={{ animationDelay: "0.7s" }}>
+        <div className="rise mt-8 flex flex-wrap justify-center gap-3" style={{ animationDelay: "0.7s" }}>
           <ButtonLink href="/signup" size="lg">
             Get started
-            <ArrowRight size={18} aria-hidden />
+            <ArrowRight size={16} aria-hidden />
           </ButtonLink>
           <ButtonLink href="/login" size="lg" variant="secondary">
             Log in
