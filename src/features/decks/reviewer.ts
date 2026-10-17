@@ -11,7 +11,13 @@ const HEADER_WORDS =
 
 /** Headings and labels. A line that starts like this is not a term. */
 const LABEL =
-  /^(step|figure|fig|table|chapter|section|part|unit|lesson|module|page|slide|appendix|source|sources|reference|references|summary|objectives?|introduction|conclusion|agenda|outline|contents|overview|key points?|learning outcomes?|in summary|in conclusion|however|therefore|first|second|third|finally|date|time|name|author|subject|topic|prepared by)\b/i;
+  /^(?:(?:step|figure|fig|table|chapter|section|part|unit|lesson|module|page|slide|appendix)\.?\s*[\dIVXL]+\b.*|source|sources|reference|references|summary|objectives?|introduction|conclusion|agenda|outline|contents|overview|key points?|learning outcomes?|in summary|in conclusion|however|therefore|first|second|third|finally|date|time|name|author|subject|topic|prepared by|course|course code|code|student|instructor|lecturer|professor|school|department|semester|title|version)$/i;
+
+/** A date such as "August, 2026" or "12 March 2025". */
+const DATE = /^(\d{1,2}(st|nd|rd|th)?\s+)?(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?,?\s*(\d{1,2},?\s*)?(\d{4})?$/i;
+
+/** Questions start with one of these, or have at least three words. */
+const QUESTION_START = /^(what|why|how|which|who|whom|whose|when|where|define|explain|describe|list|name|state|identify|is|are|do|does|can|should)\b/i;
 
 /** "Example: ..." and friends. Under a card they become its note. */
 const NOTE_LINE = /^(e\.?g\.?|examples?|for example|for instance|note|notes|tip|hint|remember|important|caution|warning)\s*[:\-–—]\s*(.+)$/i;
@@ -60,7 +66,12 @@ function goodTerm(term: string): boolean {
 
 /** A meaning is not just a number, a time or a date. */
 function goodMeaning(meaning: string): boolean {
-  return meaning.length >= 2 && !/^[\d\s:.,/\-–apm%$]+$/i.test(meaning);
+  return meaning.length >= 2 && !/^[\d\s:.,/\-–apm%$]+$/i.test(meaning) && !DATE.test(meaning);
+}
+
+/** A real question, not a leftover word from a wrapped line such as "Management?". */
+function isQuestion(line: string): boolean {
+  return line.endsWith("?") && line.length <= 300 && (wordCount(line) >= 3 || QUESTION_START.test(line));
 }
 
 /** Lines that are one bullet of a short list: brief, and not a card on their own. */
@@ -76,18 +87,20 @@ function isItem(row: string): boolean {
   );
 }
 
-/** PDFs break paragraphs at the page width. Join a long line with the lowercase line that continues it. */
+/**
+ * PDFs break paragraphs at the page width. Join a long line with the lowercase line that continues it,
+ * and a line that stops in the middle of a thought (after a comma, "and", "of", ...) with the next one.
+ */
 function unwrap(lines: string[]): string[] {
   const out: string[] = [];
   for (const line of lines) {
     const prev = out.at(-1);
     if (
       prev &&
-      prev.length >= 45 &&
       !prev.includes("\t") &&
       !line.includes("\t") &&
-      !/[.!?:;]$/.test(prev) &&
-      /^\p{Ll}/u.test(line)
+      ((prev.length >= 45 && !/[.!?:;]$/.test(prev) && /^\p{Ll}/u.test(line)) ||
+        (prev.length >= 30 && /(,|\b(and|or|of|the|to|a|an|in|for|with|by|that|which))$/i.test(prev)))
     ) {
       out[out.length - 1] = `${prev} ${line}`;
     } else out.push(line);
@@ -157,7 +170,9 @@ export function buildReviewer(text: string): Reviewer {
         answer: clip(answer, LIMITS.side),
       };
       if (explanation) card.explanation = clip(explanation, LIMITS.note);
-      if (!prompt || !answer || !add(card, i)) left++;
+      // Page layouts also make tab gaps (cover pages, headers), so rows with labels or dates are not cards.
+      const layout = LABEL.test(prompt) || NOISE.test(prompt) || !goodMeaning(answer);
+      if (!prompt || !answer || layout || !add(card, i)) left++;
       continue;
     }
 
@@ -196,11 +211,12 @@ export function buildReviewer(text: string): Reviewer {
     if (line.endsWith("?")) {
       const next = rows[i + 1];
       if (
-        line.length <= 300 &&
+        isQuestion(line) &&
         next &&
         next.length >= 3 &&
         !next.includes("\t") &&
         !next.endsWith("?") &&
+        !next.endsWith(":") &&
         !NOISE.test(next) &&
         add({ kind: "question", prompt: line, answer: clip(next.replace(/^a(?:nswer)?\s*[:.)\-–]\s*/i, ""), LIMITS.side) }, i + 1)
       ) {
