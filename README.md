@@ -28,7 +28,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 **Decks**
 - Create, edit and delete decks of flashcards. Each card is either a *word → meaning* or a *question → answer*, with an optional note.
 - Reorder cards and give each deck a color.
-- Choose who can see each deck: only you, anyone with the link, or everyone. Public decks are listed on the Explore page, where you can search them by words in the title or subject. Anyone who can see a deck can copy it into their own decks; your study progress stays private.
+- Choose who can see each deck: only you, anyone with the link, or everyone. Public decks are listed on the Explore page, where you can search them by words in the title or subject, sort them by newest or most copied, and press "Load more" to see more. Each deck shows how many people copied it (one copy per person; your own copies don't count). Anyone who can see a deck can copy it into their own decks; your study progress stays private.
 - Report a shared deck (wrong answers, rude or not okay for school, spam, something else). A deck reported by 3 different people is hidden from Explore until it is reviewed; its link keeps working. Reports are reviewed with SQL (see the comment at the top of `supabase/migrations/0014_deck_reports.sql`).
 - Search decks by name or subject, filter by "to review", "has new cards" or "caught up", and sort by recently studied or A to Z.
 - Upload cards from an Excel `.xlsx` file (first sheet) or a `.txt`, `.csv` or `.tsv` file (for example saved from Google Sheets). Old `.xls` files aren't supported. Column 1 is the front, column 2 the back, and an optional column 3 is the note. Text files can use one card per line with a tab, ` - ` or `:` between front and back. A header row is skipped. Files are read in the browser and nothing is sent until you save the deck.
@@ -207,6 +207,7 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Beat-my-score links with a shared scoreboard
 - [x] Share decks by link and copy shared decks
 - [x] Explore page for public decks
+- [x] Explore: copy counts, "Most copied" sort, "Load more"
 - [x] Report shared decks
 - [x] Deck search, filters and sort
 - [x] Pixel picture-book redesign

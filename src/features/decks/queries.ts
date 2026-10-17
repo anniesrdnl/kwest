@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { requireUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import type { CardKind, PublicDeck, SetVisibility, SharedDeck } from "@/lib/types/database";
+import type { CardKind, ExploreSort, PublicDeck, SetVisibility, SharedDeck } from "@/lib/types/database";
 
 export type Deck = {
   id: string;
@@ -104,13 +104,25 @@ export const getSharedDeck = cache(async (id: string): Promise<SharedDeck | null
   return (data as unknown as SharedDeck | null) ?? null;
 });
 
-/** Public decks for Explore, newest first. `query` matches words in the title or subject. */
-export async function listPublicDecks(query: string): Promise<PublicDeck[]> {
+/**
+ * Public decks for Explore. `query` matches words in the title or subject.
+ * Asks for one extra deck so the page knows if there is more to load.
+ */
+export async function listPublicDecks(
+  query: string,
+  sort: ExploreSort,
+  limit: number,
+): Promise<{ decks: PublicDeck[]; hasMore: boolean }> {
   await requireUser();
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("list_public_decks", { p_query: query.slice(0, 100) });
+  const { data, error } = await supabase.rpc("list_public_decks", {
+    p_query: query.slice(0, 100),
+    p_sort: sort,
+    p_limit: limit + 1,
+  });
   if (error) throw new Error(`Could not load public decks: ${error.message}`);
-  return data as unknown as PublicDeck[];
+  const all = data as unknown as PublicDeck[];
+  return { decks: all.slice(0, limit), hasMore: all.length > limit };
 }
 
 /** Owner only: true when reports have hidden this deck from Explore. */

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Compass, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { listPublicDecks } from "@/features/decks/queries";
+import type { ExploreSort } from "@/lib/types/database";
+
+const PAGE_SIZE = 24;
+const MAX_LIMIT = 192;
 
 export const metadata: Metadata = { title: "Explore" };
 
@@ -11,7 +15,13 @@ export const metadata: Metadata = { title: "Explore" };
 export default async function ExplorePage({ searchParams }: PageProps<"/explore">) {
   const q = (await searchParams).q;
   const query = (typeof q === "string" ? q : "").trim().slice(0, 100);
-  const decks = await listPublicDecks(query);
+  const sort: ExploreSort = (await searchParams).sort === "copied" ? "copied" : "new";
+  const n = Number((await searchParams).limit);
+  const limit = Number.isInteger(n) && n >= PAGE_SIZE && n <= MAX_LIMIT ? n : PAGE_SIZE;
+  const { decks, hasMore } = await listPublicDecks(query, sort, limit);
+  const moreParams = new URLSearchParams({ limit: String(limit + PAGE_SIZE) });
+  if (query) moreParams.set("q", query);
+  if (sort === "copied") moreParams.set("sort", "copied");
 
   return (
     <div className="space-y-6">
@@ -20,7 +30,7 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
         <p className="text-text-muted">Decks other people made public. Open one to see its cards and copy it to your decks.</p>
       </div>
 
-      <form role="search" action="/explore" className="flex gap-2">
+      <form role="search" action="/explore" className="flex flex-col gap-2 sm:flex-row">
         <div className="relative flex-1">
           <Search size={18} className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-muted" aria-hidden />
           <input
@@ -32,6 +42,18 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
             className="w-full min-h-11 rounded-lg border border-border-strong bg-surface py-2 pr-3 pl-10 text-base text-text placeholder:text-text-muted/70 transition-colors focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-focus/30"
           />
         </div>
+        <label className="flex items-center gap-2 text-sm text-text-muted">
+          Sort
+          <select
+            name="sort"
+            defaultValue={sort}
+            aria-label="Sort public decks"
+            className="min-h-11 flex-1 rounded-lg border border-border-strong bg-surface px-3 text-base text-text transition-colors focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-focus/30 sm:flex-none"
+          >
+            <option value="new">Newest</option>
+            <option value="copied">Most copied</option>
+          </select>
+        </label>
         <Button type="submit" variant="secondary">
           Search
         </Button>
@@ -61,7 +83,7 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
         <>
           {query && (
             <p className="text-sm text-text-muted" role="status">
-              {decks.length} {decks.length === 1 ? "deck" : "decks"} for &ldquo;{query}&rdquo;
+              {decks.length}{hasMore ? "+" : ""} {decks.length === 1 && !hasMore ? "deck" : "decks"} for &ldquo;{query}&rdquo;
             </p>
           )}
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -75,7 +97,7 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
                   <div className="min-w-0">
                     <p className="truncate font-medium">{deck.title}</p>
                     <p className="truncate text-sm text-text-muted">
-                      {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"} · by {deck.isOwner ? "you" : deck.ownerName}
+                      {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"} · {deck.copyCount} {deck.copyCount === 1 ? "copy" : "copies"} · by {deck.isOwner ? "you" : deck.ownerName}
                       {deck.subject && <> · {deck.subject}</>}
                     </p>
                   </div>
@@ -83,6 +105,13 @@ export default async function ExplorePage({ searchParams }: PageProps<"/explore"
               </li>
             ))}
           </ul>
+          {hasMore && limit < MAX_LIMIT && (
+            <div className="text-center">
+              <ButtonLink href={`/explore?${moreParams}`} scroll={false} variant="secondary">
+                Load more
+              </ButtonLink>
+            </div>
+          )}
         </>
       )}
     </div>

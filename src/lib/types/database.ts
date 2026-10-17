@@ -397,7 +397,7 @@ export type Database = {
         Returns: Json | null; // see SharedDeck
       };
       list_public_decks: {
-        Args: { p_query?: string; p_limit?: number };
+        Args: { p_query?: string; p_sort?: ExploreSort; p_limit?: number };
         Returns: Json; // see PublicDeck[]
       };
       report_deck: {
@@ -472,9 +472,12 @@ export type PublicDeck = {
   subject: string | null;
   colorKey: string;
   cardCount: number;
+  copyCount: number;
   ownerName: string;
   isOwner: boolean;
 };
+
+export type ExploreSort = "new" | "copied";
 
 export type SharedDeck = {
   id: string;
