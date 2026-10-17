@@ -199,16 +199,17 @@ const KIP_EARS = [
 /** Face rows: two rows of eyes, a spacer, then the 3 x 3 cross mouth. */
 const MOUTH = [put({ 8: "#", 10: "#" }), put({ 9: "#" }), put({ 8: "#", 10: "#" })];
 const faceWith = (eyes: Record<number, string>) => [put(eyes), put(eyes), HEAD, ...MOUTH];
+const EYES = { 5: "#", 6: "#", 12: "#", 13: "#" };
 const KIP_FACE: Record<KipMood, string[]> = {
-  happy: faceWith({ 5: "#", 13: "#" }),
+  happy: faceWith(EYES),
   cheer: [
-    put({ 5: "#", 13: "#" }),
-    put({ 4: "#", 6: "#", 12: "#", 14: "#" }),
+    put({ 5: "#", 6: "#", 12: "#", 13: "#" }),
+    put({ 4: "#", 7: "#", 11: "#", 14: "#" }),
     put({ 3: "P", 15: "P" }),
     ...MOUTH,
   ],
-  sad: [put({ 5: "#", 13: "#" }), put({ 5: "#", 13: "#" }), put({ 5: "T" }), ...MOUTH],
-  think: faceWith({ 7: "#", 15: "#" }),
+  sad: [put(EYES), put(EYES), put({ 5: "T" }), ...MOUTH],
+  think: faceWith({ 6: "#", 7: "#", 13: "#", 14: "#" }),
 };
 
 const KIP_BODY = [
