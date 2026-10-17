@@ -24,7 +24,7 @@ export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={`inline-flex h-10 items-center gap-2 px-3 font-pixel text-base tracking-wide transition-colors ${
-              active ? "bg-secondary text-secondary-fg" : "text-text-muted hover:bg-surface-2 hover:text-text"
+              active ? "bg-track text-text" : "text-text-muted hover:bg-surface-2 hover:text-text"
             }`}
           >
             <PixelIcon name={icon} scale={2} />
@@ -60,7 +60,7 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
               >
                 <span
                   className={`inline-flex h-7 w-11 items-center justify-center transition-colors ${
-                    active ? "bg-secondary text-secondary-fg" : ""
+                    active ? "bg-track text-text" : ""
                   }`}
                 >
                   <PixelIcon name={Icon} scale={2} />

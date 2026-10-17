@@ -27,12 +27,12 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
           <Link href={`/decks/${deck.id}`} className="text-xl font-bold break-words decoration-2 underline-offset-4 hover:underline sm:text-2xl">
             {deck.title}
           </Link>
-          <p className="text-hero-muted">{parts.join(" · ")}</p>
+          <p className="text-text-muted">{parts.join(" · ")}</p>
         </div>
       </div>
       <div className="space-y-2">
         <div className="flex flex-col gap-3 sm:flex-row">
-          <ButtonLink href={`/decks/${deck.id}/quiz`} variant="secondary" size="lg">
+          <ButtonLink href={`/decks/${deck.id}/quiz`} size="lg">
             Start review
             <ArrowRight size={18} aria-hidden />
           </ButtonLink>
@@ -66,13 +66,13 @@ export function AllCaughtUpCard({ decks, timeZone }: { decks: Deck[]; timeZone: 
   return (
     <NextUpShell label="Today's quest" mood="cheer">
       <div className="flex items-start gap-4">
-        <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-hero-border bg-surface text-correct">
+        <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-correct">
           <PixelIcon name="check" scale={4} />
         </span>
         <div>
           <p className="text-xl font-bold">All caught up</p>
-          <p className="text-hero-muted">Nothing to review right now.</p>
-          {nextLabel && <p className="text-sm text-hero-muted">Next review: {nextLabel}</p>}
+          <p className="text-text-muted">Nothing to review right now.</p>
+          {nextLabel && <p className="text-sm text-text-muted">Next review: {nextLabel}</p>}
         </div>
       </div>
     </NextUpShell>
@@ -84,18 +84,18 @@ export function NoDecksCard() {
   return (
     <NextUpShell label="Your first quest" mood="think">
       <div className="flex items-start gap-4">
-        <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-hero-border bg-surface text-text">
+        <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-text">
           <PixelIcon name="decks" scale={3} />
         </span>
         <div>
           <p className="text-xl font-bold">No decks yet</p>
-          <p className="text-hero-muted">
+          <p className="text-text-muted">
             Make your own deck, or start with a ready-made one: How to Write a Research Paper.
           </p>
         </div>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <ButtonLink href="/decks/new" variant="secondary">
+        <ButtonLink href="/decks/new">
           Make a deck
         </ButtonLink>
         <ActionButton action={addStarterDeck} appearance="outline" pendingLabel="Adding…">
@@ -111,15 +111,15 @@ function NextUpShell({ label, mood, children }: { label: string; mood: KipMood; 
     <div className="pixel-lift">
       <section
         aria-labelledby="next-up-heading"
-        className="pixel-frame flex flex-col gap-4 p-6 text-hero-fg [--frame-bg:var(--hero)] sm:flex-row sm:items-center sm:gap-8 sm:p-8"
+        className="pixel-frame flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8"
       >
         <div className="min-w-0 flex-1 space-y-5">
-          <h2 id="next-up-heading" className="font-pixel text-base tracking-wide text-hero-muted">
+          <h2 id="next-up-heading" className="font-sans text-sm font-medium text-text-muted">
             {label}
           </h2>
           {children}
         </div>
-        <Kip mood={mood} scale={6} bob className="order-first shrink-0 self-start sm:order-last sm:self-center" />
+        <Kip mood={mood} scale={5} bob className="order-first shrink-0 self-start sm:order-last sm:self-center" />
       </section>
     </div>
   );

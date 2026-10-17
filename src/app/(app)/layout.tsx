@@ -38,7 +38,6 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             </div>
           </div>
         </div>
-        <div className="pixel-dash absolute inset-x-0 -bottom-1.5" aria-hidden />
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 md:pt-10 md:pb-12">{children}</main>
       <Suspense fallback={<MobileTabBarLinks pathname={null} />}>

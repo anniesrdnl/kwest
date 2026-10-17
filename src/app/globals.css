@@ -20,8 +20,9 @@
   --text: #111111;
   --text-muted: #5c4248;
   --ink: #111111;
-  --border: #111111;
-  --border-strong: #111111;
+  --border: #e2a8b8; /* soft outline for cards */
+  --border-strong: #111111; /* buttons, inputs: strong outline */
+  --shadow-soft: #efc3cf;
   /* Primary action (buttons): blush with black text */
   --accent: #cf7486;
   --accent-hover: #da8b9b;
@@ -47,7 +48,7 @@
   --wrong: #b0261a;
   --gold: #8a5a00;
   --focus: #111111;
-  --shadow-card: 4px 4px 0 0 var(--ink);
+  --shadow-card: 3px 3px 0 0 var(--shadow-soft);
   --shadow-hover: 4px 4px 0 0 var(--accent);
   color-scheme: light;
 }
@@ -60,8 +61,9 @@
     --text: #ffe6ed;
     --text-muted: #d9b8c1;
     --ink: #cf7486;
-    --border: #ffe6ed;
+    --border: #5a454c;
     --border-strong: #ffe6ed;
+    --shadow-soft: #2a2125;
     --accent: #cf7486;
     --accent-hover: #da8b9b;
     --accent-fg: #111111;
@@ -83,7 +85,7 @@
     --wrong: #ff8f80;
     --gold: #f2c94c;
     --focus: #ffe6ed;
-    --shadow-card: 4px 4px 0 0 var(--ink);
+    --shadow-card: 3px 3px 0 0 var(--shadow-soft);
     --shadow-hover: 4px 4px 0 0 var(--accent);
     color-scheme: dark;
   }
@@ -96,8 +98,9 @@
   --text: #ffe6ed;
   --text-muted: #d9b8c1;
   --ink: #cf7486;
-  --border: #ffe6ed;
+  --border: #5a454c;
   --border-strong: #ffe6ed;
+  --shadow-soft: #2a2125;
   --accent: #cf7486;
   --accent-hover: #da8b9b;
   --accent-fg: #111111;
@@ -119,7 +122,7 @@
   --wrong: #ff8f80;
   --gold: #f2c94c;
   --focus: #ffe6ed;
-  --shadow-card: 4px 4px 0 0 var(--ink);
+  --shadow-card: 3px 3px 0 0 var(--shadow-soft);
   --shadow-hover: 4px 4px 0 0 var(--accent);
   color-scheme: dark;
 }
@@ -270,7 +273,7 @@
 ----------------------------------------------------------------------------- */
 @layer components {
   .pixel-lift {
-    filter: drop-shadow(4px 4px 0 var(--ink));
+    filter: drop-shadow(3px 3px 0 var(--shadow-soft));
   }
 
   .pixel-frame {

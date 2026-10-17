@@ -18,7 +18,7 @@ export function Panel({ title, actions, tone = "plain", className = "", children
         {(title || actions) && (
           <header className="flex min-h-11 items-center justify-between gap-3 px-5 pt-4">
             {title && (
-              <h2 className={`font-pixel text-base ${tone === "hero" ? "text-hero-muted" : "text-text-muted"}`}>{title}</h2>
+              <h2 className={`font-sans text-sm font-medium ${tone === "hero" ? "text-hero-muted" : "text-text-muted"}`}>{title}</h2>
             )}
             {actions}
           </header>
