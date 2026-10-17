@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { PixelIcon } from "@/components/brand/pixel";
-import { LogoMark } from "@/components/brand/wordmark";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
 import {
   DesktopNav,
@@ -12,7 +11,6 @@ import {
 import { getPlayer } from "@/features/profile/queries";
 import { UserAvatar, lookOf } from "@/features/shop/avatar";
 import { XpBar } from "@/features/progression/components/xp-bar";
-import { HOME_ROUTE } from "@/lib/routes";
 
 // Shell for signed-in pages. The header renders instantly; the player chip
 // reads the session, so it streams in behind its own <Suspense>.
@@ -22,18 +20,9 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
     <div className="flex flex-1 flex-col">
       <header className="sticky top-0 z-30 border-b-2 border-border bg-surface">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-6 px-4 md:h-16">
-          <div className="flex items-center gap-6">
-            <Link
-              href={HOME_ROUTE}
-              aria-label="Kwest, home"
-              className="inline-flex min-h-11 items-center transition-[opacity,translate] duration-150 hover:opacity-70 active:translate-y-px"
-            >
-              <LogoMark />
-            </Link>
-            <Suspense fallback={<DesktopNavLinks pathname={null} />}>
-              <DesktopNav />
-            </Suspense>
-          </div>
+          <Suspense fallback={<DesktopNavLinks pathname={null} />}>
+            <DesktopNav />
+          </Suspense>
           <div className="flex items-center gap-3">
             <Suspense fallback={<div className="h-5 w-28 animate-pulse bg-surface-2" />}>
               <PlayerChip />
