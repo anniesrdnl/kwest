@@ -5,6 +5,7 @@ import { ArrowLeft, Layers, ListChecks, Pencil, Trophy } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { DeleteDeckButton } from "@/features/decks/components/delete-deck-button";
+import { ShareDeck } from "@/features/decks/components/share-deck";
 import { getDeck } from "@/features/decks/queries";
 
 export async function generateMetadata({ params }: PageProps<"/decks/[id]">): Promise<Metadata> {
@@ -77,6 +78,8 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
           <DeleteDeckButton deckId={deck.id} title={deck.title} />
         </div>
       </header>
+
+      <ShareDeck deckId={deck.id} title={deck.title} shared={deck.shared} />
 
       <section aria-labelledby="cards-heading" className="space-y-3">
         <h2 id="cards-heading" className="text-lg font-semibold">

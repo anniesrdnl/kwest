@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 
 const noSubscribe = () => () => {};
 
-/** A "beat my score" link with Copy and (where the device has it) Share buttons. */
-export function ShareLink({ code, text }: { code: string; text: string }) {
+/** A link to send someone, with Copy and (where the device has it) Share buttons. `path` starts with "/". */
+export function ShareLink({ path, text, label = "Send this link to a friend" }: { path: string; text: string; label?: string }) {
   // The full address and the Share button are only known in the browser.
   const origin = useSyncExternalStore(noSubscribe, () => window.location.origin, () => "");
   const canShare = useSyncExternalStore(noSubscribe, () => typeof navigator.share === "function", () => false);
   const [copied, setCopied] = useState(false);
-  const url = `${origin}/challenge/${code}`;
+  const url = `${origin}${path}`;
+  const id = `share-${path.replace(/\W/g, "-")}`;
 
   const copy = async () => {
     try {
@@ -24,16 +25,16 @@ export function ShareLink({ code, text }: { code: string; text: string }) {
     }
   };
 
-  const share = () => navigator.share({ title: "Kwest challenge", text, url }).catch(() => {});
+  const share = () => navigator.share({ title: "Kwest", text, url }).catch(() => {});
 
   return (
     <div className="space-y-2">
-      <label htmlFor={`share-${code}`} className="block text-sm font-medium">
-        Send this link to a friend
+      <label htmlFor={id} className="block text-sm font-medium">
+        {label}
       </label>
       <div className="flex flex-col gap-2 sm:flex-row">
         <input
-          id={`share-${code}`}
+          id={id}
           readOnly
           value={url}
           onFocus={(e) => e.currentTarget.select()}

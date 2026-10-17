@@ -165,6 +165,7 @@ export type Database = {
           subject?: string | null;
           description?: string | null;
           color_key?: string;
+          visibility?: SetVisibility;
         };
         Relationships: [];
       };
@@ -391,6 +392,14 @@ export type Database = {
         Args: Record<string, never>;
         Returns: { set_id: string; due_count: number; new_count: number; next_due_at: Timestamp | null }[];
       };
+      get_shared_deck: {
+        Args: { p_set_id: string };
+        Returns: Json | null; // see SharedDeck
+      };
+      copy_deck: {
+        Args: { p_set_id: string };
+        Returns: string;
+      };
       create_challenge_link: {
         Args: { p_session_id: string; p_timer?: boolean };
         Returns: string;
@@ -441,6 +450,18 @@ export type SubmitAnswerResult = {
   masteredNow: boolean;
   levelBefore: number;
   levelAfter: number;
+};
+
+export type SharedDeck = {
+  id: string;
+  title: string;
+  subject: string | null;
+  description: string | null;
+  colorKey: string;
+  shared: boolean;
+  isOwner: boolean;
+  ownerName: string;
+  cards: { id: string; kind: CardKind; prompt: string; answer: string; explanation: string | null }[];
 };
 
 export type ChallengeBoardRow = {

@@ -4,6 +4,7 @@ import { Heart, RotateCcw, Trophy, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
+import { ShareLink } from "@/components/ui/share-link";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { UserAvatar } from "@/features/shop/avatar";
 import type { ChallengeAttemptResult, ChallengeBoardRow, ChallengeLinkData, SubmitAnswerResult } from "@/lib/types/database";
@@ -12,7 +13,6 @@ import { answerLinkCard, finishLinkAttempt, startLinkAttempt } from "../link-act
 import type { QuizQuestion, StudyCard } from "../logic";
 import { Rule, Scoreboard } from "./challenge-game";
 import { QuizStep } from "./quiz-step";
-import { ShareLink } from "./share-link";
 
 /** "1:05" from milliseconds. */
 export function formatTime(ms: number): string {
@@ -147,7 +147,7 @@ function Game({ link, onFinished, onRestart }: { link: ChallengeLinkData; onFini
           </div>
         </div>
 
-        {link.isOwner && <ShareLink code={link.code} text={`Can you beat my score on "${link.deck.title}"?`} />}
+        {link.isOwner && <ShareLink path={`/challenge/${link.code}`} text={`Can you beat my score on "${link.deck.title}"?`} />}
         <Board rows={link.board} />
       </div>
     );

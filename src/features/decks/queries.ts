@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { requireUser } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
-import type { CardKind } from "@/lib/types/database";
+import type { CardKind, SharedDeck } from "@/lib/types/database";
 
 export type Deck = {
   id: string;
@@ -17,6 +17,8 @@ export type Deck = {
   fresh: number;
   /** Earliest upcoming review, when nothing is due now. */
   nextDueAt: string | null;
+  /** Anyone with the link can see and copy it. */
+  shared: boolean;
 };
 
 /** The player's decks with review counts, most recently studied first. */
@@ -27,7 +29,7 @@ export const getDecks = cache(async (): Promise<Deck[]> => {
   const [sets, reviews] = await Promise.all([
     supabase
       .from("study_sets")
-      .select("id, title, subject, color_key, card_count, last_studied_at")
+      .select("id, title, subject, color_key, card_count, last_studied_at, visibility")
       .order("last_studied_at", { ascending: false, nullsFirst: false })
       .order("updated_at", { ascending: false }),
     supabase.rpc("deck_dust"),
@@ -48,6 +50,7 @@ export const getDecks = cache(async (): Promise<Deck[]> => {
       due: d?.due_count ?? 0,
       fresh: d?.new_count ?? 0,
       nextDueAt: d?.next_due_at ?? null,
+      shared: set.visibility !== "private",
     };
   });
 });
@@ -86,4 +89,14 @@ export const getDeck = cache(async (id: string): Promise<DeckDetail | null> => {
   const deck = decks.find((d) => d.id === id);
   if (!deck || !set.data) return null;
   return { ...deck, description: set.data.description, cards: cards.data };
+});
+
+/** A deck someone shared by link (or your own), or null if it isn't shared. */
+export const getSharedDeck = cache(async (id: string): Promise<SharedDeck | null> => {
+  if (!UUID.test(id)) return null;
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("get_shared_deck", { p_set_id: id });
+  if (error) throw new Error(`Could not load shared deck: ${error.message}`);
+  return (data as unknown as SharedDeck | null) ?? null;
 });

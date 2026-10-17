@@ -65,3 +65,29 @@ export async function deleteDeck(id: string): Promise<FormState> {
   if (error || !data?.length) return { status: "error", message: "Couldn't delete this deck. Please try again." };
   redirect("/decks");
 }
+
+/** Turns link sharing on or off for one of the player's decks. */
+export async function setDeckSharing(id: string, shared: boolean): Promise<FormState> {
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("study_sets")
+    .update({ visibility: shared ? "unlisted" : "private" })
+    .eq("id", id)
+    .select("id");
+  if (error || !data?.length) return { status: "error", message: "Couldn't change sharing. Please try again." };
+  refresh();
+  return { status: "success", message: shared ? "Sharing is on." : "Sharing is off." };
+}
+
+/** Copies a shared deck into the player's decks and opens the copy. */
+export async function copyDeck(id: string): Promise<FormState> {
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("copy_deck", { p_set_id: id });
+  if (error) {
+    if (error.message === "not_found") return { status: "error", message: "This deck isn't shared anymore." };
+    return { status: "error", message: "Couldn't copy this deck. Please try again." };
+  }
+  redirect(`/decks/${data}`);
+}

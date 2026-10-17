@@ -28,6 +28,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 **Decks**
 - Create, edit and delete decks of flashcards. Each card is either a *word → meaning* or a *question → answer*, with an optional note.
 - Reorder cards and give each deck a color.
+- Share a deck with a link. Friends who are signed in can see the cards and copy the deck into their own decks; your study progress stays private. Turning sharing off stops the link working.
 - Search decks by name or subject, filter by "to review", "has new cards" or "caught up", and sort by recently studied or A to Z.
 - Upload cards from a `.txt`, `.csv` or `.tsv` file (for example saved from Excel or Google Sheets). Column 1 is the front, column 2 the back, and an optional column 3 is the note. Text files can use one card per line with a tab, ` - ` or `:` between front and back. A header row is skipped. Files are read in the browser and nothing is sent until you save the deck.
 - Saving is atomic: a deck and all its cards are written in one database transaction.
@@ -203,6 +204,7 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Coin shop: avatar icons, colors and frames
 - [x] Challenge mode (solo study game)
 - [x] Beat-my-score links with a shared scoreboard
+- [x] Share decks by link and copy shared decks
 - [x] Deck search, filters and sort
 - [x] Pixel picture-book redesign
 - [ ] Multiplayer study game

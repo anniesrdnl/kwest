@@ -4,6 +4,7 @@ import { Heart, RotateCcw, Sparkles, Trophy, UserPlus, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
+import { ShareLink } from "@/components/ui/share-link";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import type { FinishSessionResult, SubmitAnswerResult } from "@/lib/types/database";
 import { finishStudySession, startChallenge } from "../actions";
@@ -11,7 +12,6 @@ import { createChallengeLink } from "../link-actions";
 import { CHALLENGE, challengeQuestion, isGameOver, pickChallengeCards } from "../challenge";
 import type { QuizQuestion, StudyCard } from "../logic";
 import { QuizStep } from "./quiz-step";
-import { ShareLink } from "./share-link";
 
 type DeckInfo = { id: string; title: string; colorKey: string };
 type GameProps = { deck: DeckInfo; cards: StudyCard[] };
@@ -350,7 +350,7 @@ function ChallengeFriend({ deck, sessionId, timer, correct }: { deck: DeckInfo; 
         </p>
       </div>
       {code ? (
-        <ShareLink code={code} text={`I got ${correct} right on "${deck.title}" in Kwest. Can you beat me?`} />
+        <ShareLink path={`/challenge/${code}`} text={`I got ${correct} right on "${deck.title}" in Kwest. Can you beat me?`} />
       ) : (
         <Button variant="secondary" onClick={make} disabled={pending}>
           <UserPlus size={18} aria-hidden />

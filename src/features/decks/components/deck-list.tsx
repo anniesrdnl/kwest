@@ -137,6 +137,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
                   <p className="truncate font-medium">{deck.title}</p>
                   <p className="text-sm text-text-muted">
                     {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"} · {status(deck)}
+                    {deck.shared && " · Shared"}
                   </p>
                 </div>
               </Link>
