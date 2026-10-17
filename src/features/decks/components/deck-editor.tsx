@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, FileUp, Plus, StickyNote, Trash2 } from "lucide-rea
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
+import { Panel } from "@/components/ui/panel";
 import { TextArea } from "@/components/ui/text-area";
 import type { CardKind } from "@/lib/types/database";
 import { saveDeck } from "../actions";
@@ -67,6 +68,10 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
   const [subject, setSubject] = useState(initial.subject);
   const [description, setDescription] = useState(initial.description);
   const [colorKey, setColorKey] = useState(initial.colorKey);
+  // Subject and description are optional, so they stay tucked away until asked for (or already filled in).
+  const [showMore, setShowMore] = useState(Boolean(initial.subject || initial.description));
+  const subjectInput = useRef<HTMLInputElement>(null);
+  const focusSubject = useRef(false);
   // Keys must match on the server and in the browser, so they come from a counter, not random ids.
   const [rows, setRows] = useState<Row[]>(() => {
     const cards = initial.cards.map((c, i) =>
@@ -111,6 +116,13 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [dirty]);
+
+  // Move focus to Subject right after it is revealed.
+  useEffect(() => {
+    if (!showMore || !focusSubject.current) return;
+    focusSubject.current = false;
+    subjectInput.current?.focus();
+  }, [showMore]);
 
   // Move focus to a newly added card.
   useEffect(() => {
@@ -194,6 +206,7 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage(null);
     const kept = rows.filter((r) => !isBlank(r));
     // Map "cards.N.field" errors back to the row they belong to.
     const keyFor = (path: string) => {
@@ -224,67 +237,83 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
 
   return (
     <form ref={formRef} onSubmit={save} noValidate className="space-y-8">
-      <section aria-labelledby="details-heading" className="space-y-5 rounded-xl border border-border bg-surface p-5 sm:p-6">
-        <h2 id="details-heading" className="text-lg font-semibold">
-          Details
-        </h2>
-        <Field
-          label="Name"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            clearError("title");
-          }}
-          maxLength={LIMITS.title}
-          placeholder="e.g. Biology: The Cell"
-          errors={errors.title ? [errors.title] : undefined}
-          required
-        />
-        <Field
-          label="Subject (optional)"
-          value={subject}
-          onChange={(e) => {
-            setSubject(e.target.value);
-            clearError("subject");
-          }}
-          maxLength={LIMITS.subject}
-          placeholder="e.g. Biology"
-          errors={errors.subject ? [errors.subject] : undefined}
-        />
-        <TextArea
-          label="Description (optional)"
-          value={description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-            clearError("description");
-          }}
-          maxLength={LIMITS.description}
-          error={errors.description}
-        />
-        <fieldset className="space-y-2">
-          <legend className="text-sm font-medium">Color</legend>
-          <div className="flex flex-wrap gap-2">
-            {DECK_COLORS.map(({ key, name }) => (
-              <label key={key} className="relative inline-flex size-11 cursor-pointer items-center justify-center">
-                <input
-                  type="radio"
-                  name="color"
-                  value={key}
-                  checked={colorKey === key}
-                  onChange={() => setColorKey(key)}
-                  className="peer sr-only"
-                />
-                <span className="sr-only">{name}</span>
-                <span
-                  aria-hidden
-                  className="size-8 rounded-full ring-offset-2 ring-offset-surface peer-checked:ring-2 peer-checked:ring-text peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-focus"
-                  style={{ backgroundColor: deckColor(key) }}
-                />
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      </section>
+      <Panel aria-label="Deck details" className="rise">
+        <div className="space-y-5">
+          <Field
+            label="Name"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              clearError("title");
+            }}
+            maxLength={LIMITS.title}
+            placeholder="e.g. Biology: The Cell"
+            errors={errors.title ? [errors.title] : undefined}
+            required
+          />
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-medium">Color</legend>
+            <div className="flex flex-wrap gap-2">
+              {DECK_COLORS.map(({ key, name }) => (
+                <label key={key} className="relative inline-flex size-11 cursor-pointer items-center justify-center">
+                  <input
+                    type="radio"
+                    name="color"
+                    value={key}
+                    checked={colorKey === key}
+                    onChange={() => setColorKey(key)}
+                    className="peer sr-only"
+                  />
+                  <span className="sr-only">{name}</span>
+                  <span
+                    aria-hidden
+                    className="size-8 ring-offset-2 ring-offset-surface transition-transform duration-150 peer-checked:ring-2 peer-checked:ring-text peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-focus hover:-translate-y-0.5"
+                    style={{ backgroundColor: deckColor(key) }}
+                  />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          {showMore || errors.subject || errors.description ? (
+            <>
+              <Field
+                ref={subjectInput}
+                label="Subject"
+                value={subject}
+                onChange={(e) => {
+                  setSubject(e.target.value);
+                  clearError("subject");
+                }}
+                maxLength={LIMITS.subject}
+                placeholder="e.g. Biology"
+                errors={errors.subject ? [errors.subject] : undefined}
+              />
+              <TextArea
+                label="Description"
+                value={description}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                  clearError("description");
+                }}
+                maxLength={LIMITS.description}
+                error={errors.description}
+              />
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                focusSubject.current = true;
+                setShowMore(true);
+              }}
+              className="inline-flex min-h-11 items-center gap-2 px-1 text-sm font-semibold underline decoration-accent decoration-2 underline-offset-4 transition-colors hover:bg-track active:bg-accent"
+            >
+              <Plus size={16} aria-hidden />
+              Add subject and description
+            </button>
+          )}
+        </div>
+      </Panel>
 
       <section
         aria-labelledby="cards-heading"
@@ -300,7 +329,8 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
           setDragging(false);
           void uploadFile(e.dataTransfer.files[0]);
         }}
-        className={`space-y-4 rounded-xl ${dragging ? "outline-2 outline-offset-8 outline-text outline-dashed" : ""}`}
+        className={`rise space-y-4 ${dragging ? "outline-2 outline-offset-8 outline-accent outline-dashed" : ""}`}
+        style={{ animationDelay: "0.1s" }}
       >
         <input
           ref={fileInput}
@@ -315,24 +345,23 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
           }}
         />
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 id="cards-heading" className="text-lg font-semibold">
-            Cards <span className="font-normal text-text-muted">({cardCount})</span>
+          <h2 id="cards-heading" className="text-2xl">
+            Cards
+            {cardCount > 0 && <span className="ml-2 font-sans text-base text-text-muted">{cardCount}</span>}
           </h2>
           {rows.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" onClick={openFilePicker}>
-                <FileUp size={18} aria-hidden />
-                Upload file
-              </Button>
-            </div>
+            <Button variant="outline" onClick={openFilePicker}>
+              <FileUp size={18} aria-hidden />
+              Upload file
+            </Button>
           )}
         </div>
 
         <div aria-live="polite">
           {fileNote && (
             <p
-              className={`rounded-lg border px-3 py-2 text-sm ${
-                fileNote.ok ? "border-correct/30 bg-correct/10 text-correct" : "border-wrong/30 bg-wrong/10 text-wrong"
+              className={`border-2 bg-surface px-3 py-2 text-sm ${
+                fileNote.ok ? "border-correct/40 text-correct" : "border-wrong/40 text-wrong"
               }`}
             >
               {fileNote.message}
@@ -342,25 +371,19 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
         {errors.cards && <p className="text-sm text-wrong">{errors.cards}</p>}
 
         {rows.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border-strong bg-surface px-4 py-10 text-center">
-            <div className="space-y-1">
-              <p className="font-semibold">No cards yet</p>
-              <p className="text-sm text-text-muted">Type them one by one, or upload a file to add many at once.</p>
-            </div>
+          <div className="flex flex-col items-center gap-4 border-2 border-dashed border-border px-4 py-10 text-center">
             <div className="flex flex-wrap justify-center gap-2">
               <Button onClick={addRow}>
                 <Plus size={18} aria-hidden />
                 Add card
               </Button>
-              <Button variant="secondary" onClick={openFilePicker}>
+              <Button variant="outline" onClick={openFilePicker}>
                 <FileUp size={18} aria-hidden />
                 Upload file
               </Button>
             </div>
-            <p className="max-w-md text-sm text-text-muted">
-              Files can be Word (.docx), PowerPoint (.pptx), PDF, Excel (.xlsx), .csv, .tsv or .txt. Kwest makes a card
-              from each table row, and from each line like &ldquo;word - meaning&rdquo; or &ldquo;word: meaning&rdquo;.
-              Anything else is skipped, so check the cards below before you save. You can also drop a file here.
+            <p className="max-w-sm text-sm text-text-muted">
+              Upload a Word, PowerPoint, PDF, Excel or text file. You can also drop one here.
             </p>
           </div>
         ) : (
@@ -385,21 +408,19 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
               type="button"
               onClick={addRow}
               disabled={rows.length >= LIMITS.cards}
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border-strong text-[15px] font-medium text-text-muted transition-colors hover:border-accent hover:text-accent-ink disabled:opacity-50"
+              className="flex min-h-12 w-full items-center justify-center gap-2 border-2 border-dashed border-border text-[15px] font-medium text-text-muted transition-colors hover:border-accent hover:bg-accent-soft hover:text-text active:translate-y-px disabled:opacity-50"
             >
               <Plus size={18} aria-hidden />
               Add card
             </button>
-            <p className="text-sm text-text-muted">
-              Empty cards are skipped when you save. A deck can have up to {LIMITS.cards} cards.
-            </p>
+            <p className="text-sm text-text-muted">A deck holds up to {LIMITS.cards} cards.</p>
           </>
         )}
       </section>
 
-      <div className="space-y-3 border-t border-border pt-6">
+      <div className="space-y-3 pt-2">
         {message && (
-          <p id="deck-editor-message" role="alert" tabIndex={-1} className="rounded-lg border border-wrong/30 bg-wrong/10 px-3 py-2 text-sm text-wrong">
+          <p id="deck-editor-message" role="alert" tabIndex={-1} className="border-2 border-wrong/40 bg-surface px-3 py-2 text-sm text-wrong">
             {message}
           </p>
         )}
@@ -430,14 +451,14 @@ type CardRowProps = {
 function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRemove }: CardRowProps) {
   const labels = LABELS[row.kind];
   const iconButton =
-    "inline-flex size-11 items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text disabled:opacity-30";
+    "inline-flex size-11 items-center justify-center text-text-muted transition-[color,background-color,translate] hover:bg-track hover:text-text active:translate-y-px disabled:opacity-30 disabled:hover:bg-transparent";
 
   return (
-    <li data-row={row.key} className="space-y-3 rounded-xl border border-border bg-surface p-4">
+    <li data-row={row.key} className="pixel-frame space-y-3 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <span className="text-sm font-semibold text-text-muted tabular-nums">{number}</span>
-          <fieldset className="inline-flex rounded-lg bg-surface-2 p-1">
+          <fieldset className="inline-flex border-2 border-border">
             <legend className="sr-only">Card {number} type</legend>
             {(["term", "question"] as const).map((kind) => (
               <label key={kind} className="cursor-pointer">
@@ -449,7 +470,7 @@ function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRem
                   onChange={() => onChange({ kind })}
                   className="peer sr-only"
                 />
-                <span className="inline-flex min-h-9 items-center rounded-md px-3 text-sm font-medium text-text-muted peer-checked:bg-surface peer-checked:text-text peer-checked:shadow-card peer-focus-visible:outline-2 peer-focus-visible:outline-focus">
+                <span className="inline-flex min-h-9 items-center px-3 text-sm font-medium text-text-muted transition-colors hover:text-text peer-checked:bg-accent peer-checked:text-accent-fg peer-focus-visible:outline-2 peer-focus-visible:outline-focus">
                   {kind === "term" ? "Word" : "Question"}
                 </span>
               </label>
@@ -518,7 +539,7 @@ function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRem
         <button
           type="button"
           onClick={() => onChange({ showNote: true })}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-medium text-text-muted hover:text-text"
+          className="inline-flex min-h-11 items-center gap-2 px-2 text-sm font-medium text-text-muted transition-colors hover:bg-track hover:text-text"
         >
           <StickyNote size={16} aria-hidden />
           Add a note<span className="sr-only"> to card {number}</span>

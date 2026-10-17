@@ -227,6 +227,6 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Install on phone (web app manifest and icons)
 - [x] Pixel redesign phase 2: stepped frames, block progress bars, pixel icons on Home, Study and Profile
 - [x] Upload cards from Word, PowerPoint and PDF files
-- [x] Pixel redesign phase 3: Decks list and deck page
-- [ ] Pixel redesign phase 3, still to do: deck editor, Study picker, Shop, Explore, shared-deck page, Challenge and link-game screens, Profile, onboarding
+- [x] Pixel redesign phase 3: Decks list, deck page and deck editor (subject and description are tucked behind one link; short upload hint)
+- [ ] Pixel redesign phase 3, still to do: Study picker, Shop, Explore, shared-deck page, Challenge and link-game screens, Profile, onboarding
 - [ ] Multiplayer study game

@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, type ComponentProps, type ReactNode } from "react";
+import { inputBase } from "./field";
 
 type TextAreaProps = Omit<ComponentProps<"textarea">, "id"> & {
   label: ReactNode;
@@ -10,10 +11,7 @@ type TextAreaProps = Omit<ComponentProps<"textarea">, "id"> & {
   hideLabel?: boolean;
 };
 
-export const textAreaClass =
-  "block w-full min-h-11 resize-y rounded-lg border border-border-strong bg-surface px-3 py-2 text-base text-text " +
-  "placeholder:text-text-muted/70 transition-colors focus-visible:border-accent focus-visible:outline-2 " +
-  "focus-visible:outline-offset-0 focus-visible:outline-focus/30 aria-invalid:border-wrong";
+export const textAreaClass = `${inputBase} block resize-y px-3`;
 
 export function TextArea({ label, hint, error, hideLabel = false, className = "", rows = 2, ...props }: TextAreaProps) {
   const id = useId();
