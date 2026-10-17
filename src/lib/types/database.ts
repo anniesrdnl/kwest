@@ -391,6 +391,26 @@ export type Database = {
         Args: Record<string, never>;
         Returns: { set_id: string; due_count: number; new_count: number; next_due_at: Timestamp | null }[];
       };
+      create_challenge_link: {
+        Args: { p_session_id: string; p_timer?: boolean };
+        Returns: string;
+      };
+      get_challenge_link: {
+        Args: { p_code: string };
+        Returns: Json | null; // see ChallengeLinkData
+      };
+      start_challenge_attempt: {
+        Args: { p_code: string };
+        Returns: string;
+      };
+      submit_challenge_answer: {
+        Args: { p_attempt_id: string; p_card_id: string; p_question_type: QuestionType; p_given: string };
+        Returns: Json; // see SubmitAnswerResult (xp is always 0)
+      };
+      finish_challenge_attempt: {
+        Args: { p_attempt_id: string };
+        Returns: Json; // see ChallengeAttemptResult
+      };
     };
     Enums: {
       card_kind: CardKind;
@@ -421,6 +441,38 @@ export type SubmitAnswerResult = {
   masteredNow: boolean;
   levelBefore: number;
   levelAfter: number;
+};
+
+export type ChallengeBoardRow = {
+  name: string;
+  icon: string | null;
+  color: string | null;
+  frame: string | null;
+  correct: number;
+  incorrect: number;
+  timeMs: number;
+  won: boolean;
+  /** The shared game everyone is trying to beat. */
+  isOwner: boolean;
+  isYou: boolean;
+};
+
+export type ChallengeLinkData = {
+  code: string;
+  timer: boolean;
+  isOwner: boolean;
+  ownerName: string;
+  deck: { title: string; colorKey: string };
+  cards: { id: string; kind: CardKind; prompt: string; answer: string }[];
+  board: ChallengeBoardRow[];
+};
+
+export type ChallengeAttemptResult = {
+  correct: number;
+  incorrect: number;
+  timeMs: number;
+  won: boolean;
+  beatOwner: boolean;
 };
 
 export type FinishSessionResult = {

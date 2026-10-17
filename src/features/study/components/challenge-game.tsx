@@ -1,15 +1,17 @@
 "use client";
 
-import { Heart, RotateCcw, Sparkles, Trophy, X } from "lucide-react";
+import { Heart, RotateCcw, Sparkles, Trophy, UserPlus, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import type { FinishSessionResult, SubmitAnswerResult } from "@/lib/types/database";
 import { finishStudySession, startChallenge } from "../actions";
+import { createChallengeLink } from "../link-actions";
 import { CHALLENGE, challengeQuestion, isGameOver, pickChallengeCards } from "../challenge";
 import type { QuizQuestion, StudyCard } from "../logic";
 import { QuizStep } from "./quiz-step";
+import { ShareLink } from "./share-link";
 
 type DeckInfo = { id: string; title: string; colorKey: string };
 type GameProps = { deck: DeckInfo; cards: StudyCard[] };
@@ -154,7 +156,16 @@ function Game({ deck, cards, onFinished, onRestart }: GameProps & { onFinished: 
   }
 
   if (phase === "done" && result) {
-    return <Results deck={deck} result={result} levelBefore={score.levelBefore} onRestart={onRestart} />;
+    return (
+      <Results
+        deck={deck}
+        result={result}
+        levelBefore={score.levelBefore}
+        sessionId={sessionId!}
+        timer={timer}
+        onRestart={onRestart}
+      />
+    );
   }
 
   const question = questions[index];
@@ -189,7 +200,7 @@ function Game({ deck, cards, onFinished, onRestart }: GameProps & { onFinished: 
   );
 }
 
-function Rule({ children }: { children: React.ReactNode }) {
+export function Rule({ children }: { children: React.ReactNode }) {
   return (
     <li className="flex items-start gap-2">
       <span aria-hidden className="mt-2 size-1.5 shrink-0 rounded-full bg-progress" />
@@ -198,7 +209,7 @@ function Rule({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Scoreboard({ hits, misses }: { hits: number; misses: number }) {
+export function Scoreboard({ hits, misses }: { hits: number; misses: number }) {
   const hearts = CHALLENGE.maxMisses - misses;
   return (
     <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-surface px-4 py-3">
@@ -236,11 +247,15 @@ function Results({
   deck,
   result,
   levelBefore,
+  sessionId,
+  timer,
   onRestart,
 }: {
   deck: DeckInfo;
   result: FinishSessionResult;
   levelBefore: number;
+  sessionId: string;
+  timer: boolean;
   onRestart: () => void;
 }) {
   const leveledUp = levelBefore > 0 && result.level > levelBefore;
@@ -306,6 +321,47 @@ function Results({
           Back to deck
         </ButtonLink>
       </div>
+
+      <ChallengeFriend deck={deck} sessionId={sessionId} timer={timer} correct={result.correct} />
+    </div>
+  );
+}
+
+/** Make a "beat my score" link for this game. */
+function ChallengeFriend({ deck, sessionId, timer, correct }: { deck: DeckInfo; sessionId: string; timer: boolean; correct: number }) {
+  const [code, setCode] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  const make = () =>
+    startTransition(async () => {
+      setError(null);
+      const res = await createChallengeLink(sessionId, timer);
+      if (!res.ok) return setError(res.message);
+      setCode(res.code);
+    });
+
+  return (
+    <div className="space-y-3 rounded-xl border border-border bg-surface p-5 shadow-card">
+      <div className="space-y-1">
+        <h2 className="text-lg font-semibold">Challenge a friend</h2>
+        <p className="text-sm text-text-muted">
+          Get a link to this deck. Friends play the same game and try to beat your score.
+        </p>
+      </div>
+      {code ? (
+        <ShareLink code={code} text={`I got ${correct} right on "${deck.title}" in Kwest. Can you beat me?`} />
+      ) : (
+        <Button variant="secondary" onClick={make} disabled={pending}>
+          <UserPlus size={18} aria-hidden />
+          {pending ? "Making link…" : "Get a link"}
+        </Button>
+      )}
+      {error && (
+        <p role="alert" className="text-sm text-wrong">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

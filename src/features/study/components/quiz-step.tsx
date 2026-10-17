@@ -4,11 +4,19 @@ import { ArrowRight, Check, Clock, X } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import type { SubmitAnswerResult } from "@/lib/types/database";
-import { answerCard } from "../actions";
+import { answerCard, type AnswerInput } from "../actions";
 import { questionText, type QuizQuestion } from "../logic";
 
+/** Grades one answer. The default sends it to the player's own study session. */
+export type GradeAnswer = (
+  input: Omit<AnswerInput, "sessionId">,
+) => Promise<{ ok: true; result: SubmitAnswerResult } | { ok: false; message: string }>;
+
 type QuizStepProps = {
-  sessionId: string;
+  /** Study session the answer counts toward. Not needed when `grade` is given. */
+  sessionId?: string;
+  /** Grades somewhere else, like a friend's challenge link. */
+  grade?: GradeAnswer;
   question: QuizQuestion;
   retry?: boolean;
   isLast: boolean;
@@ -25,6 +33,7 @@ type QuizStepProps = {
 /** One quiz question: multiple choice, true/false or a typed answer. Graded on the server. */
 export function QuizStep({
   sessionId,
+  grade,
   question,
   retry = false,
   isLast,
@@ -57,14 +66,14 @@ export function QuizStep({
     setGiven(value);
     setTimedOut(outOfTime);
     startTransition(async () => {
-      const res = await answerCard({
-        sessionId,
+      const input = {
         cardId: question.card.id,
         type: question.type,
         given: value,
         responseMs: performance.now() - shownAt.current,
         shownAnswer: question.type === "tf" ? question.shownAnswer : undefined,
-      });
+      };
+      const res = grade ? await grade(input) : await answerCard({ sessionId: sessionId!, ...input });
       if (!res.ok) {
         setGiven(null);
         setTimedOut(false);
