@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PixelIcon } from "@/components/brand/pixel";
 import { NAV_ITEMS, isActive } from "../nav-items";
 
 // usePathname can suspend on routes with dynamic params (Cache Components),
@@ -15,19 +16,19 @@ export function DesktopNav() {
 export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
   return (
     <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
-      {NAV_ITEMS.map(({ href, label }) => {
+      {NAV_ITEMS.map(({ href, label, icon }) => {
         const active = isActive(pathname, href);
         return (
           <Link
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`relative inline-flex h-16 items-center px-3 text-[15px] transition-colors ${
-              active ? "font-semibold text-text" : "font-medium text-text-muted hover:text-text"
+            className={`inline-flex h-10 items-center gap-2 px-3 font-pixel text-base tracking-wide transition-colors ${
+              active ? "bg-secondary text-secondary-fg" : "text-text-muted hover:bg-surface-2 hover:text-text"
             }`}
           >
+            <PixelIcon name={icon} scale={2} />
             {label}
-            {active && <span aria-hidden className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-progress" />}
           </Link>
         );
       })}
@@ -53,12 +54,17 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`relative flex min-h-14 flex-col items-center justify-center gap-1 text-xs ${
+                className={`flex min-h-16 flex-col items-center justify-center gap-1 text-xs ${
                   active ? "font-semibold text-text" : "font-medium text-text-muted"
                 }`}
               >
-                {active && <span aria-hidden className="absolute inset-x-4 top-0 h-0.5 rounded-full bg-progress" />}
-                <Icon size={20} strokeWidth={active ? 2.25 : 1.75} aria-hidden />
+                <span
+                  className={`inline-flex h-7 w-11 items-center justify-center transition-colors ${
+                    active ? "bg-secondary text-secondary-fg" : ""
+                  }`}
+                >
+                  <PixelIcon name={Icon} scale={2} />
+                </span>
                 {label}
               </Link>
             </li>

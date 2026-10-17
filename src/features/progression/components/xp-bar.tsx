@@ -1,30 +1,27 @@
+import { PixelBar } from "@/components/ui/pixel-bar";
 import { levelProgress, titleForLevel } from "@/lib/game/levels";
 
-/** Level and a thin progress bar toward the next level. */
+/** Level and a block progress bar toward the next level. */
 export function XpBar({ xpTotal, compact = false }: { xpTotal: number; compact?: boolean }) {
   const { level, xpIntoLevel, xpNeeded, ratio } = levelProgress(xpTotal);
 
   const bar = (
-    <div
-      role="progressbar"
-      aria-label={`Level ${level} progress`}
-      aria-valuemin={0}
-      aria-valuemax={xpNeeded}
-      aria-valuenow={xpIntoLevel}
-      aria-valuetext={`${xpIntoLevel} of ${xpNeeded} XP to level ${level + 1}`}
-      className={`h-2 overflow-hidden rounded-full bg-track ${compact ? "w-16" : "w-full"}`}
-    >
-      <div
-        className="h-full rounded-full bg-progress transition-[width] duration-700 ease-out"
-        style={{ width: `${Math.round(ratio * 100)}%` }}
-      />
-    </div>
+    <PixelBar
+      ratio={ratio}
+      label={`Level ${level} progress`}
+      max={xpNeeded}
+      now={xpIntoLevel}
+      valueText={`${xpIntoLevel} of ${xpNeeded} XP to level ${level + 1}`}
+      segments={compact ? 5 : 10}
+      size={compact ? "sm" : "md"}
+      className={compact ? "w-16" : "w-full"}
+    />
   );
 
   if (compact) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium whitespace-nowrap">Level {level}</span>
+        <span className="font-pixel text-base whitespace-nowrap">Level {level}</span>
         {bar}
       </div>
     );

@@ -1,8 +1,10 @@
 "use client";
 
-import { ArrowRight, Check, Clock, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { Kip, PixelIcon } from "@/components/brand/pixel";
 import { Button } from "@/components/ui/button";
+import { PixelBar } from "@/components/ui/pixel-bar";
 import type { SubmitAnswerResult } from "@/lib/types/database";
 import { answerCard, type AnswerInput } from "../actions";
 import { questionText, type QuizQuestion } from "../logic";
@@ -96,18 +98,20 @@ export function QuizStep({
           onTimeUp={() => submit("", true)}
         />
       )}
-      <div className="space-y-3 rounded-2xl border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm font-medium text-text-muted">
-          {ask}
-          {retry && <span className="ml-2 rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-fg">Try again</span>}
-        </p>
-        <p className="text-2xl font-semibold break-words whitespace-pre-line">{text}</p>
-        {question.type === "tf" && (
-          <p className="rounded-lg bg-surface-2 px-4 py-3 text-lg break-words">
-            <span className="sr-only">Answer shown: </span>
-            {question.shownAnswer}
+      <div className="pixel-lift">
+        <section className="pixel-frame space-y-3 p-6 sm:p-8">
+          <p className="font-pixel text-base text-text-muted">
+            {ask}
+            {retry && <span className="ml-2 bg-secondary px-2 py-0.5 text-sm text-secondary-fg">Try again</span>}
           </p>
-        )}
+          <p className="text-2xl font-semibold break-words whitespace-pre-line">{text}</p>
+          {question.type === "tf" && (
+            <p className="bg-surface-2 px-4 py-3 text-lg break-words">
+              <span className="sr-only">Answer shown: </span>
+              {question.shownAnswer}
+            </p>
+          )}
+        </section>
       </div>
 
       {question.type === "mc" && (
@@ -121,18 +125,30 @@ export function QuizStep({
                   type="button"
                   onClick={() => submit(option)}
                   disabled={Boolean(feedback) || sending || busy}
-                  className={`flex min-h-14 w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
+                  className={`flex min-h-14 w-full items-center gap-3 border px-4 py-3 text-left transition-colors enabled:active:translate-x-[3px] enabled:active:translate-y-[3px] enabled:active:shadow-none ${
                     isRight
-                      ? "border-correct bg-correct/10"
+                      ? "border-correct bg-correct/15 shadow-[3px_3px_0_0_var(--correct)]"
                       : isPickedWrong
-                        ? "border-wrong bg-wrong/10"
+                        ? "border-wrong bg-wrong/15 shadow-[3px_3px_0_0_var(--wrong)]"
                         : given === option
-                          ? "border-text"
-                          : "border-border bg-surface hover:border-border-strong/60"
+                          ? "border-text bg-surface-2 shadow-card"
+                          : "border-border bg-surface shadow-card enabled:hover:bg-surface-2"
                   }`}
                 >
-                  <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-surface-2 text-sm font-semibold text-text-muted">
-                    {isRight ? <Check size={16} className="text-correct" aria-label="Correct answer" /> : isPickedWrong ? <X size={16} className="text-wrong" aria-label="Your answer" /> : i + 1}
+                  <span className="inline-flex size-8 shrink-0 items-center justify-center bg-secondary font-pixel text-base text-secondary-fg">
+                    {isRight ? (
+                      <>
+                        <PixelIcon name="check" scale={2} />
+                        <span className="sr-only">Correct answer</span>
+                      </>
+                    ) : isPickedWrong ? (
+                      <>
+                        <PixelIcon name="close" scale={2} />
+                        <span className="sr-only">Your answer</span>
+                      </>
+                    ) : (
+                      i + 1
+                    )}
                   </span>
                   <span className="break-words">{option}</span>
                 </button>
@@ -166,7 +182,7 @@ export function QuizStep({
           }}
           className="space-y-3"
         >
-          <label htmlFor="typed-answer" className="block text-sm font-medium">
+          <label htmlFor="typed-answer" className="block font-pixel text-base">
             Your answer
           </label>
           <div className="flex gap-3">
@@ -179,7 +195,7 @@ export function QuizStep({
               autoComplete="off"
               autoCapitalize="off"
               spellCheck={false}
-              className="min-h-12 w-full rounded-lg border border-border-strong bg-surface px-3 text-base focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-focus/30"
+              className="min-h-12 w-full border border-border-strong bg-surface px-3 text-base focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-focus/30"
             />
             {!feedback && (
               <Button type="submit" size="lg" disabled={!typed.trim() || sending || busy}>
@@ -196,25 +212,27 @@ export function QuizStep({
       {feedback && (
         <div
           role="status"
-          className={`space-y-2 rounded-xl border p-4 ${feedback.isCorrect ? "border-correct/40 bg-correct/10" : "border-wrong/40 bg-wrong/10"}`}
+          className={`flex items-start gap-4 border p-4 ${feedback.isCorrect ? "border-correct bg-correct/10" : "border-wrong bg-wrong/10"}`}
         >
-          <p className={`flex items-center gap-2 font-semibold ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
-            {feedback.isCorrect ? <Check size={18} aria-hidden /> : timedOut ? <Clock size={18} aria-hidden /> : <X size={18} aria-hidden />}
-            {feedback.isCorrect ? "Correct" : timedOut ? "Time's up" : "Not quite"}
-            {feedback.xp > 0 && (
-              <span className="ml-auto rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-fg">+{feedback.xp} XP</span>
-            )}
-          </p>
-          {!feedback.isCorrect && (
-            <p>
-              The answer is <strong className="font-semibold">{feedback.expected}</strong>.
+          <Kip mood={feedback.isCorrect ? "cheer" : "sad"} scale={4} bob={feedback.isCorrect} className="shrink-0" />
+          <div className="min-w-0 flex-1 space-y-2">
+            <p className={`flex items-center gap-2 font-pixel text-xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
+              {feedback.isCorrect ? "Correct!" : timedOut ? "Time's up" : "Not quite"}
+              {feedback.xp > 0 && (
+                <span className="ml-auto bg-secondary px-2.5 py-0.5 text-sm text-secondary-fg">+{feedback.xp} XP</span>
+              )}
             </p>
-          )}
-          {feedback.pickedPrompt && !timedOut && (
-            <p className="text-sm text-text-muted">You picked the answer for &ldquo;{feedback.pickedPrompt}&rdquo;.</p>
-          )}
-          {feedback.explanation && <p className="text-sm text-text-muted">{feedback.explanation}</p>}
-          {feedback.masteredNow && <p className="text-sm font-medium">You&apos;ve mastered this card.</p>}
+            {!feedback.isCorrect && (
+              <p>
+                The answer is <strong className="font-semibold">{feedback.expected}</strong>.
+              </p>
+            )}
+            {feedback.pickedPrompt && !timedOut && (
+              <p className="text-sm text-text-muted">You picked the answer for &ldquo;{feedback.pickedPrompt}&rdquo;.</p>
+            )}
+            {feedback.explanation && <p className="text-sm text-text-muted">{feedback.explanation}</p>}
+            {feedback.masteredNow && <p className="text-sm font-medium">You&apos;ve mastered this card.</p>}
+          </div>
         </div>
       )}
 
@@ -256,14 +274,19 @@ function Countdown({ limitMs, stopped, onTimeUp }: { limitMs: number; stopped: b
   const low = seconds <= 5;
   return (
     <div className="flex items-center gap-3">
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-track" aria-hidden>
-        <div
-          className={`h-full rounded-full ${low ? "bg-wrong" : "bg-progress"}`}
-          style={{ width: `${(leftMs / limitMs) * 100}%` }}
-        />
-      </div>
-      <p className={`inline-flex w-14 items-center justify-end gap-1 text-sm font-semibold tabular-nums ${low ? "text-wrong" : "text-text-muted"}`}>
-        <Clock size={14} aria-hidden />
+      <PixelBar
+        ratio={leftMs / limitMs}
+        label="Time left"
+        max={Math.ceil(limitMs / 1000)}
+        now={seconds}
+        valueText={`${seconds} seconds left`}
+        segments={10}
+        size="sm"
+        tone={low ? "wrong" : "progress"}
+        className="flex-1"
+      />
+      <p className={`inline-flex w-16 items-center justify-end gap-1.5 font-pixel text-base tabular-nums ${low ? "text-wrong" : "text-text-muted"}`}>
+        <PixelIcon name="clock" scale={2} />
         <span className="sr-only">Time left: </span>
         {seconds}s
       </p>

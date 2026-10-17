@@ -3,7 +3,6 @@ import {
   Footprints,
   Layers,
   Library,
-  Lock,
   Medal,
   Star,
   Swords,
@@ -12,6 +11,8 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import { PixelIcon } from "@/components/brand/pixel";
+import { PixelBar } from "@/components/ui/pixel-bar";
 import type { Achievement } from "../queries";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -39,7 +40,7 @@ export function AchievementList({ achievements, timeZone }: { achievements: Achi
   return (
     <section aria-labelledby="achievements-heading" className="space-y-3">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 id="achievements-heading" className="text-lg font-semibold">
+        <h2 id="achievements-heading" className="text-xl">
           Achievements
         </h2>
         <span className="text-sm text-text-muted tabular-nums">
@@ -51,13 +52,13 @@ export function AchievementList({ achievements, timeZone }: { achievements: Achi
           const Icon = ICONS[a.icon] ?? Trophy;
           const earned = Boolean(a.earnedAt);
           return (
-            <li key={a.key} className={`flex gap-3 rounded-xl border p-4 ${earned ? "border-hero-border bg-hero text-hero-fg" : "border-border bg-surface"}`}>
+            <li key={a.key} className={`flex gap-3 border p-4 shadow-card ${earned ? "border-hero-border bg-hero text-hero-fg" : "border-border bg-surface"}`}>
               <span
-                className={`inline-flex size-11 shrink-0 items-center justify-center rounded-xl ${
+                className={`inline-flex size-12 shrink-0 items-center justify-center ${
                   earned ? "bg-secondary text-secondary-fg" : "bg-surface-2 text-text-muted"
                 }`}
               >
-                {earned ? <Icon size={22} aria-hidden /> : <Lock size={18} aria-hidden />}
+                {earned ? <Icon size={22} aria-hidden /> : <PixelIcon name="lock" scale={3} />}
               </span>
               <div className="min-w-0 flex-1 space-y-1">
                 <p className="font-semibold">
@@ -73,16 +74,15 @@ export function AchievementList({ achievements, timeZone }: { achievements: Achi
                   <>
                     {a.progress && (
                       <div className="flex items-center gap-2 pt-1">
-                        <div
-                          role="progressbar"
-                          aria-label={`${a.name} progress`}
-                          aria-valuemin={0}
-                          aria-valuemax={a.progress.target}
-                          aria-valuenow={a.progress.value}
-                          className="h-1.5 flex-1 overflow-hidden rounded-full bg-track"
-                        >
-                          <div className="h-full rounded-full bg-progress" style={{ width: `${(a.progress.value / a.progress.target) * 100}%` }} />
-                        </div>
+                        <PixelBar
+                          ratio={a.progress.value / a.progress.target}
+                          label={`${a.name} progress`}
+                          max={a.progress.target}
+                          now={a.progress.value}
+                          segments={Math.min(a.progress.target, 10)}
+                          size="sm"
+                          className="flex-1"
+                        />
                         <span className="text-xs text-text-muted tabular-nums">
                           {a.progress.value}/{a.progress.target}
                         </span>

@@ -1,15 +1,15 @@
-import { BookOpen, House, Layers, Store, User, type LucideIcon } from "lucide-react";
+import type { PixelIconName } from "@/components/brand/pixel";
 import { HOME_ROUTE } from "@/lib/routes";
 
-export type NavItem = { href: string; label: string; icon: LucideIcon };
+export type NavItem = { href: string; label: string; icon: PixelIconName };
 
 /** Main navigation. Desktop shows it in the top bar, mobile as a bottom tab bar. */
 export const NAV_ITEMS: readonly NavItem[] = [
-  { href: HOME_ROUTE, label: "Home", icon: House },
-  { href: "/decks", label: "Decks", icon: Layers },
-  { href: "/play", label: "Study", icon: BookOpen },
-  { href: "/shop", label: "Shop", icon: Store },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: HOME_ROUTE, label: "Home", icon: "home" },
+  { href: "/decks", label: "Decks", icon: "decks" },
+  { href: "/play", label: "Study", icon: "study" },
+  { href: "/shop", label: "Shop", icon: "shop" },
+  { href: "/profile", label: "Profile", icon: "profile" },
 ];
 
 export function isActive(pathname: string | null, href: string): boolean {

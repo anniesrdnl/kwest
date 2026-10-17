@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Coins } from "lucide-react";
+import { PixelIcon } from "@/components/brand/pixel";
 import { Panel } from "@/components/ui/panel";
 import { DailyGoalCard } from "@/features/dashboard/components/daily-goal-card";
 import { AllCaughtUpCard, NextUpCard, NoDecksCard } from "@/features/dashboard/components/next-up-card";
@@ -45,7 +45,7 @@ export default async function HomePage() {
           <div className="space-y-4">
             <XpBar xpTotal={player.stats.xp_total} />
             <p className="flex items-center gap-2 text-sm">
-              <Coins size={18} className="text-gold" aria-hidden />
+              <PixelIcon name="coin" scale={2} className="text-gold" />
               <span className="font-semibold tabular-nums">{player.stats.coins}</span>
               <span className="text-text-muted">coins</span>
             </p>

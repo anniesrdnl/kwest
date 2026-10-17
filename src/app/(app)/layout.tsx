@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { Coins } from "lucide-react";
+import { PixelIcon } from "@/components/brand/pixel";
 import { Wordmark } from "@/components/brand/wordmark";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
 import {
@@ -20,7 +20,7 @@ import { HOME_ROUTE } from "@/lib/routes";
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="sticky top-0 z-30 border-b border-border bg-surface">
+      <header className="sticky top-0 z-30 border-b-2 border-border bg-surface">
         <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-6 px-4 md:h-16">
           <div className="flex items-center gap-6">
             <Wordmark href={HOME_ROUTE} />
@@ -38,6 +38,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
             </div>
           </div>
         </div>
+        <div className="pixel-dash absolute inset-x-0 -bottom-1.5" aria-hidden />
       </header>
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 md:pt-10 md:pb-12">{children}</main>
       <Suspense fallback={<MobileTabBarLinks pathname={null} />}>
@@ -53,7 +54,7 @@ async function PlayerChip() {
     <div className="flex items-center gap-3 md:gap-4">
       <XpBar xpTotal={stats.xp_total} compact />
       <span className="inline-flex items-center gap-1 text-sm font-medium tabular-nums" aria-label={`${stats.coins} coins`}>
-        <Coins size={16} className="text-gold" aria-hidden />
+        <PixelIcon name="coin" scale={2} className="text-gold" />
         {stats.coins}
       </span>
       <Link href="/profile" aria-label="Your profile" className="inline-flex size-11 items-center justify-center rounded-lg">

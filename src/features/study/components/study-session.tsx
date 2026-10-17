@@ -1,9 +1,11 @@
 "use client";
 
-import { Check, Coins, Layers, ListChecks, RotateCcw, Sparkles, X } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
+import { Kip, PixelIcon } from "@/components/brand/pixel";
 import { Button, ButtonLink } from "@/components/ui/button";
+import { PixelBar } from "@/components/ui/pixel-bar";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { HOME_ROUTE } from "@/lib/routes";
 import type { FinishSessionResult, SubmitAnswerResult } from "@/lib/types/database";
@@ -105,37 +107,36 @@ function Session({ deck, mode, cards, onFinished, onRestart }: SessionProps & { 
   };
 
   if (phase === "intro") {
-    const ModeIcon = mode === "quiz" ? ListChecks : Layers;
     return (
-      <div className="mx-auto max-w-xl space-y-6 rounded-2xl border border-border bg-surface p-6 text-center sm:p-8">
-        <span className="mx-auto inline-flex size-12 items-center justify-center rounded-xl bg-accent-soft text-accent-ink">
-          <ModeIcon size={24} aria-hidden />
-        </span>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold">{mode === "quiz" ? "Quiz" : "Flashcards"}</h1>
-          <p className="flex items-center justify-center gap-2 text-text-muted">
-            <DeckBadge title={deck.title} colorKey={deck.colorKey} size="sm" />
-            <span className="min-w-0 truncate">{deck.title}</span>
+      <div className="pixel-lift mx-auto max-w-xl">
+        <section className="pixel-frame space-y-6 p-6 text-center sm:p-8">
+          <Kip mood="think" scale={6} bob className="mx-auto" />
+          <div className="space-y-2">
+            <h1 className="text-3xl">{mode === "quiz" ? "Quiz" : "Flashcards"}</h1>
+            <p className="flex items-center justify-center gap-2 text-text-muted">
+              <DeckBadge title={deck.title} colorKey={deck.colorKey} size="sm" />
+              <span className="min-w-0 truncate">{deck.title}</span>
+            </p>
+          </div>
+          <p className="text-text-muted">
+            {mode === "quiz"
+              ? `${planned.length} questions. Answers you get right move cards to a later review.`
+              : `${planned.length} cards. Flip each card, then say if you knew it.`}
           </p>
-        </div>
-        <p className="text-text-muted">
-          {mode === "quiz"
-            ? `${planned.length} questions. Answers you get right move cards to a later review.`
-            : `${planned.length} cards. Flip each card, then say if you knew it.`}
-        </p>
-        {error && (
-          <p role="alert" className="text-sm text-wrong">
-            {error}
-          </p>
-        )}
-        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
-          <ButtonLink href={`/decks/${deck.id}`} variant="ghost">
-            Back to deck
-          </ButtonLink>
-          <Button size="lg" onClick={start} disabled={pending || planned.length === 0} autoFocus>
-            {pending ? "Starting…" : "Start"}
-          </Button>
-        </div>
+          {error && (
+            <p role="alert" className="text-sm text-wrong">
+              {error}
+            </p>
+          )}
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
+            <ButtonLink href={`/decks/${deck.id}`} variant="ghost">
+              Back to deck
+            </ButtonLink>
+            <Button size="lg" onClick={start} disabled={pending || planned.length === 0} autoFocus>
+              {pending ? "Starting…" : "Start"}
+            </Button>
+          </div>
+        </section>
       </div>
     );
   }
@@ -184,22 +185,19 @@ function SessionHeader({ deck, done, total }: { deck: DeckInfo; done: number; to
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <p className="min-w-0 truncate text-sm font-medium text-text-muted">{deck.title}</p>
-        <Link href={`/decks/${deck.id}`} className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-text-muted hover:text-text">
-          <X size={16} aria-hidden />
+        <Link href={`/decks/${deck.id}`} className="inline-flex min-h-11 items-center gap-2 font-pixel text-base text-text-muted hover:text-text">
+          <PixelIcon name="close" scale={2} />
           Stop
         </Link>
       </div>
-      <div
-        role="progressbar"
-        aria-label="Session progress"
-        aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={done}
-        aria-valuetext={`${done} of ${total} done`}
-        className="h-1.5 overflow-hidden rounded-full bg-track"
-      >
-        <div className="h-full rounded-full bg-progress transition-[width] duration-300" style={{ width: `${(done / total) * 100}%` }} />
-      </div>
+      <PixelBar
+        ratio={done / total}
+        label="Session progress"
+        max={total}
+        now={done}
+        valueText={`${done} of ${total} done`}
+        segments={Math.min(total, 20)}
+      />
     </div>
   );
 }
@@ -282,7 +280,7 @@ function FlashcardStep({
             Still learning
           </Button>
           <Button size="lg" onClick={() => answer(true)} disabled={sending || busy}>
-            <Check size={18} aria-hidden />
+            <PixelIcon name="check" scale={2} />
             I knew it
           </Button>
         </div>
@@ -300,11 +298,11 @@ function Face({ label, text, note, hint, back = false }: { label: string; text: 
   return (
     <div
       aria-hidden
-      className={`col-start-1 row-start-1 flex flex-col justify-between gap-4 rounded-2xl border border-border p-6 backface-hidden sm:p-8 ${
+      className={`col-start-1 row-start-1 flex flex-col justify-between gap-4 border border-border p-6 shadow-card backface-hidden sm:p-8 ${
         back ? "rotate-y-180 bg-hero" : "bg-surface"
       }`}
     >
-      <span className="text-sm font-medium text-text-muted">{label}</span>
+      <span className="font-pixel text-base text-text-muted">{label}</span>
       <span className="text-center text-2xl font-semibold break-words whitespace-pre-line sm:text-3xl">{text}</span>
       <span className="min-h-5 text-center text-sm text-text-muted">{note ?? hint ?? ""}</span>
     </div>
@@ -340,13 +338,12 @@ function Results({
           { label: "Knew it", value: String(result.correct) },
         ];
 
+  const great = total > 0 && result.accuracy >= 0.7;
   return (
     <div className="mx-auto max-w-xl space-y-6">
-      <div className="space-y-2 text-center">
-        <span className="mx-auto inline-flex size-14 items-center justify-center rounded-2xl bg-secondary text-secondary-fg">
-          <Sparkles size={26} aria-hidden />
-        </span>
-        <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-bold outline-none sm:text-3xl">
+      <div className="space-y-3 text-center">
+        <Kip mood={great ? "cheer" : "happy"} scale={7} bob className="mx-auto" />
+        <h1 ref={headingRef} tabIndex={-1} className="text-3xl outline-none sm:text-4xl">
           Session complete
         </h1>
         <p className="text-text-muted">{deck.title}</p>
@@ -358,28 +355,28 @@ function Results({
           { label: "XP earned", value: `+${result.xpEarned}` },
           { label: "Coins", value: `+${result.coinsEarned}` },
         ].map(({ label, value }) => (
-          <div key={label} className="rounded-xl border border-border bg-surface p-4 text-center">
+          <div key={label} className="border border-border bg-surface p-4 text-center shadow-card">
             <dt className="text-sm text-text-muted">{label}</dt>
-            <dd className="text-2xl font-bold tabular-nums">{value}</dd>
+            <dd className="font-pixel text-3xl tabular-nums">{value}</dd>
           </div>
         ))}
       </dl>
 
       {(leveledUp || result.masteredSet || result.sessionBonus > 0) && (
-        <ul className="space-y-2 rounded-xl border border-hero-border bg-hero p-4 text-hero-fg">
+        <ul className="space-y-2 border border-hero-border bg-hero p-4 text-hero-fg shadow-card">
           {leveledUp && (
-            <li className="flex items-center gap-2 font-semibold">
-              <Sparkles size={18} aria-hidden /> You reached level {result.level}!
+            <li className="flex items-center gap-2 font-pixel text-lg">
+              <PixelIcon name="spark" scale={2} /> You reached level {result.level}!
             </li>
           )}
           {result.masteredSet && (
-            <li className="flex items-center gap-2 font-semibold">
-              <Check size={18} aria-hidden /> You mastered this deck.
+            <li className="flex items-center gap-2 font-pixel text-lg">
+              <PixelIcon name="check" scale={2} /> You mastered this deck.
             </li>
           )}
           {result.sessionBonus > 0 && (
             <li className="flex items-center gap-2 text-hero-muted">
-              <Coins size={18} aria-hidden /> Includes a +{result.sessionBonus} XP bonus for finishing.
+              <PixelIcon name="coin" scale={2} /> Includes a +{result.sessionBonus} XP bonus for finishing.
             </li>
           )}
         </ul>

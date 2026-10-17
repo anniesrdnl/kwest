@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, CircleCheck, Layers } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Kip, PixelIcon, type KipMood } from "@/components/brand/pixel";
 import { ActionButton } from "@/components/ui/action-button";
 import { ButtonLink } from "@/components/ui/button";
 import { addStarterDeck } from "@/features/decks/actions";
@@ -19,7 +20,7 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
   ].filter(Boolean);
 
   return (
-    <NextUpShell label="Continue studying">
+    <NextUpShell label="Today's quest" mood="happy">
       <div className="flex items-start gap-4">
         <DeckBadge title={deck.title} colorKey={deck.colorKey} size="lg" />
         <div className="min-w-0 flex-1">
@@ -31,7 +32,7 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
       </div>
       <div className="space-y-2">
         <div className="flex flex-col gap-3 sm:flex-row">
-          <ButtonLink href={`/decks/${deck.id}/quiz`} size="lg">
+          <ButtonLink href={`/decks/${deck.id}/quiz`} variant="secondary" size="lg">
             Start review
             <ArrowRight size={18} aria-hidden />
           </ButtonLink>
@@ -63,10 +64,10 @@ export function AllCaughtUpCard({ decks, timeZone }: { decks: Deck[]; timeZone: 
   }
 
   return (
-    <NextUpShell label="Today">
+    <NextUpShell label="Today's quest" mood="cheer">
       <div className="flex items-start gap-4">
         <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-hero-border bg-surface text-correct">
-          <CircleCheck size={28} aria-hidden />
+          <PixelIcon name="check" scale={4} />
         </span>
         <div>
           <p className="text-xl font-bold">All caught up</p>
@@ -81,10 +82,10 @@ export function AllCaughtUpCard({ decks, timeZone }: { decks: Deck[]; timeZone: 
 /** A player with no decks yet. */
 export function NoDecksCard() {
   return (
-    <NextUpShell label="Get started">
+    <NextUpShell label="Your first quest" mood="think">
       <div className="flex items-start gap-4">
         <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-hero-border bg-surface text-text">
-          <Layers size={26} aria-hidden />
+          <PixelIcon name="decks" scale={3} />
         </span>
         <div>
           <p className="text-xl font-bold">No decks yet</p>
@@ -94,7 +95,9 @@ export function NoDecksCard() {
         </div>
       </div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <ButtonLink href="/decks/new">Make a deck</ButtonLink>
+        <ButtonLink href="/decks/new" variant="secondary">
+          Make a deck
+        </ButtonLink>
         <ActionButton action={addStarterDeck} appearance="outline" pendingLabel="Adding…">
           Add ready-made deck
         </ActionButton>
@@ -103,13 +106,21 @@ export function NoDecksCard() {
   );
 }
 
-function NextUpShell({ label, children }: { label: string; children: React.ReactNode }) {
+function NextUpShell({ label, mood, children }: { label: string; mood: KipMood; children: React.ReactNode }) {
   return (
-    <section aria-labelledby="next-up-heading" className="space-y-5 rounded-2xl border border-hero-border bg-hero p-6 text-hero-fg">
-      <h2 id="next-up-heading" className="text-sm font-semibold text-hero-muted">
-        {label}
-      </h2>
-      {children}
-    </section>
+    <div className="pixel-lift">
+      <section
+        aria-labelledby="next-up-heading"
+        className="pixel-frame flex flex-col gap-4 p-6 text-hero-fg [--frame-bg:var(--hero)] sm:flex-row sm:items-center sm:gap-8 sm:p-8"
+      >
+        <div className="min-w-0 flex-1 space-y-5">
+          <h2 id="next-up-heading" className="font-pixel text-base tracking-wide text-hero-muted">
+            {label}
+          </h2>
+          {children}
+        </div>
+        <Kip mood={mood} scale={6} bob className="order-first shrink-0 self-start sm:order-last sm:self-center" />
+      </section>
+    </div>
   );
 }

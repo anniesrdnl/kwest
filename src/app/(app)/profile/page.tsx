@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Coins } from "lucide-react";
+import { PixelIcon } from "@/components/brand/pixel";
 import { Panel } from "@/components/ui/panel";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
@@ -51,7 +51,7 @@ export default async function ProfilePage() {
           <div className="space-y-4">
             <XpBar xpTotal={stats.xp_total} />
             <p className="flex items-center gap-2 text-sm">
-              <Coins size={18} className="text-gold" aria-hidden />
+              <PixelIcon name="coin" scale={2} className="text-gold" />
               <span className="font-semibold tabular-nums">{stats.coins}</span>
               <span className="text-text-muted">coins</span>
             </p>
@@ -60,9 +60,9 @@ export default async function ProfilePage() {
 
         <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {tiles.map(({ label, value }) => (
-            <div key={label} className="rounded-xl border border-border bg-surface p-4">
+            <div key={label} className="border border-border bg-surface p-4 shadow-card">
               <dt className="text-sm text-text-muted">{label}</dt>
-              <dd className="text-2xl font-bold tabular-nums">{value}</dd>
+              <dd className="font-pixel text-4xl tabular-nums">{value}</dd>
             </div>
           ))}
         </dl>
