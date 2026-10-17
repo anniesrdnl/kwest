@@ -199,7 +199,7 @@ All text and background pairs meet WCAG AA contrast.
 **Pixel pieces** (all drawn from text grids or plain CSS, no image files):
 - `Panel` and the hero cards use a stepped-corner frame (`.pixel-frame` inside `.pixel-lift` in `globals.css`). A frame's own shadow would be cut off by its corners, so the shadow sits on the wrapper.
 - `PixelBar` (`src/components/ui/pixel-bar.tsx`) is the progress bar: square blocks with a lit top edge. It is used for XP, daily goal, study progress, the challenge timer and achievement progress.
-- `PixelIcon` and `Kip` (`src/components/brand/pixel.tsx`) are the icon set and the mascot. Kip is an original pixel bunny with tall ears and a blush bow tie (inspired by the simple picture-book style, not a copy of any existing character). It has four moods (happy, cheer, sad, think) and hops gently; reduced-motion turns that off.
+- `PixelIcon` and `Kip` (`src/components/brand/pixel.tsx`) are the icon set and the mascot. Kip is a pixel bunny in a pink dress. It has four moods (happy, cheer, sad, think) and hops gently; reduced-motion turns that off.
 - Buttons move down and lose their shadow when pressed. Hovers still change color only.
 - A row of square dashes trims the bottom of the header.
 

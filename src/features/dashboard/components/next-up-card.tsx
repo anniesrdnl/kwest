@@ -119,7 +119,7 @@ function NextUpShell({ label, mood, children }: { label: string; mood: KipMood; 
           </h2>
           {children}
         </div>
-        <Kip mood={mood} scale={5} bob className="order-first shrink-0 self-start sm:order-last sm:self-center" />
+        <Kip mood={mood} scale={4} bob className="order-first shrink-0 self-start sm:order-last sm:self-center" />
       </section>
     </div>
   );
