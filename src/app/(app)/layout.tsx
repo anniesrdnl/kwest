@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { PixelWordmark } from "@/components/brand/pixel-word";
+import { PixelIcon } from "@/components/brand/pixel";
+import { LogoMark } from "@/components/brand/wordmark";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
 import {
   DesktopNav,
@@ -8,51 +9,66 @@ import {
   MobileTabBar,
   MobileTabBarLinks,
 } from "@/features/navigation/components/main-nav";
-import {
-  PlayerPlate,
-  PlayerPlateSkeleton,
-} from "@/features/navigation/components/player-plate";
+import { getPlayer } from "@/features/profile/queries";
+import { UserAvatar, lookOf } from "@/features/shop/avatar";
+import { XpBar } from "@/features/progression/components/xp-bar";
 import { HOME_ROUTE } from "@/lib/routes";
 
-// Shell for signed-in pages. The nav floats as a pixel "dock" that stays at the top.
-// The player plate reads the session, so it streams in behind its own <Suspense>.
-// Desktop: dock with keycap tabs. Mobile: slim dock on top + a hotbar of tabs at the bottom.
+// Shell for signed-in pages. The header renders instantly; the player chip
+// reads the session, so it streams in behind its own <Suspense>.
+// Desktop: top bar with links. Mobile: slim sticky header + bottom tab bar.
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="sticky top-0 z-30 pt-3">
-        <div className="mx-auto max-w-5xl px-4">
-          <div className="pixel-lift">
-            <div className="pixel-frame flex h-14 items-center gap-3 px-3 md:gap-3 md:px-3">
-              <Link
-                href={HOME_ROUTE}
-                aria-label="Kwest, home"
-                className="group inline-flex min-h-11 items-center px-1 transition-[translate] duration-150 active:translate-y-px"
-              >
-                <PixelWordmark unit={3} />
-              </Link>
-              <Suspense fallback={<DesktopNavLinks pathname={null} />}>
-                <DesktopNav />
-              </Suspense>
-              <div className="ml-auto flex items-center gap-2 md:gap-3">
-                <Suspense fallback={<PlayerPlateSkeleton />}>
-                  <PlayerPlate />
-                </Suspense>
-                {/* On mobile, log out lives on the Profile page. */}
-                <div className="hidden md:block">
-                  <LogOutButton compact />
-                </div>
-              </div>
+      <header className="sticky top-0 z-30 border-b-2 border-border bg-surface">
+        <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-6 px-4 md:h-16">
+          <div className="flex items-center gap-6">
+            <Link
+              href={HOME_ROUTE}
+              aria-label="Kwest, home"
+              className="inline-flex min-h-11 items-center transition-[opacity,translate] duration-150 hover:opacity-70 active:translate-y-px"
+            >
+              <LogoMark />
+            </Link>
+            <Suspense fallback={<DesktopNavLinks pathname={null} />}>
+              <DesktopNav />
+            </Suspense>
+          </div>
+          <div className="flex items-center gap-3">
+            <Suspense fallback={<div className="h-5 w-28 animate-pulse bg-surface-2" />}>
+              <PlayerChip />
+            </Suspense>
+            {/* On mobile, log out lives on the Profile page. */}
+            <div className="hidden md:block">
+              <LogOutButton />
             </div>
           </div>
         </div>
       </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 md:pt-8 md:pb-12">
-        {children}
-      </main>
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 md:pt-10 md:pb-12">{children}</main>
       <Suspense fallback={<MobileTabBarLinks pathname={null} />}>
         <MobileTabBar />
       </Suspense>
+    </div>
+  );
+}
+
+async function PlayerChip() {
+  const { profile, stats } = await getPlayer();
+  return (
+    <div className="flex items-center gap-3 md:gap-4">
+      <XpBar xpTotal={stats.xp_total} compact />
+      <span className="inline-flex items-center gap-1 text-sm font-medium tabular-nums" aria-label={`${stats.coins} coins`}>
+        <PixelIcon name="coin" scale={2} className="text-gold" />
+        {stats.coins}
+      </span>
+      <Link
+        href="/profile"
+        aria-label="Your profile"
+        className="inline-flex size-11 items-center justify-center transition-[background-color,translate] duration-150 hover:bg-track active:translate-y-px"
+      >
+        <UserAvatar name={profile.display_name} look={lookOf(profile)} size="sm" />
+      </Link>
     </div>
   );
 }

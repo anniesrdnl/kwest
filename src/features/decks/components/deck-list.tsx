@@ -125,7 +125,7 @@ export function DeckList({ decks }: { decks: Deck[] }) {
           </button>
         </div>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {shown.map((deck) => (
             <li key={deck.id}>
               <Link
