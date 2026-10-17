@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { Kip, PixelIcon } from "@/components/brand/pixel";
+import { PixelIcon } from "@/components/brand/pixel";
 import { Button } from "@/components/ui/button";
 import { PixelBar } from "@/components/ui/pixel-bar";
 import type { SubmitAnswerResult } from "@/lib/types/database";
@@ -214,7 +214,7 @@ export function QuizStep({
           role="status"
           className={`flex items-start gap-4 border p-4 ${feedback.isCorrect ? "border-correct bg-correct/10" : "border-wrong bg-wrong/10"}`}
         >
-          <Kip mood={feedback.isCorrect ? "cheer" : "sad"} scale={3} bob={feedback.isCorrect} className="shrink-0" />
+          <PixelIcon name={feedback.isCorrect ? "check" : "close"} scale={4} className={`mt-1 shrink-0 ${feedback.isCorrect ? "text-correct" : "text-wrong"}`} />
           <div className="min-w-0 flex-1 space-y-2">
             <p className={`flex items-center gap-2 font-pixel text-xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
               {feedback.isCorrect ? "Correct!" : timedOut ? "Time's up" : "Not quite"}

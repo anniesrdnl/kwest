@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Kip, PixelIcon, type KipMood } from "@/components/brand/pixel";
+import { PixelIcon } from "@/components/brand/pixel";
 import { ActionButton } from "@/components/ui/action-button";
 import { ButtonLink } from "@/components/ui/button";
 import { addStarterDeck } from "@/features/decks/actions";
@@ -20,7 +20,7 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
   ].filter(Boolean);
 
   return (
-    <NextUpShell label="Today's quest" mood="happy">
+    <NextUpShell label="Today's quest">
       <div className="flex items-start gap-4">
         <DeckBadge title={deck.title} colorKey={deck.colorKey} size="lg" />
         <div className="min-w-0 flex-1">
@@ -64,7 +64,7 @@ export function AllCaughtUpCard({ decks, timeZone }: { decks: Deck[]; timeZone: 
   }
 
   return (
-    <NextUpShell label="Today's quest" mood="cheer">
+    <NextUpShell label="Today's quest">
       <div className="flex items-start gap-4">
         <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-correct">
           <PixelIcon name="check" scale={4} />
@@ -82,7 +82,7 @@ export function AllCaughtUpCard({ decks, timeZone }: { decks: Deck[]; timeZone: 
 /** A player with no decks yet. */
 export function NoDecksCard() {
   return (
-    <NextUpShell label="Your first quest" mood="think">
+    <NextUpShell label="Your first quest">
       <div className="flex items-start gap-4">
         <span className="inline-flex size-14 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-text">
           <PixelIcon name="decks" scale={3} />
@@ -106,20 +106,19 @@ export function NoDecksCard() {
   );
 }
 
-function NextUpShell({ label, mood, children }: { label: string; mood: KipMood; children: React.ReactNode }) {
+function NextUpShell({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="pixel-lift">
       <section
         aria-labelledby="next-up-heading"
-        className="pixel-frame flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:gap-8 sm:p-8"
+        className="pixel-frame p-6 sm:p-8"
       >
-        <div className="min-w-0 flex-1 space-y-5">
+        <div className="space-y-5">
           <h2 id="next-up-heading" className="font-sans text-sm font-medium text-text-muted">
             {label}
           </h2>
           {children}
         </div>
-        <Kip mood={mood} scale={5} bob className="order-first shrink-0 self-start sm:order-last sm:self-center" />
       </section>
     </div>
   );

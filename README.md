@@ -199,7 +199,7 @@ All text and background pairs meet WCAG AA contrast.
 **Pixel pieces** (all drawn from text grids or plain CSS, no image files):
 - `Panel` and the hero cards use a stepped-corner frame (`.pixel-frame` inside `.pixel-lift` in `globals.css`). A frame's own shadow would be cut off by its corners, so the shadow sits on the wrapper.
 - `PixelBar` (`src/components/ui/pixel-bar.tsx`) is the progress bar: square blocks with a lit top edge. It is used for XP, daily goal, study progress, the challenge timer and achievement progress.
-- `PixelIcon` and `Kip` (`src/components/brand/pixel.tsx`) are the icon set and the mascot. Kip is a pixel bunny with tall ears and a blush bow tie. It has four moods (happy, cheer, sad, think) and hops gently; reduced-motion turns that off.
+- `PixelIcon` (`src/components/brand/pixel.tsx`) is the pixel icon set, drawn from text grids.
 - Buttons move down and lose their shadow when pressed. Hovers still change color only.
 - A row of square dashes trims the bottom of the header.
 
@@ -220,6 +220,6 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Deck search, filters and sort
 - [x] Pixel picture-book redesign
 - [x] Install on phone (web app manifest and icons)
-- [x] Pixel redesign phase 2: stepped frames, block progress bars, pixel icons, Kip bunny mascot on Home, Study and Profile
+- [x] Pixel redesign phase 2: stepped frames, block progress bars, pixel icons on Home, Study and Profile
 - [x] Upload cards from Word, PowerPoint and PDF files
 - [ ] Multiplayer study game
