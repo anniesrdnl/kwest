@@ -23,7 +23,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
       <header className="sticky top-0 z-30 pt-3">
         <div className="mx-auto max-w-5xl px-4">
           <div className="pixel-lift">
-            <div className="pixel-frame flex h-14 items-center gap-3 px-3 md:gap-4 md:px-4">
+            <div className="pixel-frame flex h-14 items-center gap-3 px-3 md:gap-3 md:px-3">
               <Link
                 href={HOME_ROUTE}
                 aria-label="Kwest, home"

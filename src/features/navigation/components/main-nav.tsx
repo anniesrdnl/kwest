@@ -14,12 +14,12 @@ export function DesktopNav() {
 }
 
 /**
- * Tabs drawn as keycaps: raised with a thick bottom edge, they press down when clicked.
- * The page you are on stays pressed in and blush. Below the lg size only the icons show.
+ * Flat tabs inside the dock: a tint on hover, a small press when clicked, and the page you are
+ * on shown as a blush block. Below the lg size only the icons show.
  */
 export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
   return (
-    <nav aria-label="Main" className="hidden items-center gap-2 md:flex">
+    <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
       {NAV_ITEMS.map(({ href, label, icon }) => {
         const active = isActive(pathname, href);
         return (
@@ -27,10 +27,10 @@ export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`group inline-flex h-10 items-center gap-2 border-2 px-2.5 font-pixel text-base whitespace-nowrap transition-[background-color,border-color,color,translate,box-shadow] duration-150 ease-out lg:px-3 ${
+            className={`group inline-flex h-10 items-center gap-2 px-3 font-pixel text-base whitespace-nowrap transition-[background-color,color,translate] duration-150 ease-out active:translate-y-0.5 ${
               active
-                ? "translate-y-[3px] border-border-strong bg-accent text-accent-fg"
-                : "border-border bg-surface text-text-muted shadow-[0_3px_0_0_var(--shadow-soft)] hover:border-border-strong hover:bg-track hover:text-text active:translate-y-[3px] active:shadow-none"
+                ? "bg-accent text-accent-fg hover:bg-accent-hover"
+                : "text-text-muted hover:bg-track hover:text-text"
             }`}
           >
             <PixelIcon name={icon} scale={2} className="transition-transform duration-150 group-hover:-translate-y-0.5" />

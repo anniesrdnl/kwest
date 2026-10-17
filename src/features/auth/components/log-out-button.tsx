@@ -2,7 +2,7 @@ import { LogOut } from "lucide-react";
 import { PixelIcon } from "@/components/brand/pixel";
 import { logOut } from "../actions";
 
-/** `compact` is a square icon key (used in the nav). The default is a text button. */
+/** `compact` is a flat icon button (used in the nav). The default is a text button. */
 export function LogOutButton({ className = "", compact = false }: { className?: string; compact?: boolean }) {
   return (
     <form action={logOut}>
@@ -11,7 +11,7 @@ export function LogOutButton({ className = "", compact = false }: { className?: 
           type="submit"
           aria-label="Log out"
           title="Log out"
-          className={`group inline-flex size-10 items-center justify-center border-2 border-border bg-surface text-text-muted shadow-[0_3px_0_0_var(--shadow-soft)] transition-[background-color,border-color,color,translate,box-shadow] duration-150 ease-out hover:border-border-strong hover:bg-track hover:text-text active:translate-y-[3px] active:shadow-none ${className}`}
+          className={`group inline-flex size-10 items-center justify-center text-text-muted transition-[background-color,color,translate] duration-150 ease-out hover:bg-track hover:text-text active:translate-y-0.5 ${className}`}
         >
           <PixelIcon name="logout" scale={2} className="transition-transform duration-150 group-hover:translate-x-0.5" />
         </button>
