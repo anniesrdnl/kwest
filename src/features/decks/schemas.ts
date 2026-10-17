@@ -74,16 +74,13 @@ const HEADER_WORDS = /^(front|back|term|terms|definition|definitions|word|words|
  */
 export function parseCardText(text: string): ParsedCard[] {
   const cards: ParsedCard[] = [];
-  let first = true;
   for (const raw of text.split(/\r?\n/)) {
     const line = raw.trim();
     if (!line) continue;
-    const isFirst = first;
-    first = false;
 
     if (raw.includes("\t")) {
       const [prompt = "", answer = "", ...rest] = raw.split("\t").map((s) => s.trim());
-      if (isFirst && HEADER_WORDS.test(prompt) && HEADER_WORDS.test(answer)) continue;
+      if (HEADER_WORDS.test(prompt) && HEADER_WORDS.test(answer)) continue;
       const explanation = rest.filter(Boolean).join(" ");
       if (prompt && answer) cards.push(explanation ? { prompt, answer, explanation } : { prompt, answer });
       continue;
