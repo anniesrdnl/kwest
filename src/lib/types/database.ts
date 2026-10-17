@@ -12,7 +12,18 @@ export type SetVisibility = "private" | "unlisted" | "public";
 export type StudyMode = "flashcards" | "quiz" | "practice" | "game";
 export type QuestionType = "mc" | "tf" | "id" | "flash";
 export type SessionStatus = "active" | "completed" | "abandoned";
-export type ItemCategory = "hair" | "shirt" | "pants" | "accessory" | "furniture" | "decor" | "wall" | "floor";
+export type ItemCategory =
+  | "hair"
+  | "shirt"
+  | "pants"
+  | "accessory"
+  | "furniture"
+  | "decor"
+  | "wall"
+  | "floor"
+  | "avatar_icon"
+  | "avatar_color"
+  | "avatar_frame";
 export type XpSource = "answer" | "session" | "game" | "mastery" | "achievement" | "purchase" | "adjustment";
 export type ThemePreference = "system" | "light" | "dark";
 export type RoomKey = "dorm" | "library";
@@ -29,6 +40,10 @@ export type Database = {
           onboarding_step: number;
           timezone: string;
           theme: ThemePreference;
+          /** Chosen shop items (0009_shop.sql). null = default look. */
+          avatar_icon: string | null;
+          avatar_color: string | null;
+          avatar_frame: string | null;
           created_at: Timestamp;
           updated_at: Timestamp;
         };
@@ -39,6 +54,9 @@ export type Database = {
           onboarding_step?: number;
           timezone?: string;
           theme?: ThemePreference;
+          avatar_icon?: string | null;
+          avatar_color?: string | null;
+          avatar_frame?: string | null;
         };
         Relationships: [];
       };

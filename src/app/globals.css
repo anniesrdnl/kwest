@@ -118,6 +118,19 @@
   color-scheme: dark;
 }
 
+/* Avatar colors (shop items color-*). Same in both themes; the icon/letter on
+   top is espresso (butter on espresso), 9:1 or better. */
+:root {
+  --avatar-butter: #ffeda2;
+  --avatar-sage: #d9e7cf;
+  --avatar-sky: #d3e4f2;
+  --avatar-blush: #f6d6d0;
+  --avatar-lilac: #e3d8f0;
+  --avatar-mint: #cdebe1;
+  --avatar-espresso: #3e2723;
+  --frame-gold: #c9a227;
+}
+
 /* Deck colors (study_sets.color_key spine-1..8). Same in both themes:
    white text on each is 4.5:1 or better. */
 :root {

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { Coins } from "lucide-react";
 import { Wordmark } from "@/components/brand/wordmark";
@@ -9,6 +10,7 @@ import {
   MobileTabBarLinks,
 } from "@/features/navigation/components/main-nav";
 import { getPlayer } from "@/features/profile/queries";
+import { UserAvatar, lookOf } from "@/features/shop/avatar";
 import { XpBar } from "@/features/progression/components/xp-bar";
 import { HOME_ROUTE } from "@/lib/routes";
 
@@ -46,14 +48,17 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
 }
 
 async function PlayerChip() {
-  const { stats } = await getPlayer();
+  const { profile, stats } = await getPlayer();
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3 md:gap-4">
       <XpBar xpTotal={stats.xp_total} compact />
       <span className="inline-flex items-center gap-1 text-sm font-medium tabular-nums" aria-label={`${stats.coins} coins`}>
         <Coins size={16} className="text-gold" aria-hidden />
         {stats.coins}
       </span>
+      <Link href="/profile" aria-label="Your profile" className="inline-flex size-11 items-center justify-center rounded-lg">
+        <UserAvatar name={profile.display_name} look={lookOf(profile)} size="sm" />
+      </Link>
     </div>
   );
 }

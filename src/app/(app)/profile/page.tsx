@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Coins } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
@@ -6,6 +7,7 @@ import { ResetPasswordForm } from "@/features/auth/components/reset-password-for
 import { DailyGoalForm } from "@/features/profile/components/daily-goal-form";
 import { ProfileForm } from "@/features/profile/components/profile-form";
 import { getPlayer } from "@/features/profile/queries";
+import { UserAvatar, lookOf } from "@/features/shop/avatar";
 import { AchievementList } from "@/features/progression/components/achievement-list";
 import { WeekChart } from "@/features/progression/components/week-chart";
 import { XpBar } from "@/features/progression/components/xp-bar";
@@ -28,17 +30,15 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto max-w-3xl space-y-10">
       <header className="flex items-center gap-4">
-        <span
-          aria-hidden
-          className="inline-flex size-16 shrink-0 items-center justify-center rounded-2xl bg-secondary text-2xl font-bold text-secondary-fg"
-        >
-          {profile.display_name.trim().charAt(0).toUpperCase() || "?"}
-        </span>
+        <UserAvatar name={profile.display_name} look={lookOf(profile)} size="lg" />
         <div className="min-w-0">
           <h1 className="text-2xl font-bold break-words md:text-3xl">{profile.display_name}</h1>
           <p className="text-sm text-text-muted">
             {profile.username && <>@{profile.username} · </>}Studying since {joined}
           </p>
+          <Link href="/shop" className="text-sm font-semibold underline decoration-progress decoration-2 underline-offset-4">
+            Change avatar
+          </Link>
         </div>
       </header>
 

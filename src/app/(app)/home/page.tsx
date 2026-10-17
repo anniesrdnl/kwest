@@ -8,6 +8,7 @@ import { RecentDecks } from "@/features/dashboard/components/recent-decks";
 import { getDashboard } from "@/features/dashboard/queries";
 import { isOnboarded } from "@/features/onboarding/steps";
 import { getPlayer } from "@/features/profile/queries";
+import { UserAvatar, lookOf } from "@/features/shop/avatar";
 import { XpBar } from "@/features/progression/components/xp-bar";
 import { ONBOARDING_ROUTE } from "@/lib/routes";
 
@@ -24,7 +25,10 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold md:text-3xl">Hi, {player.profile.display_name}</h1>
+      <div className="flex items-center gap-3">
+        <UserAvatar name={player.profile.display_name} look={lookOf(player.profile)} size="md" />
+        <h1 className="text-2xl font-bold md:text-3xl">Hi, {player.profile.display_name}</h1>
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2 md:gap-6">
         <div className="md:col-span-2">
