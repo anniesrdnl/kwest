@@ -62,40 +62,6 @@ export type DeckInput = z.input<typeof deckSchema>;
 /** Result of saveDeck. `errors` keys are paths like "title" or "cards.3.prompt". */
 export type SaveDeckResult = { ok: false; message: string; errors?: Record<string, string> };
 
-export type ParsedCard = { prompt: string; answer: string; explanation?: string };
-
-// A first row like "Term<tab>Definition" is a header from a spreadsheet, not a card.
-const HEADER_WORDS = /^(front|back|term|terms|definition|definitions|word|words|meaning|meanings|question|questions|answer|answers|note|notes)$/i;
-
-/**
- * Turns pasted text into cards. One card per line; the front and back are split
- * by a tab (what Quizlet and spreadsheets export), or by " - " or ":" when there's no tab.
- * With tabs, a third column becomes the card's note.
- */
-export function parseCardText(text: string): ParsedCard[] {
-  const cards: ParsedCard[] = [];
-  for (const raw of text.split(/\r?\n/)) {
-    const line = raw.trim();
-    if (!line) continue;
-
-    if (raw.includes("\t")) {
-      const [prompt = "", answer = "", ...rest] = raw.split("\t").map((s) => s.trim());
-      if (HEADER_WORDS.test(prompt) && HEADER_WORDS.test(answer)) continue;
-      const explanation = rest.filter(Boolean).join(" ");
-      if (prompt && answer) cards.push(explanation ? { prompt, answer, explanation } : { prompt, answer });
-      continue;
-    }
-
-    const sep = line.includes(" - ") ? " - " : line.includes(":") ? ":" : null;
-    if (!sep) continue;
-    const at = line.indexOf(sep);
-    const prompt = line.slice(0, at).trim();
-    const answer = line.slice(at + sep.length).trim();
-    if (prompt && answer) cards.push({ prompt, answer });
-  }
-  return cards;
-}
-
 /**
  * Turns a CSV file (what Excel and Google Sheets save) into tab-separated lines,
  * so it can go through parseCardText. Handles quoted cells with commas, quotes and line breaks.

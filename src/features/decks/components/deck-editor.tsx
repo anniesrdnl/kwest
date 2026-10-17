@@ -9,7 +9,8 @@ import { TextArea } from "@/components/ui/text-area";
 import type { CardKind } from "@/lib/types/database";
 import { saveDeck } from "../actions";
 import { CARD_FILE_ACCEPT, readCardFile } from "../read-card-file";
-import { DECK_COLORS, LIMITS, parseCardText, type DeckInput, type ParsedCard } from "../schemas";
+import { buildReviewer, type ParsedCard } from "../reviewer";
+import { DECK_COLORS, LIMITS, type DeckInput } from "../schemas";
 import { deckColor } from "./deck-badge";
 
 type Row = {
@@ -182,21 +183,25 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
     if (!file) return;
     const result = await readCardFile(file);
     if ("error" in result) return setFileNote({ ok: false, message: result.error });
-    const found = parseCardText(result.text);
+    const { cards: found, left } = buildReviewer(result.text);
     if (!found.length) {
       return setFileNote({
         ok: false,
-        message: `No cards found in ${file.name}. Kwest looks for table rows, and lines like "word - meaning" or "word: meaning".`,
+        message: `No cards found in ${file.name}. Kwest looks for tables, lines like "word - meaning", questions with their answers, and sentences like "A cell is ...".`,
       });
     }
     const room = LIMITS.cards - cardCount;
     if (room <= 0) return setFileNote({ ok: false, message: `This deck is full (${LIMITS.cards} cards).` });
     const added = found.slice(0, room);
     importCards(added);
+    const questions = added.filter((c) => c.kind === "question").length;
+    const words = added.length - questions;
+    const parts = [words && `${words} ${words === 1 ? "word" : "words"}`, questions && `${questions} ${questions === 1 ? "question" : "questions"}`];
     setFileNote({
       ok: true,
       message:
-        `Added ${added.length === 1 ? "1 card" : `${added.length} cards`} from ${file.name}.` +
+        `Made ${added.length === 1 ? "1 card" : `${added.length} cards`} from ${file.name} (${parts.filter(Boolean).join(", ")}).` +
+        (left ? ` Left out ${left} ${left === 1 ? "line" : "lines"} that didn't look like review material.` : "") +
         (found.length > added.length ? ` Only the first ${added.length} fit (a deck holds up to ${LIMITS.cards}).` : "") +
         " Check them below, then save.",
     });
