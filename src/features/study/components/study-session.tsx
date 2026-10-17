@@ -342,7 +342,7 @@ function Results({
   return (
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-3 text-center">
-        <Kip mood={great ? "cheer" : "happy"} scale={7} bob className="mx-auto" />
+        <Kip mood={great ? "cheer" : "happy"} scale={6} bob className="mx-auto" />
         <h1 ref={headingRef} tabIndex={-1} className="text-3xl outline-none sm:text-4xl">
           Session complete
         </h1>

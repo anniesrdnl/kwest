@@ -214,7 +214,7 @@ export function QuizStep({
           role="status"
           className={`flex items-start gap-4 border p-4 ${feedback.isCorrect ? "border-correct bg-correct/10" : "border-wrong bg-wrong/10"}`}
         >
-          <Kip mood={feedback.isCorrect ? "cheer" : "sad"} scale={4} bob={feedback.isCorrect} className="shrink-0" />
+          <Kip mood={feedback.isCorrect ? "cheer" : "sad"} scale={3} bob={feedback.isCorrect} className="shrink-0" />
           <div className="min-w-0 flex-1 space-y-2">
             <p className={`flex items-center gap-2 font-pixel text-xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
               {feedback.isCorrect ? "Correct!" : timedOut ? "Time's up" : "Not quite"}
