@@ -28,8 +28,8 @@ export type ProgressOverview = {
   achievements: Achievement[];
 };
 
-// Achievements for features that don't exist (room decorating).
-const COMING_LATER = new Set(["decorator"]);
+// Achievements for features that don't exist yet.
+const COMING_LATER = new Set<string>();
 
 /** Stats, the last 7 days and achievements for the profile page. */
 export async function getProgressOverview(): Promise<ProgressOverview> {

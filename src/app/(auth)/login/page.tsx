@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 import { AuthCard } from "@/features/auth/components/auth-card";
+import { AuthSwitchLink } from "@/features/auth/components/auth-switch-link";
 import { LinkErrorNotice } from "@/features/auth/components/link-error-notice";
 import { LoginForm } from "@/features/auth/components/login-form";
 
@@ -15,9 +15,7 @@ export default function LoginPage({ searchParams }: PageProps<"/login">) {
       footer={
         <>
           New to Kwest?{" "}
-          <Link href="/signup" className="text-text underline underline-offset-4">
-            Create an account
-          </Link>
+          <AuthSwitchLink href="/signup">Create an account</AuthSwitchLink>
         </>
       }
     >

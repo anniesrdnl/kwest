@@ -16,7 +16,7 @@ export function ResetPasswordForm() {
       <div className="space-y-5">
         <FormMessage state={state} />
         <ButtonLink href={HOME_ROUTE} size="lg" className="w-full">
-          Back to my room
+          Go to Home
         </ButtonLink>
       </div>
     );

@@ -5,13 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Field, PasswordField } from "@/components/ui/field";
 import { FormMessage } from "@/components/ui/form-message";
 import { idleState } from "@/lib/forms";
-import { readTimeZone, useBrowserValue } from "@/lib/hooks/use-browser-value";
+import { readSearchParam, readTimeZone, useBrowserValue } from "@/lib/hooks/use-browser-value";
 import { signUp } from "../actions";
+
+const readNext = readSearchParam("next");
 
 export function SignUpForm() {
   const [state, action, pending] = useActionState(signUp, idleState);
   // The browser's time zone (the server doesn't know it).
   const timezone = useBrowserValue(readTimeZone);
+  // A shared or challenge link to open after signing up (?next=...).
+  const next = useBrowserValue(readNext);
 
   return (
     <form action={action} className="space-y-5" noValidate>
@@ -44,8 +48,9 @@ export function SignUpForm() {
         errors={state.fieldErrors?.password}
       />
       <input type="hidden" name="timezone" value={timezone} />
+      <input type="hidden" name="next" value={next} />
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Creating your room…" : "Create account"}
+        {pending ? "Creating your account…" : "Create account"}
       </Button>
     </form>
   );

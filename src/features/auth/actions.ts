@@ -22,13 +22,17 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   const parsed = signUpSchema.safeParse({ ...fields, password: formValue(formData, "password") });
   if (!parsed.success) return validationError(parsed.error, fields);
 
+  // Signed up from a shared or challenge link: open it right away. The welcome
+  // steps still run the first time they open Home.
+  const next = safeNextPath(formValue(formData, "next"), "");
+
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
       data: { display_name: parsed.data.displayName },
-      emailRedirectTo: `${await siteOrigin()}/auth/callback?next=${HOME_ROUTE}`,
+      emailRedirectTo: `${await siteOrigin()}/auth/callback?next=${encodeURIComponent(next || HOME_ROUTE)}`,
     },
   });
   if (error) return { status: "error", message: authErrorMessage(error), fields };
@@ -45,7 +49,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
     await supabase.from("profiles").update({ timezone }).eq("id", data.user.id);
   }
 
-  redirect(ONBOARDING_ROUTE);
+  redirect(next || ONBOARDING_ROUTE);
 }
 
 export async function logIn(_prev: FormState, formData: FormData): Promise<FormState> {

@@ -44,7 +44,7 @@ export function LoginForm() {
       />
       <input type="hidden" name="next" value={next} />
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
-        {pending ? "Opening your room…" : "Log in"}
+        {pending ? "Logging in…" : "Log in"}
       </Button>
     </form>
   );

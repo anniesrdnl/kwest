@@ -72,7 +72,7 @@ insert into public.achievements (key, name, description, icon_key, xp_reward, co
   ('perfect_quiz',  'Flawless',       'Finish a quiz of 10+ questions with no mistakes.',   'badge-star',     40, 20, 3),
   ('dust_buster',   'Dust Buster',    'Win a Dust Duel.',                                   'badge-broom',    30, 20, 4),
   ('first_mastery', 'Gold Trim',      'Master a whole tome.',                               'badge-gold',     50, 30, 5),
-  ('decorator',     'Decorator',      'Place 5 items you bought in your room.',             'badge-plant',    30, 20, 6),
+  ('rival',         'Friendly Rival', 'Have a friend play your challenge link.',            'badge-rival',    30, 20, 6),
   ('level_5',       'Study Explorer', 'Reach level 5.',                                     'badge-compass',  0,  50, 7),
   ('cards_100',     'Hundred Cards',  'Review 100 cards.',                                  'badge-stack',    50, 30, 8),
   ('lantern_7',     'Lamplighter',    'Meet your daily goal on 7 different days.',          'badge-lantern',  60, 40, 9)

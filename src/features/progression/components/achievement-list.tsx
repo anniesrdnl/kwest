@@ -5,11 +5,11 @@ import {
   Library,
   Lock,
   Medal,
-  Sprout,
   Star,
   Swords,
   Target,
   Trophy,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import type { Achievement } from "../queries";
@@ -20,7 +20,7 @@ const ICONS: Record<string, LucideIcon> = {
   "badge-star": Star,
   "badge-broom": Swords,
   "badge-gold": Medal,
-  "badge-plant": Sprout,
+  "badge-rival": Users,
   "badge-compass": Compass,
   "badge-stack": Library,
   "badge-lantern": Target,
