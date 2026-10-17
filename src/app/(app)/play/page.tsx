@@ -23,7 +23,7 @@ export default async function StudyPage() {
       <div className="space-y-1">
         <h1 className="text-2xl font-bold md:text-3xl">Study</h1>
         <p className="text-text-muted">
-          <strong className="font-semibold text-text">Quiz</strong> moves cards to a later review when you get them right.{" "}
+          <strong className="font-semibold text-text">Quiz</strong> has three levels: easy (multiple choice), average (matching) and difficult (type the answer). Right answers move cards to a later review.{" "}
           <strong className="font-semibold text-text">Flashcards</strong> are for learning new cards.{" "}
           <strong className="font-semibold text-text">Challenge</strong> is a game: get 8 right before you miss 3.
         </p>

@@ -95,6 +95,58 @@ export function buildQuiz(cards: StudyCard[], pool: StudyCard[]): QuizQuestion[]
   });
 }
 
+export type Level = "easy" | "average" | "difficult";
+
+/** The quiz levels, from gentlest to hardest. */
+export const LEVELS: readonly { key: Level; label: string; way: string; blurb: string }[] = [
+  { key: "easy", label: "Easy", way: "Multiple choice", blurb: "Pick the right answer from a short list." },
+  { key: "average", label: "Average", way: "Matching", blurb: "Match each card with its answer." },
+  { key: "difficult", label: "Difficult", way: "Identification", blurb: "Type each answer from memory." },
+];
+
+/** One round of matching: a few cards, and their answers in a shuffled order. */
+export type MatchRound = { cards: StudyCard[]; answers: string[] };
+
+/** One step of a quiz: a single question, or a round of matching. */
+export type QuizUnit = { question: QuizQuestion } | { round: MatchRound };
+
+const MATCH_MAX = 5;
+
+/** Splits n cards into rounds of 2 to 5 that are as even as possible: 10 is 5+5, 7 is 4+3, 6 is 3+3. */
+function roundSizes(n: number): number[] {
+  const rounds = Math.ceil(n / MATCH_MAX);
+  const base = Math.floor(n / rounds);
+  return Array.from({ length: rounds }, (_, i) => base + (i < n % rounds ? 1 : 0));
+}
+
+/**
+ * Builds a quiz for one level. Easy is multiple choice, average is matching and difficult is a typed answer.
+ * A deck with too few other answers can't make choices, and one card can't make a match, so those fall back
+ * to a typed answer. Runs in the browser after "Start", so the random order never differs from the server.
+ */
+export function buildLevelQuiz(cards: StudyCard[], pool: StudyCard[], level: Level): QuizUnit[] {
+  if (level === "average" && cards.length >= 2) {
+    let at = 0;
+    return roundSizes(cards.length).map((size) => {
+      const group = cards.slice(at, at + size);
+      at += size;
+      return { round: { cards: group, answers: shuffle(group.map((c) => c.answer)) } };
+    });
+  }
+  return cards.map((card): QuizUnit => {
+    const wrong = level === "easy" ? wrongAnswers(card, pool) : [];
+    if (wrong.length === 0) return { question: { type: "id", card } };
+    return { question: { type: "mc", card, options: shuffle([card.answer, ...wrong.slice(0, 3)]) } };
+  });
+}
+
+/** The instruction above a matching round. */
+export function matchAsk(cards: StudyCard[]): string {
+  if (cards.every((c) => c.kind === "term")) return "Match each word with its meaning";
+  if (cards.every((c) => c.kind === "question")) return "Match each question with its answer";
+  return "Match each card with its answer";
+}
+
 /** What the player sees as the question, per type. Typed answers on word cards ask for the word. */
 export function questionText(q: QuizQuestion): { ask: string; text: string } {
   if (q.type === "id" && q.card.kind === "term") return { ask: "Type the word for this meaning", text: q.card.answer };

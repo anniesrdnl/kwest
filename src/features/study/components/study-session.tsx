@@ -10,8 +10,19 @@ import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { HOME_ROUTE } from "@/lib/routes";
 import type { FinishSessionResult, SubmitAnswerResult } from "@/lib/types/database";
 import { answerCard, finishStudySession, startStudySession } from "../actions";
+import { LevelPicker } from "./level-picker";
+import { MatchStep } from "./match-step";
 import { QuizStep } from "./quiz-step";
-import { buildQuiz, pickSessionCards, type QuizQuestion, type StudyCard, type StudyMode } from "../logic";
+import {
+  buildLevelQuiz,
+  LEVELS,
+  pickSessionCards,
+  type Level,
+  type MatchRound,
+  type QuizQuestion,
+  type StudyCard,
+  type StudyMode,
+} from "../logic";
 
 type DeckInfo = { id: string; title: string; colorKey: string };
 
@@ -25,6 +36,8 @@ type SessionProps = { deck: DeckInfo; mode: StudyMode; cards: StudyCard[] };
  */
 export function StudySession(props: SessionProps) {
   const [generation, setGeneration] = useState(0);
+  // Kept here, so "Study again" starts on the level you just played.
+  const [level, setLevel] = useState<Level>("easy");
   const finished = useRef(false);
 
   useLayoutEffect(() => {
@@ -40,15 +53,25 @@ export function StudySession(props: SessionProps) {
     <Session
       key={generation}
       {...props}
+      level={level}
+      onLevel={setLevel}
       onFinished={() => (finished.current = true)}
       onRestart={() => setGeneration((g) => g + 1)}
     />
   );
 }
 
-type Item = { card: StudyCard; question: QuizQuestion | null; retry: boolean };
+/** One step of a session: a card (flashcard or quiz question), or a round of matching. */
+type Item =
+  | { kind: "card"; card: StudyCard; question: QuizQuestion | null; retry: boolean }
+  | { kind: "match"; round: MatchRound };
 
-function Session({ deck, mode, cards, onFinished, onRestart }: SessionProps & { onFinished: () => void; onRestart: () => void }) {
+/** How many cards a step covers, so the progress bar counts cards, not steps. */
+const weight = (item: Item) => (item.kind === "match" ? item.round.cards.length : 1);
+
+type SessionExtras = { level: Level; onLevel: (level: Level) => void; onFinished: () => void; onRestart: () => void };
+
+function Session({ deck, mode, cards, level, onLevel, onFinished, onRestart }: SessionProps & SessionExtras) {
   const [phase, setPhase] = useState<"intro" | "running" | "done">("intro");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [items, setItems] = useState<Item[]>([]);
@@ -66,24 +89,37 @@ function Session({ deck, mode, cards, onFinished, onRestart }: SessionProps & { 
       const res = await startStudySession(deck.id, mode);
       if (!res.ok) return setError(res.message);
       const picked = pickSessionCards(cards, mode);
-      const questions = mode === "quiz" ? buildQuiz(picked, cards) : null;
-      setItems(picked.map((card, i) => ({ card, question: questions?.[i] ?? null, retry: false })));
+      if (mode === "quiz") {
+        setItems(
+          buildLevelQuiz(picked, cards, level).map((unit): Item =>
+            "round" in unit
+              ? { kind: "match", round: unit.round }
+              : { kind: "card", card: unit.question.card, question: unit.question, retry: false },
+          ),
+        );
+      } else {
+        setItems(picked.map((card): Item => ({ kind: "card", card, question: null, retry: false })));
+      }
       setSessionId(res.sessionId);
       setIndex(0);
       setPhase("running");
     });
 
-  /** Records one answer. Missed cards come back once at the end of the session. Returns true if re-queued. */
-  const record = (r: SubmitAnswerResult, item: Item): boolean => {
+  const tallyAnswer = (r: SubmitAnswerResult) =>
     setTally((t) => ({
       correct: t.correct + (r.isCorrect ? 1 : 0),
       wrong: t.wrong + (r.isCorrect ? 0 : 1),
       xp: t.xp + r.xp,
       levelBefore: t.levelBefore || r.levelBefore,
     }));
+
+  /** Records one answer. Missed cards come back once at the end of the session. Returns true if re-queued. */
+  const record = (r: SubmitAnswerResult, item: Item & { kind: "card" }): boolean => {
+    tallyAnswer(r);
     if (!r.isCorrect && !item.retry) {
-      const question = mode === "quiz" ? buildQuiz([item.card], cards)[0] : null;
-      setItems((list) => [...list, { card: item.card, question, retry: true }]);
+      const unit = mode === "quiz" ? buildLevelQuiz([item.card], cards, level)[0] : null;
+      const question = unit && "question" in unit ? unit.question : null;
+      setItems((list) => [...list, { kind: "card", card: item.card, question, retry: true }]);
       return true;
     }
     return false;
@@ -108,18 +144,21 @@ function Session({ deck, mode, cards, onFinished, onRestart }: SessionProps & { 
 
   if (phase === "intro") {
     return (
-      <div className="pixel-lift mx-auto max-w-xl">
+      <div className={`pixel-lift mx-auto ${mode === "quiz" ? "max-w-2xl" : "max-w-xl"}`}>
         <section className="pixel-frame space-y-6 p-6 text-center sm:p-8">
           <div className="space-y-2">
-            <h1 className="text-3xl">{mode === "quiz" ? "Quiz" : "Flashcards"}</h1>
+            <h1 className="text-[2rem]">{mode === "quiz" ? "Quiz" : "Flashcards"}</h1>
             <p className="flex items-center justify-center gap-2 text-text-muted">
               <DeckBadge title={deck.title} colorKey={deck.colorKey} size="sm" />
               <span className="min-w-0 truncate">{deck.title}</span>
             </p>
           </div>
+          {mode === "quiz" && <LevelPicker level={level} onChange={onLevel} />}
           <p className="text-text-muted">
             {mode === "quiz"
-              ? `${planned.length} questions. Answers you get right move cards to a later review.`
+              ? `${planned.length} ${planned.length === 1 ? "card" : "cards"}, ${
+                  level === "average" ? "a few at a time" : "one at a time"
+                }. Answers you get right move cards to a later review.`
               : `${planned.length} cards. Flip each card, then say if you knew it.`}
           </p>
           {error && (
@@ -141,19 +180,43 @@ function Session({ deck, mode, cards, onFinished, onRestart }: SessionProps & { 
   }
 
   if (phase === "done" && result) {
-    return <Results deck={deck} mode={mode} result={result} levelBefore={tally.levelBefore} onRestart={onRestart} />;
+    return (
+      <Results
+        deck={deck}
+        mode={mode}
+        levelLabel={mode === "quiz" ? LEVELS.find((l) => l.key === level)?.label : undefined}
+        result={result}
+        levelBefore={tally.levelBefore}
+        onRestart={onRestart}
+      />
+    );
   }
 
   const item = items[index];
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <SessionHeader deck={deck} done={index} total={items.length} />
+      <SessionHeader
+        deck={deck}
+        done={items.slice(0, index).reduce((n, it) => n + weight(it), 0)}
+        total={items.reduce((n, it) => n + weight(it), 0)}
+      />
       {error && (
         <p role="alert" className="rounded-lg border border-wrong/30 bg-wrong/10 px-3 py-2 text-sm text-wrong">
           {error}
         </p>
       )}
-      {item.question ? (
+      {item.kind === "match" ? (
+        <MatchStep
+          key={`${index}-match`}
+          sessionId={sessionId!}
+          round={item.round}
+          isLast={index + 1 >= items.length}
+          busy={pending}
+          onAnswered={tallyAnswer}
+          onError={setError}
+          onNext={() => next()}
+        />
+      ) : item.question ? (
         <QuizStep
           key={`${index}-${item.card.id}`}
           sessionId={sessionId!}
@@ -311,12 +374,14 @@ function Face({ label, text, note, hint, back = false }: { label: string; text: 
 function Results({
   deck,
   mode,
+  levelLabel,
   result,
   levelBefore,
   onRestart,
 }: {
   deck: DeckInfo;
   mode: StudyMode;
+  levelLabel?: string;
   result: FinishSessionResult;
   levelBefore: number;
   onRestart: () => void;
@@ -344,7 +409,10 @@ function Results({
         <h1 ref={headingRef} tabIndex={-1} className="text-3xl outline-none sm:text-4xl">
           Session complete
         </h1>
-        <p className="text-text-muted">{deck.title}</p>
+        <p className="text-text-muted">
+          {deck.title}
+          {levelLabel && ` · ${levelLabel} level`}
+        </p>
       </div>
 
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">

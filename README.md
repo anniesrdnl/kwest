@@ -35,7 +35,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 - Saving is atomic: a deck and all its cards are written in one database transaction.
 
 **Studying**
-- **Quiz**: multiple choice, true/false and typed answers. New cards get easier formats; familiar cards ask you to type. Missed cards come back once at the end of the session.
+- **Quiz** has three levels you pick before you start: **Easy** is multiple choice, **Average** is matching (up to 5 cards per round; tap a card, then its answer) and **Difficult** is identification (type the answer). A deck with too few other answers falls back to typing on Easy, and a single card falls back to typing on Average. Every answer is graded on the server like before, so XP and review dates work the same at every level (matching pairs count as multiple choice). The level is not saved with the results. Missed cards come back once at the end of the session on Easy and Difficult; in matching you keep going until every pair is right.
 - **Flashcards**: flip each card and mark it *Still learning* or *I knew it*. Keyboard shortcuts included (Space, 1, 2).
 - **Challenge**: a game. Get 8 right before you miss 3 (three hearts), with an optional 15-second timer per question (25 seconds for typed answers). Winning earns bonus XP and an award; the win is checked on the server.
 - **Beat my score**: after a challenge, get a link to send to a friend. They play the same deck under the same rules, and a scoreboard on the link shows everyone's best game (most right, then fewest misses, then fastest). Answers are graded on the server. Link games give no XP or coins, and they never change the friend's own card progress.
@@ -214,6 +214,7 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Dashboard with next best action and daily goal
 - [x] Deck editor
 - [x] Quiz and flashcard study modes
+- [x] Quiz levels: easy (multiple choice), average (matching), difficult (identification)
 - [x] Profile stats, 7-day activity chart, achievements and daily goal setting
 - [x] Coin shop: avatar icons, colors and frames
 - [x] Challenge mode (solo study game)
