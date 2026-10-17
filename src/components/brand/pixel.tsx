@@ -187,3 +187,8 @@ export function Cloud({ scale = 6, className, style }: { scale?: number; classNa
     </span>
   );
 }
+
+/** One-color pixel picture that follows the text color. Size it with CSS (height, width auto). */
+export function PixelArt({ rows, className }: { rows: readonly string[]; className?: string }) {
+  return <Bitmap rows={rows} palette={{ "#": "currentColor" }} scale={1} className={className} />;
+}
