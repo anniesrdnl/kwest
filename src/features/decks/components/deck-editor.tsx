@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, ArrowUp, FileUp, ListPlus, Plus, StickyNote, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ClipboardPaste, FileUp, Plus, StickyNote, Trash2 } from "lucide-react";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -71,15 +71,18 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
     const cards = initial.cards.map((c, i) =>
       blankRow(`row-${i}`, { ...c, explanation: c.explanation ?? "", showNote: Boolean(c.explanation) }),
     );
-    return cards.length ? cards : [blankRow("row-0"), blankRow("row-1")];
+    return cards;
   });
-  const nextKey = useRef(Math.max(initial.cards.length, 2));
+  const nextKey = useRef(initial.cards.length);
   const makeRow = (card?: Partial<Row>) => blankRow(`row-${nextKey.current++}`, card);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const [showImport, setShowImport] = useState(false);
+  const [fileNote, setFileNote] = useState<{ ok: boolean; message: string } | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const savingRef = useRef(false);
   const focusKey = useRef<string | null>(null);
@@ -141,7 +144,7 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
       return copy;
     });
 
-  const remove = (key: string) => setRows((rs) => (rs.length === 1 ? [makeRow()] : rs.filter((r) => r.key !== key)));
+  const remove = (key: string) => setRows((rs) => rs.filter((r) => r.key !== key));
 
   const addRow = () => {
     const row = makeRow({ kind: rows.at(-1)?.kind ?? "term" });
@@ -158,7 +161,38 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
     );
     clearError("cards");
     setShowImport(false);
+    setFileNote(null);
   };
+
+  const cardCount = rows.filter((r) => !isBlank(r)).length;
+
+  /** Reads a picked or dropped file and adds its cards straight to the deck. */
+  const uploadFile = async (file: File | undefined) => {
+    if (!file) return;
+    const result = await readCardFile(file);
+    if ("error" in result) return setFileNote({ ok: false, message: result.error });
+    const found = parseCardText(result.text);
+    if (!found.length) {
+      return setFileNote({
+        ok: false,
+        message: `No cards found in ${file.name}. Put the front and back in two columns, or one card per line.`,
+      });
+    }
+    const room = LIMITS.cards - cardCount;
+    if (room <= 0) return setFileNote({ ok: false, message: `This deck is full (${LIMITS.cards} cards).` });
+    const added = found.slice(0, room);
+    importCards(added);
+    setFileNote({
+      ok: true,
+      message:
+        `Added ${added.length === 1 ? "1 card" : `${added.length} cards`} from ${file.name}.` +
+        (found.length > added.length ? ` Only the first ${added.length} fit (a deck holds up to ${LIMITS.cards}).` : "") +
+        " Check them below, then save.",
+    });
+  };
+
+  const openFilePicker = () => fileInput.current?.click();
+  const togglePaste = () => setShowImport((v) => !v);
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,8 +223,6 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
       }
     });
   };
-
-  const cardCount = rows.filter((r) => !isBlank(r)).length;
 
   return (
     <form ref={formRef} onSubmit={save} noValidate className="space-y-8">
@@ -256,48 +288,123 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
         </fieldset>
       </section>
 
-      <section aria-labelledby="cards-heading" className="space-y-4">
+      <section
+        aria-labelledby="cards-heading"
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
+        onDragLeave={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          void uploadFile(e.dataTransfer.files[0]);
+        }}
+        className={`space-y-4 rounded-xl ${dragging ? "outline-2 outline-offset-8 outline-text outline-dashed" : ""}`}
+      >
+        <input
+          ref={fileInput}
+          type="file"
+          accept=".txt,.csv,.tsv,text/plain,text/csv,text/tab-separated-values"
+          className="sr-only"
+          tabIndex={-1}
+          aria-hidden
+          onChange={(e) => {
+            void uploadFile(e.target.files?.[0]);
+            e.target.value = "";
+          }}
+        />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 id="cards-heading" className="text-lg font-semibold">
             Cards <span className="font-normal text-text-muted">({cardCount})</span>
           </h2>
-          <Button variant="secondary" onClick={() => setShowImport((v) => !v)} aria-expanded={showImport}>
-            <ListPlus size={18} aria-hidden />
-            Add many cards
-          </Button>
+          {rows.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <Button variant="secondary" onClick={openFilePicker}>
+                <FileUp size={18} aria-hidden />
+                Upload file
+              </Button>
+              <Button variant="outline" onClick={togglePaste} aria-expanded={showImport}>
+                <ClipboardPaste size={18} aria-hidden />
+                Paste list
+              </Button>
+            </div>
+          )}
         </div>
 
+        <div aria-live="polite">
+          {fileNote && (
+            <p
+              className={`rounded-lg border px-3 py-2 text-sm ${
+                fileNote.ok ? "border-correct/30 bg-correct/10 text-correct" : "border-wrong/30 bg-wrong/10 text-wrong"
+              }`}
+            >
+              {fileNote.message}
+            </p>
+          )}
+        </div>
         {showImport && <ImportPanel room={LIMITS.cards - cardCount} onImport={importCards} onCancel={() => setShowImport(false)} />}
         {errors.cards && <p className="text-sm text-wrong">{errors.cards}</p>}
 
-        <ol className="space-y-3">
-          {rows.map((row, i) => (
-            <CardRow
-              key={row.key}
-              row={row}
-              number={i + 1}
-              isFirst={i === 0}
-              isLast={i === rows.length - 1}
-              errors={errors}
-              onChange={(patch) => update(row.key, patch)}
-              onMove={(by) => move(i, by)}
-              onRemove={() => remove(row.key)}
-            />
-          ))}
-        </ol>
+        {rows.length === 0 ? (
+          <div className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-border-strong bg-surface px-4 py-10 text-center">
+            <div className="space-y-1">
+              <p className="font-semibold">No cards yet</p>
+              <p className="text-sm text-text-muted">Type them one by one, or add many at once from a file or a list.</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button onClick={addRow}>
+                <Plus size={18} aria-hidden />
+                Add card
+              </Button>
+              <Button variant="secondary" onClick={openFilePicker}>
+                <FileUp size={18} aria-hidden />
+                Upload file
+              </Button>
+              <Button variant="outline" onClick={togglePaste} aria-expanded={showImport}>
+                <ClipboardPaste size={18} aria-hidden />
+                Paste list
+              </Button>
+            </div>
+            <p className="max-w-md text-sm text-text-muted">
+              Files can be .txt, .csv or .tsv (save from Excel or Google Sheets). Column 1 is the front, column 2 the back,
+              column 3 an optional note. You can also drop a file here.
+            </p>
+          </div>
+        ) : (
+          <>
+            <ol className="space-y-3">
+              {rows.map((row, i) => (
+                <CardRow
+                  key={row.key}
+                  row={row}
+                  number={i + 1}
+                  isFirst={i === 0}
+                  isLast={i === rows.length - 1}
+                  errors={errors}
+                  onChange={(patch) => update(row.key, patch)}
+                  onMove={(by) => move(i, by)}
+                  onRemove={() => remove(row.key)}
+                />
+              ))}
+            </ol>
 
-        <button
-          type="button"
-          onClick={addRow}
-          disabled={rows.length >= LIMITS.cards}
-          className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border-strong text-[15px] font-medium text-text-muted transition-colors hover:border-accent hover:text-accent-ink disabled:opacity-50"
-        >
-          <Plus size={18} aria-hidden />
-          Add card
-        </button>
-        <p className="text-sm text-text-muted">
-          Empty cards are skipped when you save. A deck can have up to {LIMITS.cards} cards.
-        </p>
+            <button
+              type="button"
+              onClick={addRow}
+              disabled={rows.length >= LIMITS.cards}
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border-strong text-[15px] font-medium text-text-muted transition-colors hover:border-accent hover:text-accent-ink disabled:opacity-50"
+            >
+              <Plus size={18} aria-hidden />
+              Add card
+            </button>
+            <p className="text-sm text-text-muted">
+              Empty cards are skipped when you save. A deck can have up to {LIMITS.cards} cards.
+            </p>
+          </>
+        )}
       </section>
 
       <div className="space-y-3 border-t border-border pt-6">
@@ -471,74 +578,17 @@ function ImportPanel({
   onCancel: () => void;
 }) {
   const [text, setText] = useState("");
-  const [fileNote, setFileNote] = useState<{ ok: boolean; message: string } | null>(null);
-  const [dragging, setDragging] = useState(false);
-  const fileInput = useRef<HTMLInputElement>(null);
   const found = parseCardText(text);
   const adding = found.slice(0, Math.max(room, 0));
 
-  const loadFile = async (file: File | undefined) => {
-    if (!file) return;
-    const result = await readCardFile(file);
-    if ("error" in result) {
-      setFileNote({ ok: false, message: result.error });
-      return;
-    }
-    const count = parseCardText(result.text).length;
-    setText(result.text);
-    setFileNote(
-      count
-        ? { ok: true, message: `Loaded ${file.name}. Check the cards below, then add them.` }
-        : { ok: false, message: `No cards found in ${file.name}. Put the front and back in two columns, or one card per line.` },
-    );
-  };
-
   return (
-    <div
-      onDragOver={(e) => {
-        e.preventDefault();
-        setDragging(true);
-      }}
-      onDragLeave={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
-      }}
-      onDrop={(e) => {
-        e.preventDefault();
-        setDragging(false);
-        void loadFile(e.dataTransfer.files[0]);
-      }}
-      className={`space-y-3 rounded-xl border bg-surface-2 p-4 ${dragging ? "border-dashed border-text" : "border-border"}`}
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-1">
-          <label htmlFor="import-text" className="block text-sm font-medium">
-            Paste one card per line, or upload a file
-          </label>
-          <div id="import-help" className="space-y-1 text-sm text-text-muted">
-            <p>Put a tab, &quot; - &quot; or &quot;:&quot; between the front and the back. Quizlet lists work as they are.</p>
-            <p>Files: .txt, .csv or .tsv (save from Excel or Google Sheets). Column 1 is the front, column 2 the back, column 3 an optional note.</p>
-          </div>
-        </div>
-        <input
-          ref={fileInput}
-          type="file"
-          accept=".txt,.csv,.tsv,text/plain,text/csv,text/tab-separated-values"
-          className="sr-only"
-          tabIndex={-1}
-          aria-hidden
-          onChange={(e) => {
-            void loadFile(e.target.files?.[0]);
-            e.target.value = "";
-          }}
-        />
-        <Button variant="outline" onClick={() => fileInput.current?.click()}>
-          <FileUp size={18} aria-hidden />
-          Upload a file
-        </Button>
-      </div>
-      <div aria-live="polite">
-        {fileNote && <p className={`text-sm ${fileNote.ok ? "text-correct" : "text-wrong"}`}>{fileNote.message}</p>}
-      </div>
+    <div className="space-y-3 rounded-xl border border-border bg-surface-2 p-4">
+      <label htmlFor="import-text" className="block text-sm font-medium">
+        Paste one card per line
+      </label>
+      <p id="import-help" className="text-sm text-text-muted">
+        Put a tab, &quot; - &quot; or &quot;:&quot; between the front and the back. Quizlet lists work as they are.
+      </p>
       <textarea
         id="import-text"
         rows={6}
