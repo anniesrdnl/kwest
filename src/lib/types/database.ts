@@ -396,6 +396,10 @@ export type Database = {
         Args: { p_set_id: string };
         Returns: Json | null; // see SharedDeck
       };
+      list_public_decks: {
+        Args: { p_query?: string; p_limit?: number };
+        Returns: Json; // see PublicDeck[]
+      };
       copy_deck: {
         Args: { p_set_id: string };
         Returns: string;
@@ -450,6 +454,16 @@ export type SubmitAnswerResult = {
   masteredNow: boolean;
   levelBefore: number;
   levelAfter: number;
+};
+
+export type PublicDeck = {
+  id: string;
+  title: string;
+  subject: string | null;
+  colorKey: string;
+  cardCount: number;
+  ownerName: string;
+  isOwner: boolean;
 };
 
 export type SharedDeck = {

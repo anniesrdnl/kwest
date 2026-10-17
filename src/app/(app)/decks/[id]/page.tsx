@@ -79,7 +79,7 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
         </div>
       </header>
 
-      <ShareDeck deckId={deck.id} title={deck.title} shared={deck.shared} />
+      <ShareDeck deckId={deck.id} title={deck.title} visibility={deck.visibility} />
 
       <section aria-labelledby="cards-heading" className="space-y-3">
         <h2 id="cards-heading" className="text-lg font-semibold">

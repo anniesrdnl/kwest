@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Layers, Plus } from "lucide-react";
+import { Compass, Layers, Plus } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { DeckList } from "@/features/decks/components/deck-list";
 import { getDecks } from "@/features/decks/queries";
@@ -13,10 +13,16 @@ export default async function DecksPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold md:text-3xl">Decks</h1>
-        <ButtonLink href="/decks/new">
-          <Plus size={18} aria-hidden />
-          New deck
-        </ButtonLink>
+        <div className="flex flex-wrap gap-2">
+          <ButtonLink href="/explore" variant="outline">
+            <Compass size={18} aria-hidden />
+            Explore
+          </ButtonLink>
+          <ButtonLink href="/decks/new">
+            <Plus size={18} aria-hidden />
+            New deck
+          </ButtonLink>
+        </div>
       </div>
 
       {decks.length === 0 ? (

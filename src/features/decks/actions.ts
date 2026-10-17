@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import type { FormState } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
+import type { SetVisibility } from "@/lib/types/database";
 import { deckSchema, type DeckInput, type SaveDeckResult } from "./schemas";
 import { createStarterDeck } from "./starter";
 
@@ -66,18 +67,25 @@ export async function deleteDeck(id: string): Promise<FormState> {
   redirect("/decks");
 }
 
-/** Turns link sharing on or off for one of the player's decks. */
-export async function setDeckSharing(id: string, shared: boolean): Promise<FormState> {
+const SHARING_MESSAGES: Record<SetVisibility, string> = {
+  private: "Only you can see this deck now.",
+  unlisted: "Anyone with the link can see this deck now.",
+  public: "This deck is now public and shown in Explore.",
+};
+
+/** Who can see one of the player's decks: only them, anyone with the link, or everyone (Explore). */
+export async function setDeckSharing(id: string, visibility: SetVisibility): Promise<FormState> {
   await requireUser();
+  if (!(visibility in SHARING_MESSAGES)) return { status: "error", message: "Couldn't change sharing." };
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("study_sets")
-    .update({ visibility: shared ? "unlisted" : "private" })
+    .update({ visibility })
     .eq("id", id)
     .select("id");
   if (error || !data?.length) return { status: "error", message: "Couldn't change sharing. Please try again." };
   refresh();
-  return { status: "success", message: shared ? "Sharing is on." : "Sharing is off." };
+  return { status: "success", message: SHARING_MESSAGES[visibility] };
 }
 
 /** Copies a shared deck into the player's decks and opens the copy. */

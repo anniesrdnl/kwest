@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Pixelify_Sans, Poppins } from "next/font/google";
+import { Poppins, Tiny5 } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -8,10 +8,12 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
-const pixelify = Pixelify_Sans({
-  variable: "--font-pixelify",
+// Pixel font for headings, buttons and the logo. Picked for clear digits
+// (Pixelify Sans drew "2" like "8").
+const pixel = Tiny5({
+  variable: "--font-pixel-face",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +33,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable} ${pixelify.variable} h-full antialiased`}>
+    <html lang="en" className={`${poppins.variable} ${pixel.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );

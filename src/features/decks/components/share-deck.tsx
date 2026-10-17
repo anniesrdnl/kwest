@@ -3,18 +3,25 @@
 import { Share2 } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { ShareLink } from "@/components/ui/share-link";
+import type { SetVisibility } from "@/lib/types/database";
 import { setDeckSharing } from "../actions";
 
-/** Owner's switch for link sharing, plus the link while it's on. */
-export function ShareDeck({ deckId, title, shared }: { deckId: string; title: string; shared: boolean }) {
-  const [on, setOn] = useOptimistic(shared);
+const OPTIONS: { value: SetVisibility; label: string; hint: string }[] = [
+  { value: "private", label: "Only me", hint: "Nobody else can see this deck." },
+  { value: "unlisted", label: "Anyone with the link", hint: "Send the link to friends. It isn't listed anywhere." },
+  { value: "public", label: "Everyone", hint: "Shown in Explore, so anyone on Kwest can find it." },
+];
+
+/** Owner's choice of who can see a deck, plus the link while it's shared. */
+export function ShareDeck({ deckId, title, visibility }: { deckId: string; title: string; visibility: SetVisibility }) {
+  const [current, setCurrent] = useOptimistic(visibility);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const toggle = (next: boolean) =>
+  const choose = (next: SetVisibility) =>
     startTransition(async () => {
       setError(null);
-      setOn(next);
+      setCurrent(next);
       const res = await setDeckSharing(deckId, next);
       if (res.status === "error") setError(res.message ?? "Something went wrong.");
     });
@@ -30,22 +37,40 @@ export function ShareDeck({ deckId, title, shared }: { deckId: string; title: st
             Share
           </h2>
           <p className="text-sm text-text-muted">
-            Friends with the link can see the cards and copy the deck. Your study progress stays private.
+            People you share with can see the cards and copy the deck. Your study progress stays private.
           </p>
         </div>
       </div>
-      <label className="flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-lg border border-border px-4 py-2">
-        <span className="font-medium">Anyone with the link can see this deck</span>
-        <input
-          type="checkbox"
-          role="switch"
-          checked={on}
-          disabled={pending}
-          onChange={(e) => toggle(e.target.checked)}
-          className="size-5 shrink-0 accent-accent"
-        />
-      </label>
-      {on && <ShareLink path={`/shared/${deckId}`} text={`Study "${title}" with me on Kwest.`} label="Deck link" />}
+
+      <fieldset className="space-y-2">
+        <legend className="sr-only">Who can see this deck</legend>
+        {OPTIONS.map((o) => (
+          <label
+            key={o.value}
+            className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 transition-colors ${
+              current === o.value ? "border-accent bg-accent-soft" : "border-border hover:bg-surface-2"
+            }`}
+          >
+            <input
+              type="radio"
+              name={`visibility-${deckId}`}
+              value={o.value}
+              checked={current === o.value}
+              disabled={pending}
+              onChange={() => choose(o.value)}
+              className="mt-1 size-4 shrink-0 accent-accent"
+            />
+            <span>
+              <span className="block font-medium">{o.label}</span>
+              <span className="block text-sm text-text-muted">{o.hint}</span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
+
+      {current !== "private" && (
+        <ShareLink path={`/shared/${deckId}`} text={`Study "${title}" with me on Kwest.`} label="Deck link" />
+      )}
       {error && (
         <p role="alert" className="text-sm text-wrong">
           {error}
