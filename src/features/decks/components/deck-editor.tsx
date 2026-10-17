@@ -304,7 +304,7 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
         <input
           ref={fileInput}
           type="file"
-          accept=".txt,.csv,.tsv,text/plain,text/csv,text/tab-separated-values"
+          accept=".txt,.csv,.tsv,.xlsx,text/plain,text/csv,text/tab-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           className="sr-only"
           tabIndex={-1}
           aria-hidden
@@ -357,8 +357,8 @@ function EditorForm({ initial, cancelHref, onSaving }: EditorProps & { onSaving:
               </Button>
             </div>
             <p className="max-w-md text-sm text-text-muted">
-              Files can be .txt, .csv or .tsv (save from Excel or Google Sheets). Column 1 is the front, column 2 the back,
-              column 3 an optional note. You can also drop a file here.
+              Files can be Excel (.xlsx), .csv, .tsv or .txt. Column 1 is the front, column 2 the back, column 3 an
+              optional note. You can also drop a file here.
             </p>
           </div>
         ) : (
@@ -527,19 +527,22 @@ function CardRow({ row, number, isFirst, isLast, errors, onChange, onMove, onRem
 }
 
 const MAX_FILE_BYTES = 1024 * 1024;
+/** Excel files are zipped and carry formatting, so they get more room. */
+const MAX_XLSX_BYTES = 5 * 1024 * 1024;
 
 /**
- * Reads a card file in the browser. Nothing is uploaded: the text goes into the
- * import box, and cards are only saved with the deck.
+ * Reads a card file in the browser. Nothing is uploaded: the cards are added to
+ * the editor, and only saved with the deck.
  */
 async function readCardFile(file: File): Promise<{ text: string } | { error: string }> {
   const ext = file.name.toLowerCase().split(".").pop() ?? "";
+  if (ext === "xlsx") return readExcelFile(file);
   if (!["txt", "csv", "tsv"].includes(ext)) {
     return {
       error:
-        ext === "xlsx" || ext === "xls"
-          ? "Excel files can't be read yet. In Excel, choose File > Save As > CSV, then upload that."
-          : "Use a .txt, .csv or .tsv file.",
+        ext === "xls"
+          ? "Old Excel files (.xls) can't be read. In Excel, choose File > Save As > Excel Workbook (.xlsx), then upload that."
+          : "Use an Excel (.xlsx), .csv, .tsv or .txt file.",
     };
   }
   if (file.size > MAX_FILE_BYTES) return { error: "That file is too big. Keep it under 1 MB." };
@@ -553,4 +556,19 @@ async function readCardFile(file: File): Promise<{ text: string } | { error: str
     text = new TextDecoder("windows-1252").decode(bytes);
   }
   return { text: ext === "csv" ? csvToTabText(text) : text };
+}
+
+/** First sheet of an .xlsx file as tab-separated lines, ready for parseCardText. */
+async function readExcelFile(file: File): Promise<{ text: string } | { error: string }> {
+  if (file.size > MAX_XLSX_BYTES) return { error: "That file is too big. Keep it under 5 MB." };
+  try {
+    // Loaded only when someone uploads an Excel file.
+    const { readSheet } = await import("read-excel-file/browser");
+    const rows = await readSheet(file);
+    const cell = (v: unknown) =>
+      v == null ? "" : v instanceof Date ? v.toLocaleDateString() : String(v).replace(/\s+/g, " ").trim();
+    return { text: rows.map((row) => row.map(cell).join("\t")).join("\n") };
+  } catch {
+    return { error: "Couldn't read that Excel file. Try saving it again, or save it as CSV and upload that." };
+  }
 }
