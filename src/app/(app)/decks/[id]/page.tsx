@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, BookOpen, Pencil } from "lucide-react";
+import { ArrowLeft, Layers, ListChecks, Pencil } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { DeleteDeckButton } from "@/features/decks/components/delete-deck-button";
@@ -54,12 +54,19 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
         </dl>
 
         <div className="flex flex-wrap gap-3">
-          {/* Study modes are Phase 9: this opens an honest "coming soon" page for now. */}
-          <ButtonLink href="/play" size="lg">
-            <BookOpen size={18} aria-hidden />
-            Study
-          </ButtonLink>
-          <ButtonLink href={`/decks/${deck.id}/edit`} variant="secondary" size="lg">
+          {deck.cardCount > 0 && (
+            <>
+              <ButtonLink href={`/decks/${deck.id}/quiz`} size="lg">
+                <ListChecks size={18} aria-hidden />
+                Quiz
+              </ButtonLink>
+              <ButtonLink href={`/decks/${deck.id}/flashcards`} variant="secondary" size="lg">
+                <Layers size={18} aria-hidden />
+                Flashcards
+              </ButtonLink>
+            </>
+          )}
+          <ButtonLink href={`/decks/${deck.id}/edit`} variant="outline" size="lg">
             <Pencil size={18} aria-hidden />
             Edit
           </ButtonLink>

@@ -30,12 +30,15 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
         </div>
       </div>
       <div className="space-y-2">
-        {/* Study modes are Phase 9: this opens an honest "coming soon" page for now. */}
-        <ButtonLink href="/play" size="lg" className="w-full sm:w-auto">
-          Study now
-          <ArrowRight size={18} aria-hidden />
-        </ButtonLink>
-        <p className="text-sm text-hero-muted">Studying isn&apos;t open yet. This button shows what&apos;s coming.</p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <ButtonLink href={`/decks/${deck.id}/quiz`} size="lg">
+            Start review
+            <ArrowRight size={18} aria-hidden />
+          </ButtonLink>
+          <ButtonLink href={`/decks/${deck.id}/flashcards`} variant="outline" size="lg">
+            Flashcards
+          </ButtonLink>
+        </div>
       </div>
     </NextUpShell>
   );
