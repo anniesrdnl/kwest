@@ -27,7 +27,7 @@ export function DeckBadge({
   return (
     <span
       aria-hidden
-      className={`inline-flex shrink-0 items-center justify-center font-semibold text-white ${SIZES[size]} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center font-semibold text-espresso ${SIZES[size]} ${className}`}
       style={{ backgroundColor: deckColor(colorKey) }}
     >
       {title.trim().charAt(0).toUpperCase() || "?"}

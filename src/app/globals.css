@@ -143,17 +143,17 @@
   --frame-gold: #c9a227;
 }
 
-/* Deck colors (study_sets.color_key spine-1..8). Same in both themes:
-   white text on each is 4.5:1 or better. */
+/* Deck colors (study_sets.color_key spine-1..8). Pastels, same in both themes:
+   the letter on each is black (10:1 or better). */
 :root {
-  --deck-1: #a8432c;
-  --deck-2: #2f6188;
-  --deck-3: #3d7149;
-  --deck-4: #7a4a7e;
-  --deck-5: #8a6212;
-  --deck-6: #2d6e68;
-  --deck-7: #9c5420;
-  --deck-8: #5a4a8a;
+  --deck-1: #f4b6a8;
+  --deck-2: #b5d3ee;
+  --deck-3: #bfe0bf;
+  --deck-4: #dcc0e2;
+  --deck-5: #f3dca0;
+  --deck-6: #b4e0da;
+  --deck-7: #f6c9a0;
+  --deck-8: #c9c2ee;
 }
 
 @theme inline {
