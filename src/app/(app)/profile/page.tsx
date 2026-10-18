@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PixelIcon } from "@/components/brand/pixel";
 import { Panel } from "@/components/ui/panel";
+import { SettingsList, SettingsSection } from "@/components/ui/settings-list";
+import { StatRow } from "@/components/ui/stat-row";
 import { LogOutButton } from "@/features/auth/components/log-out-button";
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
 import { DailyGoalForm } from "@/features/profile/components/daily-goal-form";
@@ -30,20 +32,23 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-10">
-      <header className="flex items-center gap-4">
+      <header className="rise flex items-center gap-4">
         <UserAvatar name={profile.display_name} look={lookOf(profile)} size="lg" />
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold break-words md:text-3xl">{profile.display_name}</h1>
+          <h1 className="text-2xl break-words sm:text-[2rem] sm:leading-tight">{profile.display_name}</h1>
           <p className="text-sm text-text-muted">
             {profile.username && <>@{profile.username} · </>}Studying since {joined}
           </p>
-          <Link href="/shop" className="text-sm font-semibold underline decoration-progress decoration-2 underline-offset-4">
+          <Link
+            href="/shop"
+            className="inline-flex min-h-11 items-center text-sm font-medium text-accent-ink underline underline-offset-4 transition-colors hover:text-text"
+          >
             Change avatar
           </Link>
         </div>
       </header>
 
-      <section aria-labelledby="progress-heading" className="space-y-4">
+      <section aria-labelledby="progress-heading" className="rise space-y-5" style={{ animationDelay: "0.05s" }}>
         <h2 id="progress-heading" className="sr-only">
           Progress
         </h2>
@@ -58,42 +63,39 @@ export default async function ProfilePage() {
           </div>
         </Panel>
 
-        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {tiles.map(({ label, value }) => (
-            <div key={label} className="border border-border bg-surface p-4 shadow-card">
-              <dt className="text-sm text-text-muted">{label}</dt>
-              <dd className="font-pixel text-4xl tabular-nums">{value}</dd>
-            </div>
-          ))}
-        </dl>
+        <StatRow items={tiles} />
 
         <Panel>
           <WeekChart week={overview.week} goal={stats.daily_goal} />
         </Panel>
       </section>
 
-      <AchievementList achievements={overview.achievements} timeZone={profile.timezone} />
+      <div className="rise" style={{ animationDelay: "0.1s" }}>
+        <AchievementList achievements={overview.achievements} timeZone={profile.timezone} />
+      </div>
 
-      <section aria-labelledby="settings-heading" className="space-y-4">
-        <h2 id="settings-heading" className="text-lg font-semibold">
+      <section aria-labelledby="settings-heading" className="rise space-y-4" style={{ animationDelay: "0.15s" }}>
+        <h2 id="settings-heading" className="text-2xl">
           Settings
         </h2>
-        <Panel title="Daily goal">
-          <DailyGoalForm goal={stats.daily_goal} />
-        </Panel>
-        <Panel title="Profile">
-          <ProfileForm displayName={profile.display_name} username={profile.username} />
-        </Panel>
-        <Panel title="Account">
-          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
-            <dt className="text-sm font-medium">Email</dt>
-            <dd className="break-all">{email ?? "—"}</dd>
-          </dl>
-        </Panel>
-        <InstallApp />
-        <Panel title="Change password">
-          <ResetPasswordForm />
-        </Panel>
+        <SettingsList>
+          <SettingsSection title="Daily goal">
+            <DailyGoalForm goal={stats.daily_goal} />
+          </SettingsSection>
+          <SettingsSection title="Profile">
+            <ProfileForm displayName={profile.display_name} username={profile.username} />
+          </SettingsSection>
+          <SettingsSection title="Account">
+            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
+              <dt className="text-sm font-medium">Email</dt>
+              <dd className="break-all">{email ?? "—"}</dd>
+            </dl>
+          </SettingsSection>
+          <InstallApp />
+          <SettingsSection title="Change password">
+            <ResetPasswordForm />
+          </SettingsSection>
+        </SettingsList>
         <div className="flex justify-end">
           <LogOutButton />
         </div>

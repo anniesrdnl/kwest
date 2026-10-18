@@ -1,8 +1,9 @@
 "use client";
 
-import { Heart, RotateCcw, Trophy, X } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState, useTransition } from "react";
+import { PixelIcon } from "@/components/brand/pixel";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { ShareLink } from "@/components/ui/share-link";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
@@ -93,58 +94,59 @@ function Game({ link, onFinished, onRestart }: { link: ChallengeLinkData; onFini
 
   if (phase === "intro") {
     return (
-      <div className="mx-auto max-w-xl space-y-6">
-        <div className="space-y-6 rounded-2xl border border-border bg-surface p-6 text-center shadow-card sm:p-8">
-          <span className="mx-auto inline-flex size-12 items-center justify-center rounded-xl bg-accent-soft text-accent-ink">
-            <Trophy size={24} aria-hidden />
-          </span>
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold">{link.isOwner ? "Your challenge link" : `Beat ${link.ownerName}'s score`}</h1>
-            <p className="flex items-center justify-center gap-2 text-text-muted">
-              <DeckBadge title={link.deck.title} colorKey={link.deck.colorKey} size="sm" />
-              <span className="min-w-0 truncate">{link.deck.title}</span>
-            </p>
-          </div>
-
-          {target && (
-            <div className="rounded-xl border border-hero-border bg-hero p-4 text-hero-fg">
-              <p className="text-sm font-semibold text-hero-muted">Score to beat</p>
-              <p className="text-lg font-bold">{scoreLine(target)}</p>
+      <div className="mx-auto max-w-xl space-y-8">
+        <div className="pixel-lift">
+          <section className="pixel-frame space-y-6 p-6 text-center sm:p-8">
+            <div className="space-y-2">
+              <h1 className="text-2xl break-words sm:text-[2rem] sm:leading-tight">
+                {link.isOwner ? "Your challenge link" : `Beat ${link.ownerName}'s score`}
+              </h1>
+              <p className="flex items-center justify-center gap-2 text-text-muted">
+                <DeckBadge title={link.deck.title} colorKey={link.deck.colorKey} size="sm" />
+                <span className="min-w-0 truncate">{link.deck.title}</span>
+              </p>
             </div>
-          )}
 
-          {tooFew ? (
-            <p className="text-text-muted">This deck doesn&apos;t have enough cards to play anymore.</p>
-          ) : (
-            <ul className="space-y-2 text-left">
-              <Rule>
-                Get <strong className="font-semibold">{CHALLENGE.winHits} right</strong> before you miss {CHALLENGE.maxMisses}.
-              </Rule>
-              <Rule>More right wins. If that&apos;s a tie, fewer misses wins, then the faster time.</Rule>
-              <Rule>
-                {link.timer
-                  ? `Timer is on: ${CHALLENGE.timeMs.mc / 1000} seconds a question (${CHALLENGE.timeMs.id / 1000} to type).`
-                  : "No timer."}
-              </Rule>
-              <Rule>Just for fun: this game doesn&apos;t give XP or coins.</Rule>
-            </ul>
-          )}
-
-          {error && (
-            <p role="alert" className="text-sm text-wrong">
-              {error}
-            </p>
-          )}
-          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
-            <ButtonLink href="/home" variant="ghost">
-              Not now
-            </ButtonLink>
-            {!tooFew && (
-              <Button size="lg" onClick={start} disabled={pending} autoFocus>
-                {pending ? "Starting…" : link.isOwner ? "Play it yourself" : "Start"}
-              </Button>
+            {target && (
+              <p className="bg-accent-soft px-3 py-3">
+                <span className="block text-sm text-text-muted">Score to beat</span>
+                <span className="font-pixel text-base">{scoreLine(target)}</span>
+              </p>
             )}
-          </div>
+
+            {tooFew ? (
+              <p className="text-text-muted">This deck doesn&apos;t have enough cards to play anymore.</p>
+            ) : (
+              <ul className="space-y-2 text-left">
+                <Rule>
+                  Get <strong className="font-semibold">{CHALLENGE.winHits} right</strong> before you miss {CHALLENGE.maxMisses}.
+                </Rule>
+                <Rule>More right wins. A tie goes to fewer misses, then the faster time.</Rule>
+                <Rule>
+                  {link.timer
+                    ? `Timer is on: ${CHALLENGE.timeMs.mc / 1000} seconds a question (${CHALLENGE.timeMs.id / 1000} to type).`
+                    : "No timer."}
+                </Rule>
+                <Rule>Just for fun: no XP or coins.</Rule>
+              </ul>
+            )}
+
+            {error && (
+              <p role="alert" className="text-sm text-wrong">
+                {error}
+              </p>
+            )}
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
+              <ButtonLink href="/home" variant="ghost">
+                Not now
+              </ButtonLink>
+              {!tooFew && (
+                <Button size="lg" onClick={start} disabled={pending} autoFocus>
+                  {pending ? "Starting…" : link.isOwner ? "Play it yourself" : "Start"}
+                </Button>
+              )}
+            </div>
+          </section>
         </div>
 
         {link.isOwner && <ShareLink path={`/challenge/${link.code}`} text={`Can you beat my score on "${link.deck.title}"?`} />}
@@ -156,11 +158,9 @@ function Game({ link, onFinished, onRestart }: { link: ChallengeLinkData; onFini
   if (phase === "done" && result) {
     const heading = result.beatOwner && !link.isOwner ? `You beat ${link.ownerName}!` : result.won ? "You won!" : "Not this time";
     return (
-      <div className="mx-auto max-w-xl space-y-6">
-        <div className="space-y-2 text-center">
-          <span className="mx-auto inline-flex size-14 items-center justify-center rounded-2xl bg-secondary text-secondary-fg">
-            {result.won ? <Trophy size={26} aria-hidden /> : <Heart size={26} aria-hidden />}
-          </span>
+      <div className="mx-auto max-w-xl space-y-8">
+        <div className="space-y-3 text-center">
+          <PixelIcon name={result.won ? "spark" : "heart"} scale={5} className={`mx-auto ${result.won ? "text-progress" : "text-wrong"}`} />
           <ResultHeading>{heading}</ResultHeading>
           <p className="text-text-muted">{scoreLine(result)}</p>
         </div>
@@ -186,14 +186,14 @@ function Game({ link, onFinished, onRestart }: { link: ChallengeLinkData; onFini
           {link.deck.title}
           {target && <span> · to beat: {target.correct} right</span>}
         </p>
-        <Link href="/home" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-text-muted hover:text-text">
-          <X size={16} aria-hidden />
+        <Link href="/home" className="inline-flex min-h-11 items-center gap-2 font-pixel text-base text-text-muted hover:text-text">
+          <PixelIcon name="close" scale={2} />
           Stop
         </Link>
       </div>
       <Scoreboard hits={score.hits} misses={score.misses} />
       {error && (
-        <p role="alert" className="rounded-lg border border-wrong/30 bg-wrong/10 px-3 py-2 text-sm text-wrong">
+        <p role="alert" className="border border-wrong/30 bg-wrong/10 px-3 py-2 text-sm text-wrong">
           {error}
         </p>
       )}
@@ -217,7 +217,7 @@ function ResultHeading({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLHeadingElement>(null);
   useEffect(() => ref.current?.focus(), []);
   return (
-    <h1 ref={ref} tabIndex={-1} className="text-2xl font-bold outline-none sm:text-3xl">
+    <h1 ref={ref} tabIndex={-1} className="text-[2rem] break-words outline-none sm:text-[2.5rem]">
       {children}
     </h1>
   );
@@ -226,28 +226,28 @@ function ResultHeading({ children }: { children: React.ReactNode }) {
 /** Everyone's best game on this link, best first. */
 function Board({ rows }: { rows: ChallengeBoardRow[] }) {
   return (
-    <section aria-labelledby="board-heading" className="space-y-3">
-      <h2 id="board-heading" className="text-lg font-semibold">
+    <section aria-labelledby="board-heading" className="space-y-4">
+      <h2 id="board-heading" className="text-2xl">
         Scoreboard
       </h2>
-      <ol className="divide-y-2 divide-border rounded-xl border border-border bg-surface">
-        {rows.map((row, i) => (
-          <li key={i} className={`flex items-center gap-3 px-4 py-3 ${row.isYou && !row.isOwner ? "bg-accent-soft" : ""}`}>
-            <span className="w-6 shrink-0 text-center text-lg font-bold tabular-nums">{i + 1}</span>
-            <UserAvatar name={row.name} look={{ icon: row.icon, color: row.color, frame: row.frame }} size="sm" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-medium">
-                {row.name}
-                {row.isYou && <span className="text-text-muted"> (you)</span>}
-              </p>
-              <p className="text-sm text-text-muted">{scoreLine(row)}</p>
-            </div>
-            {row.isOwner && (
-              <span className="shrink-0 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-fg">To beat</span>
-            )}
-          </li>
-        ))}
-      </ol>
+      <div className="pixel-lift">
+        <ol className="pixel-frame divide-y-2 divide-border">
+          {rows.map((row, i) => (
+            <li key={i} className={`flex items-center gap-3 px-4 py-3 ${row.isYou && !row.isOwner ? "bg-accent-soft" : ""}`}>
+              <span className="w-6 shrink-0 text-center font-pixel text-base tabular-nums">{i + 1}</span>
+              <UserAvatar name={row.name} look={{ icon: row.icon, color: row.color, frame: row.frame }} size="sm" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium">
+                  {row.name}
+                  {row.isYou && <span className="text-text-muted"> (you)</span>}
+                </p>
+                <p className="text-sm text-text-muted">{scoreLine(row)}</p>
+              </div>
+              {row.isOwner && <span className="shrink-0 bg-accent-soft px-2 py-0.5 text-xs font-semibold">To beat</span>}
+            </li>
+          ))}
+        </ol>
+      </div>
       {rows.length < 2 && <p className="text-sm text-text-muted">No one else has played yet.</p>}
     </section>
   );

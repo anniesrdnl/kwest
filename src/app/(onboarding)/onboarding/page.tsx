@@ -20,8 +20,8 @@ export default async function OnboardingPage() {
   const stepNumber = onWelcome ? 1 : 2;
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className="space-y-4">
+      <div className="rise flex items-center justify-between gap-4">
         <p className="text-sm font-medium text-text-muted">
           Step {stepNumber} of {ONBOARDING_STEP_COUNT}
         </p>

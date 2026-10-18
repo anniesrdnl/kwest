@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, useTransitio
 import { PixelIcon } from "@/components/brand/pixel";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { PixelBar } from "@/components/ui/pixel-bar";
+import { StatRow } from "@/components/ui/stat-row";
 import { DeckBadge } from "@/features/decks/components/deck-badge";
 import { HOME_ROUTE } from "@/lib/routes";
 import type { FinishSessionResult, SubmitAnswerResult } from "@/lib/types/database";
@@ -406,7 +407,7 @@ function Results({
     <div className="mx-auto max-w-xl space-y-6">
       <div className="space-y-3 text-center">
         <PixelIcon name="spark" scale={5} className="mx-auto text-progress" />
-        <h1 ref={headingRef} tabIndex={-1} className="text-3xl outline-none sm:text-4xl">
+        <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] outline-none sm:text-[2.5rem]">
           Session complete
         </h1>
         <p className="text-text-muted">
@@ -415,34 +416,29 @@ function Results({
         </p>
       </div>
 
-      <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
+      <StatRow
+        items={[
           ...tiles,
           { label: "XP earned", value: `+${result.xpEarned}` },
           { label: "Coins", value: `+${result.coinsEarned}` },
-        ].map(({ label, value }) => (
-          <div key={label} className="border border-border bg-surface p-4 text-center shadow-card">
-            <dt className="text-sm text-text-muted">{label}</dt>
-            <dd className="font-pixel text-3xl tabular-nums">{value}</dd>
-          </div>
-        ))}
-      </dl>
+        ]}
+      />
 
       {(leveledUp || result.masteredSet || result.sessionBonus > 0) && (
-        <ul className="space-y-2 border border-hero-border bg-hero p-4 text-hero-fg shadow-card">
+        <ul className="space-y-2 text-center">
           {leveledUp && (
-            <li className="flex items-center gap-2 font-pixel text-lg">
+            <li className="flex items-center justify-center gap-2 font-pixel text-base text-accent-ink">
               <PixelIcon name="spark" scale={2} /> You reached level {result.level}!
             </li>
           )}
           {result.masteredSet && (
-            <li className="flex items-center gap-2 font-pixel text-lg">
+            <li className="flex items-center justify-center gap-2 font-pixel text-base text-accent-ink">
               <PixelIcon name="check" scale={2} /> You mastered this deck.
             </li>
           )}
           {result.sessionBonus > 0 && (
-            <li className="flex items-center gap-2 text-hero-muted">
-              <PixelIcon name="coin" scale={2} /> Includes a +{result.sessionBonus} XP bonus for finishing.
+            <li className="flex items-center justify-center gap-2">
+              <PixelIcon name="coin" scale={2} className="text-gold" /> Includes a +{result.sessionBonus} XP bonus for finishing.
             </li>
           )}
         </ul>

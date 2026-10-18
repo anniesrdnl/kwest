@@ -41,11 +41,11 @@ export function ReportDeckButton({ deckId, reported }: { deckId: string; reporte
       <dialog
         ref={dialogRef}
         aria-labelledby="report-deck-title"
-        className="m-auto w-[calc(100%-2rem)] max-w-md rounded-2xl border border-border bg-surface p-6 text-text shadow-card backdrop:bg-black/40"
+        className="m-auto w-[calc(100%-2rem)] max-w-md border-2 border-border bg-surface p-6 text-text shadow-card backdrop:bg-black/40"
       >
         {result?.ok ? (
           <div className="space-y-4">
-            <h2 id="report-deck-title" className="text-xl font-semibold">
+            <h2 id="report-deck-title" className="text-2xl">
               Report sent
             </h2>
             <p role="status">{result.message}</p>
@@ -55,14 +55,14 @@ export function ReportDeckButton({ deckId, reported }: { deckId: string; reporte
           </div>
         ) : (
           <form onSubmit={send} className="space-y-4">
-            <h2 id="report-deck-title" className="text-xl font-semibold">
+            <h2 id="report-deck-title" className="text-2xl">
               Report this deck
             </h2>
             {reported && <p className="text-sm text-text-muted">You already reported it. Sending again replaces your report.</p>}
             <fieldset className="space-y-2">
               <legend className="mb-2 text-sm font-medium">What&apos;s wrong?</legend>
               {REASONS.map((r) => (
-                <label key={r.value} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-border px-3 py-2 hover:bg-surface-2">
+                <label key={r.value} className="flex min-h-11 cursor-pointer items-center gap-3 border-2 border-border px-3 py-2 transition-colors hover:bg-accent-soft">
                   <input
                     type="radio"
                     name="reason"

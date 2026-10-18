@@ -9,9 +9,9 @@ export default async function ShopPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-2xl font-bold md:text-3xl">Shop</h1>
-        <p className="text-text-muted">Spend the coins you earn from studying on a new look for your avatar.</p>
+      <div className="rise space-y-1">
+        <h1 className="text-2xl sm:text-[2rem] sm:leading-tight">Shop</h1>
+        <p className="text-text-muted">Spend your coins on a new look for your avatar.</p>
       </div>
       <ShopBoard shop={shop} />
     </div>

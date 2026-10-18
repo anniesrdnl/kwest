@@ -2,7 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { useDeferredValue, useState } from "react";
-import { inputBase } from "@/components/ui/field";
+import { inputBase } from "@/components/ui/input-styles";
 import type { Deck } from "../queries";
 import { DeckTile } from "./deck-tile";
 

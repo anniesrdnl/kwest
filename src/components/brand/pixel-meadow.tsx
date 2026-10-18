@@ -130,7 +130,9 @@ function Hills({
  * with little trees, on the plain page color. On phones the hills sit above the tab bar.
  * Decoration only. Put it inside a fixed or relative wrapper; it fills that wrapper.
  */
-export function PixelMeadow() {
+export function PixelMeadow({ flush = false }: { flush?: boolean }) {
+  // With no tab bar below (first-run pages), the hills sit right on the bottom edge.
+  const hillsAt = flush ? "bottom-0" : "bottom-16 md:bottom-0";
   return (
     <div aria-hidden className="absolute inset-0 overflow-hidden">
       {SPECKS.map((s, i) => (
@@ -160,8 +162,8 @@ export function PixelMeadow() {
         />
       ))}
 
-      <Hills id="hills-far" columns={192} base={18} wave={7} phase={0.6} trees={[]} className="hills-far bottom-16 md:bottom-0" />
-      <Hills id="hills-near" columns={144} base={10} wave={5} phase={2.4} trees={[28, 104]} className="hills-near bottom-16 md:bottom-0" />
+      <Hills id="hills-far" columns={192} base={18} wave={7} phase={0.6} trees={[]} className={`hills-far ${hillsAt}`} />
+      <Hills id="hills-near" columns={144} base={10} wave={5} phase={2.4} trees={[28, 104]} className={`hills-near ${hillsAt}`} />
     </div>
   );
 }

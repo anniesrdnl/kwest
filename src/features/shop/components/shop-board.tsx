@@ -1,8 +1,10 @@
 "use client";
 
-import { Check, Coins, Lock } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { useState, useTransition } from "react";
+import { PixelIcon } from "@/components/brand/pixel";
 import { Button } from "@/components/ui/button";
+import { Panel } from "@/components/ui/panel";
 import { buyShopItem, equipShopItem, type ShopResult } from "../actions";
 import { UserAvatar, type AvatarLook } from "../avatar";
 import type { Shop, ShopCategory, ShopItem } from "../queries";
@@ -36,28 +38,34 @@ export function ShopBoard({ shop }: { shop: Shop }) {
 
   return (
     <div className="space-y-10">
-      <div className="flex flex-col items-center gap-5 rounded-2xl border border-hero-border bg-hero p-6 text-hero-fg sm:flex-row sm:p-8">
-        <UserAvatar name={shop.name} look={previewLook} size="xl" />
-        <div className="space-y-2 text-center sm:text-left">
-          <p className="text-sm font-semibold text-hero-muted">{Object.keys(preview).length ? "Preview" : "Your avatar"}</p>
-          <p className="text-xl font-bold">{shop.name}</p>
-          <p className="inline-flex items-center gap-2">
-            <Coins size={18} className="text-gold" aria-hidden />
-            <span className="font-semibold tabular-nums">{shop.coins}</span> coins · Level {shop.level}
-          </p>
-          {Object.keys(preview).length > 0 && (
-            <button type="button" onClick={() => setPreview({})} className="block text-sm font-medium underline underline-offset-4">
-              Back to my avatar
-            </button>
-          )}
+      <Panel className="rise" style={{ animationDelay: "0.05s" }}>
+        <div className="flex flex-col items-center gap-5 sm:flex-row">
+          <UserAvatar name={shop.name} look={previewLook} size="xl" />
+          <div className="space-y-1 text-center sm:text-left">
+            <p className="text-sm text-text-muted">{Object.keys(preview).length ? "Preview" : "Your avatar"}</p>
+            <p className="font-pixel text-2xl break-words">{shop.name}</p>
+            <p className="inline-flex items-center gap-2">
+              <PixelIcon name="coin" scale={2} className="text-gold" />
+              <span className="font-semibold tabular-nums">{shop.coins}</span> coins · Level {shop.level}
+            </p>
+            {Object.keys(preview).length > 0 && (
+              <button
+                type="button"
+                onClick={() => setPreview({})}
+                className="block min-h-11 w-full text-sm font-medium text-accent-ink underline underline-offset-4 sm:w-auto"
+              >
+                Back to my avatar
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </Panel>
 
       <div aria-live="polite">
         {result && (
           <p
             role={result.ok ? "status" : "alert"}
-            className={`rounded-lg border px-3 py-2 text-sm ${
+            className={`shake border px-3 py-2 text-sm ${
               result.ok ? "border-correct/30 bg-correct/10 text-correct" : "border-wrong/30 bg-wrong/10 text-wrong"
             }`}
           >
@@ -66,15 +74,20 @@ export function ShopBoard({ shop }: { shop: Shop }) {
         )}
       </div>
 
-      {SECTIONS.map(({ category, title, part, defaultLabel }) => {
+      {SECTIONS.map(({ category, title, part, defaultLabel }, s) => {
         const items = shop.items.filter((i) => i.category === category);
         const current = shop.look[part];
         return (
-          <section key={category} aria-labelledby={`${category}-heading`} className="space-y-3">
-            <h2 id={`${category}-heading`} className="text-lg font-semibold">
+          <section
+            key={category}
+            aria-labelledby={`${category}-heading`}
+            className="rise space-y-4"
+            style={{ animationDelay: `${0.1 + s * 0.05}s` }}
+          >
+            <h2 id={`${category}-heading`} className="text-2xl">
               {title}
             </h2>
-            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            <ul className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
               {defaultLabel && (
                 <ItemCard
                   name={defaultLabel}
@@ -84,7 +97,12 @@ export function ShopBoard({ shop }: { shop: Shop }) {
                   onPreview={() => setPreview((p) => ({ ...p, [part]: null }))}
                   action={
                     current === null ? null : (
-                      <Button variant="outline" className="w-full" disabled={pendingKey !== null} onClick={() => run(`${category}-default`, () => equipShopItem(category, null))}>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        disabled={pendingKey !== null}
+                        onClick={() => run(`${category}-default`, () => equipShopItem(category, null))}
+                      >
                         {pendingKey === `${category}-default` ? "Saving…" : "Use"}
                       </Button>
                     )
@@ -168,7 +186,7 @@ function ShopItemCard({
     status = <Price price={item.price} />;
     action = (
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="ghost" className="px-2" onClick={onCancelBuy}>
+        <Button variant="outline" className="px-2" onClick={onCancelBuy}>
           Cancel
         </Button>
         <Button className="px-2" disabled={busy} onClick={onBuy}>
@@ -180,7 +198,7 @@ function ShopItemCard({
     status = <Price price={item.price} />;
     action = (
       <Button variant="secondary" className="w-full" disabled={busy || !canAfford} onClick={onAskBuy} aria-label={`Buy ${item.name} for ${item.price} coins`}>
-        {canAfford ? "Buy" : "Not enough coins"}
+        {canAfford ? "Buy" : "Need coins"}
       </Button>
     );
   }
@@ -190,12 +208,13 @@ function ShopItemCard({
 
 function Price({ price }: { price: number }) {
   return (
-    <span className="inline-flex items-center gap-1 tabular-nums">
-      <Coins size={14} className="text-gold" aria-hidden /> {price}
+    <span className="inline-flex items-center gap-1.5 tabular-nums">
+      <PixelIcon name="coin" scale={2} className="text-gold" /> {price}
     </span>
   );
 }
 
+/** One shop item as a small pixel card. The one you are previewing gets a blush tint. */
 function ItemCard({
   name,
   avatar,
@@ -213,22 +232,24 @@ function ItemCard({
 }) {
   const inUse = status === "In use";
   return (
-    <li className={`flex flex-col gap-3 rounded-xl border bg-surface p-4 ${previewing ? "border-text" : "border-border"}`}>
-      <button
-        type="button"
-        onClick={onPreview}
-        aria-pressed={previewing}
-        aria-label={`Preview ${name}`}
-        className="flex flex-col items-center gap-3 rounded-lg py-2"
-      >
-        {avatar}
-        <span className="text-sm font-medium">{name}</span>
-      </button>
-      <p className={`flex items-center justify-center gap-1 text-sm ${inUse ? "font-semibold text-text" : "text-text-muted"}`}>
-        {inUse && <Check size={14} aria-hidden />}
-        {status}
-      </p>
-      {action}
+    <li className="pixel-lift">
+      <div className={`pixel-frame flex h-full flex-col gap-3 p-4 ${previewing ? "[--frame-bg:var(--accent-soft)]" : ""}`}>
+        <button
+          type="button"
+          onClick={onPreview}
+          aria-pressed={previewing}
+          aria-label={`Preview ${name}`}
+          className="group flex flex-1 flex-col items-center gap-3 py-2"
+        >
+          <span className="transition-transform duration-150 group-hover:-translate-y-0.5">{avatar}</span>
+          <span className="text-sm font-medium">{name}</span>
+        </button>
+        <p className={`flex items-center justify-center gap-1 text-sm ${inUse ? "font-semibold text-text" : "text-text-muted"}`}>
+          {inUse && <Check size={14} aria-hidden />}
+          {status}
+        </p>
+        {action}
+      </div>
     </li>
   );
 }

@@ -13,13 +13,13 @@ export function WeekChart({ week, goal }: { week: DayActivity[]; goal: number })
   return (
     <figure className="space-y-3">
       <figcaption className="flex items-baseline justify-between gap-3">
-        <span className="font-pixel text-lg">Last 7 days</span>
+        <span className="font-pixel text-base">Last 7 days</span>
         <span className="text-sm text-text-muted tabular-nums">{total} cards</span>
       </figcaption>
 
       <div className="relative h-40" aria-hidden>
         {/* Daily goal reference line */}
-        <div className="absolute inset-x-0 border-t border-dashed border-border-strong/60" style={{ top: `${goalTop}%` }}>
+        <div className="absolute inset-x-0 border-t-2 border-dashed border-border" style={{ top: `${goalTop}%` }}>
           <span className="absolute top-1 left-0 bg-surface pr-1 text-xs text-text-muted">Goal {goal}</span>
         </div>
         <div className="absolute inset-0 flex items-end gap-2">
@@ -45,7 +45,7 @@ export function WeekChart({ week, goal }: { week: DayActivity[]; goal: number })
       <div className="flex gap-2" aria-hidden>
         {week.map((d) => (
           <div key={d.day} className="flex flex-1 flex-col items-center gap-0.5 text-xs">
-            <span className={d.isToday ? "font-pixel text-sm text-text" : "text-text-muted"}>{d.isToday ? "Today" : d.label}</span>
+            <span className={d.isToday ? "font-medium text-text" : "text-text-muted"}>{d.isToday ? "Today" : d.label}</span>
             <span className="flex h-4 items-center text-correct">{d.goalMet && <PixelIcon name="check" scale={2} />}</span>
           </div>
         ))}

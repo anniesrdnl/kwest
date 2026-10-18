@@ -22,7 +22,7 @@ export function DailyGoalForm({ goal }: { goal: number }) {
           {options.map((n) => (
             <label key={n} className="cursor-pointer">
               <input type="radio" name="dailyGoal" value={n} defaultChecked={n === goal} className="peer sr-only" />
-              <span className="inline-flex min-h-11 min-w-14 items-center justify-center rounded-lg border border-border-strong/50 px-3 text-[15px] font-medium tabular-nums transition-colors hover:border-text peer-checked:border-transparent peer-checked:bg-secondary peer-checked:text-secondary-fg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus">
+              <span className="inline-flex min-h-11 min-w-14 items-center justify-center border-2 border-border px-3 font-medium tabular-nums transition-colors hover:bg-accent-soft peer-checked:border-border-strong peer-checked:bg-accent-soft peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus">
                 {n}
               </span>
             </label>

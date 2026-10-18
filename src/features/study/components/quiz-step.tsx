@@ -216,7 +216,7 @@ export function QuizStep({
         >
           <PixelIcon name={feedback.isCorrect ? "check" : "close"} scale={4} className={`mt-1 shrink-0 ${feedback.isCorrect ? "text-correct" : "text-wrong"}`} />
           <div className="min-w-0 flex-1 space-y-2">
-            <p className={`flex items-center gap-2 font-pixel text-xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
+            <p className={`flex items-center gap-2 font-pixel text-2xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
               {feedback.isCorrect ? "Correct!" : timedOut ? "Time's up" : "Not quite"}
               {feedback.xp > 0 && (
                 <span className="ml-auto bg-secondary px-2.5 py-0.5 text-sm text-secondary-fg">+{feedback.xp} XP</span>

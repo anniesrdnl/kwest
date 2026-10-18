@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, type ComponentProps, type ReactNode } from "react";
-import { inputBase } from "./field";
+import { inputBase } from "./input-styles";
 
 type TextAreaProps = Omit<ComponentProps<"textarea">, "id"> & {
   label: ReactNode;

@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Panel } from "@/components/ui/panel";
+import { SettingsSection } from "@/components/ui/settings-list";
 import { useBrowserValue } from "@/lib/hooks/use-browser-value";
 
 /** Chrome and Edge fire this when the app can be installed. Safari (iPhone) never does. */
@@ -50,7 +50,7 @@ export function InstallApp() {
   if (installed) return null;
 
   return (
-    <Panel title="Install on your phone">
+    <SettingsSection title="Install on your phone">
       <div className="space-y-3">
         <p className="flex items-start gap-3">
           <Smartphone size={20} className="mt-0.5 shrink-0" aria-hidden />
@@ -88,6 +88,6 @@ export function InstallApp() {
           </ul>
         )}
       </div>
-    </Panel>
+    </SettingsSection>
   );
 }
