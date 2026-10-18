@@ -231,4 +231,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Upload cards from Word, PowerPoint and PDF files
 - [x] Pixel redesign phase 3: Decks list, deck page and deck editor (subject and description are tucked behind one link; short upload hint)
 - [x] Pixel redesign phase 4: Study picker, Shop, Explore, shared-deck page, Challenge and link-game screens, results screens, Profile and onboarding
+- [x] Pixel redesign phase 5: quiz and matching screens, flashcard back, loading placeholder and logo text made lighter and crisper
 - [ ] Multiplayer study game

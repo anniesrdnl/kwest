@@ -102,7 +102,7 @@ export function QuizStep({
         <section className="pixel-frame space-y-3 p-6 sm:p-8">
           <p className="font-pixel text-base text-text-muted">
             {ask}
-            {retry && <span className="ml-2 bg-secondary px-2 py-0.5 text-sm text-secondary-fg">Try again</span>}
+            {retry && <span className="ml-2 bg-secondary px-2 py-0.5 font-sans text-sm text-secondary-fg">Try again</span>}
           </p>
           <p className="text-2xl font-semibold break-words whitespace-pre-line">{text}</p>
           {question.type === "tf" && (
@@ -125,14 +125,14 @@ export function QuizStep({
                   type="button"
                   onClick={() => submit(option)}
                   disabled={Boolean(feedback) || sending || busy}
-                  className={`flex min-h-14 w-full items-center gap-3 border px-4 py-3 text-left transition-colors enabled:active:translate-x-[3px] enabled:active:translate-y-[3px] enabled:active:shadow-none ${
+                  className={`flex min-h-14 w-full items-center gap-3 border px-4 py-3 text-left transition-colors enabled:active:translate-y-px ${
                     isRight
-                      ? "border-correct bg-correct/15 shadow-[3px_3px_0_0_var(--correct)]"
+                      ? "border-correct bg-surface ring-1 ring-correct"
                       : isPickedWrong
-                        ? "border-wrong bg-wrong/15 shadow-[3px_3px_0_0_var(--wrong)]"
+                        ? "border-wrong bg-surface ring-1 ring-wrong"
                         : given === option
-                          ? "border-text bg-surface-2 shadow-card"
-                          : "border-border bg-surface shadow-card enabled:hover:bg-surface-2"
+                          ? "border-border-strong bg-accent-soft"
+                          : "border-border bg-surface enabled:hover:bg-accent-soft"
                   }`}
                 >
                   <span className="inline-flex size-8 shrink-0 items-center justify-center bg-secondary font-pixel text-base text-secondary-fg">
@@ -219,7 +219,7 @@ export function QuizStep({
             <p className={`flex items-center gap-2 font-pixel text-2xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
               {feedback.isCorrect ? "Correct!" : timedOut ? "Time's up" : "Not quite"}
               {feedback.xp > 0 && (
-                <span className="ml-auto bg-secondary px-2.5 py-0.5 text-sm text-secondary-fg">+{feedback.xp} XP</span>
+                <span className="ml-auto bg-secondary px-2.5 py-0.5 font-sans text-sm text-secondary-fg">+{feedback.xp} XP</span>
               )}
             </p>
             {!feedback.isCorrect && (

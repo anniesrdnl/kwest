@@ -14,7 +14,7 @@ export function LogoMark({ className = "size-7" }: { className?: string }) {
 
 export function Wordmark({ href = "/" }: { href?: string }) {
   return (
-    <Link href={href} className="inline-flex min-h-11 items-center gap-2 rounded-lg font-pixel text-xl font-bold tracking-wide">
+    <Link href={href} className="inline-flex min-h-11 items-center gap-2 rounded-lg font-pixel text-2xl tracking-wide">
       <LogoMark />
       Kwest
     </Link>

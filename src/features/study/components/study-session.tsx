@@ -362,7 +362,7 @@ function Face({ label, text, note, hint, back = false }: { label: string; text: 
     <div
       aria-hidden
       className={`col-start-1 row-start-1 flex flex-col justify-between gap-4 border border-border p-6 shadow-card backface-hidden sm:p-8 ${
-        back ? "rotate-y-180 bg-hero" : "bg-surface"
+        back ? "rotate-y-180 bg-accent-soft" : "bg-surface"
       }`}
     >
       <span className="font-pixel text-base text-text-muted">{label}</span>

@@ -96,9 +96,9 @@ export function MatchStep({ sessionId, round, isLast, busy, onAnswered, onError,
 
   const style = (isMatched: boolean, isMiss: boolean, isPicked: boolean) =>
     isMatched
-      ? "border-correct bg-correct/15"
+      ? "border-correct bg-surface ring-1 ring-correct"
       : isMiss
-        ? "shake border-wrong bg-wrong/15"
+        ? "shake border-wrong bg-surface ring-1 ring-wrong"
         : isPicked
           ? "border-border-strong bg-accent-soft"
           : "border-border bg-surface enabled:hover:bg-accent-soft";
@@ -163,9 +163,9 @@ export function MatchStep({ sessionId, round, isLast, busy, onAnswered, onError,
         <div role="status" className="flex items-start gap-4 border border-correct bg-correct/10 p-4">
           <PixelIcon name="check" scale={4} className="mt-1 shrink-0 text-correct" />
           <div className="min-w-0 flex-1 space-y-1">
-            <p className="flex items-center gap-2 font-pixel text-xl text-correct">
+            <p className="flex items-center gap-2 font-pixel text-2xl text-correct">
               All matched!
-              {xp > 0 && <span className="ml-auto bg-secondary px-2.5 py-0.5 text-sm text-secondary-fg">+{xp} XP</span>}
+              {xp > 0 && <span className="ml-auto bg-secondary px-2.5 py-0.5 font-sans text-sm text-secondary-fg">+{xp} XP</span>}
             </p>
             <p className="text-sm text-text-muted">
               {misses === 0 ? "No misses." : `${misses} ${misses === 1 ? "miss" : "misses"} along the way.`}
