@@ -51,7 +51,7 @@ Kwest is a study web app built around spaced repetition, with light game element
 **Quality**
 - Responsive from 375 px phones to desktop, with a bottom tab bar on mobile.
 - Light and dark themes that follow the system setting.
-- A one-screen welcome page with an animated pixel background (graph paper, drifting clouds, floating cards) and sign-up and log-in buttons. Decoration stops when the visitor prefers reduced motion.
+- A scrolling welcome page: a hero with the pixel title on an animated background (graph paper, pale sun, drifting clouds, floating cards, twinkles), a "How it works" row of three cards, a sample card you can tap to flip, and a closing "Ready to start?" on pixel hills. Cards lift on hover and press down when clicked; sections fade up as they scroll into view (in browsers that support it). Decoration stops when the visitor prefers reduced motion.
 - Navigation is a top bar with pixel-icon tabs, your level, coins and avatar, and Log out. Tabs are light: on hover the icon turns blush and a soft line slides in underneath; the page you are on keeps a blush line. On phones the tabs move to a bar at the bottom. Both bars use the same color as the page, with no line under them; a short fade shows where the page scrolls beneath.
 - Home is a quest board: a time-of-day greeting, today's quest with the number of cards waiting, and three tiles (daily goal, level, coins) that each open the page where you can act on them, then recent decks. Everything rises in one after another; bars fill block by block. It sits on a calm version of the animated backdrop. With no decks yet, Home is a short welcome instead: a greeting with your name, one sentence about decks and one button (make a deck). It sits on a soft scene: a pale sun, slow clouds, tiny twinkling stars, and hills with little pine trees (`PixelMeadow`).
 - The Decks list and the deck page use the same light pixel style: deck cards are small pixel frames that tint on hover, the deck page is one frame with a thin-lined stats row, and the card list and Share box are single frames with thin dividers instead of boxes inside boxes.
@@ -157,7 +157,7 @@ src/
 │   ├── (onboarding)/       First-run welcome flow
 │   └── (app)/              Signed-in pages: home, decks, study, profile
 ├── components/
-│   ├── brand/              Logo and wordmark
+│   ├── brand/              Wordmark, pixel art and backdrops
 │   └── ui/                 Shared UI: Button, Panel, Field, TextArea, ...
 ├── features/               Code grouped by feature
 │   ├── auth/               Server Actions and forms
@@ -232,4 +232,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Pixel redesign phase 3: Decks list, deck page and deck editor (subject and description are tucked behind one link; short upload hint)
 - [x] Pixel redesign phase 4: Study picker, Shop, Explore, shared-deck page, Challenge and link-game screens, results screens, Profile and onboarding
 - [x] Pixel redesign phase 5: quiz and matching screens, flashcard back, loading placeholder and logo text made lighter and crisper
+- [x] New welcome page: scrolling sections, hover and press effects, flip demo card; icon next to the Kwest name removed
 - [ ] Multiplayer study game

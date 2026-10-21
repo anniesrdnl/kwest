@@ -7,7 +7,6 @@ const CARDS = [
   { face: "?", left: "88%", top: "18%", delay: 0.8, blush: false, hide: true },
   { face: "7", left: "14%", top: "62%", delay: 1.6, blush: false, hide: true },
   { face: "Z", left: "82%", top: "58%", delay: 0.4, blush: true, hide: true },
-  { face: "!", left: "48%", top: "8%", delay: 2.2, blush: false, hide: true },
 ] as const;
 
 /** Calm backdrop (busy pages): a few pieces, only in the side margins of wide screens. */
@@ -77,12 +76,12 @@ export function Sparkle({ className = "", style }: { className?: string; style?:
  * The animated page backdrop: graph paper, drifting clouds, bobbing cards and twinkles.
  * Decoration only. Put it first inside a `relative isolate` wrapper; it fills that wrapper.
  */
-export function PixelBackdrop({ calm = false }: { calm?: boolean }) {
+export function PixelBackdrop({ calm = false, grid = true }: { calm?: boolean; grid?: boolean }) {
   const cards = calm ? CALM_CARDS : CARDS;
   const sparks = calm ? CALM_SPARKS : SPARKS;
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      <div className="landing-grid absolute inset-0" />
+      {grid && <div className="landing-grid absolute inset-0" />}
 
       {CLOUDS.map((c, i) => (
         <Cloud

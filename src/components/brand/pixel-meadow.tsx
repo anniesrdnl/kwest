@@ -44,6 +44,21 @@ function disc(size: number, core: number, halo: number): string[] {
 
 const SUN = disc(23, 7.5, 11);
 
+/** The pale pixel sun. Place it with `className` (it is not positioned by itself). */
+export function PixelSun({ className }: { className?: string }) {
+  return (
+    <Bitmap
+      rows={SUN}
+      scale={UNIT}
+      palette={{
+        "#": "color-mix(in srgb, var(--accent) 38%, var(--bg))",
+        o: "color-mix(in srgb, var(--accent) 16%, var(--bg))",
+      }}
+      className={className}
+    />
+  );
+}
+
 /** Heights (in drawing pixels) along one tile of hills: two gentle waves added together. */
 function skyline(columns: number, base: number, wave: number, phase: number): number[] {
   return Array.from({ length: columns }, (_, x) => {
@@ -130,7 +145,7 @@ function Hills({
  * with little trees, on the plain page color. On phones the hills sit above the tab bar.
  * Decoration only. Put it inside a fixed or relative wrapper; it fills that wrapper.
  */
-export function PixelMeadow({ flush = false }: { flush?: boolean }) {
+export function PixelMeadow({ flush = false, clouds = true }: { flush?: boolean; clouds?: boolean }) {
   // With no tab bar below (first-run pages), the hills sit right on the bottom edge.
   const hillsAt = flush ? "bottom-0" : "bottom-16 md:bottom-0";
   return (
@@ -143,24 +158,17 @@ export function PixelMeadow({ flush = false }: { flush?: boolean }) {
         />
       ))}
 
-      <Bitmap
-        rows={SUN}
-        scale={UNIT}
-        palette={{
-          "#": "color-mix(in srgb, var(--accent) 38%, var(--bg))",
-          o: "color-mix(in srgb, var(--accent) 16%, var(--bg))",
-        }}
-        className="absolute top-[14%] right-[12%] hidden md:block"
-      />
+      <PixelSun className="absolute top-[14%] right-[12%] hidden md:block" />
 
-      {CLOUDS.map((c, i) => (
-        <Cloud
-          key={i}
-          scale={c.scale}
-          className="cloud absolute left-0 block"
-          style={{ top: c.top, animationDelay: `${c.delay}s`, animationDuration: `${c.duration}s` }}
-        />
-      ))}
+      {clouds &&
+        CLOUDS.map((c, i) => (
+          <Cloud
+            key={i}
+            scale={c.scale}
+            className="cloud absolute left-0 block"
+            style={{ top: c.top, animationDelay: `${c.delay}s`, animationDuration: `${c.duration}s` }}
+          />
+        ))}
 
       <Hills id="hills-far" columns={192} base={18} wave={7} phase={0.6} trees={[]} className={`hills-far ${hillsAt}`} />
       <Hills id="hills-near" columns={144} base={10} wave={5} phase={2.4} trees={[28, 104]} className={`hills-near ${hillsAt}`} />

@@ -390,6 +390,55 @@
     animation: twinkle 2.4s ease-in-out infinite;
   }
 
+  /* The sun drifts up and down very slowly. */
+  .float-slow {
+    animation: float-y 7s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* Sections fade up as they scroll into view. Where scroll-driven animation is missing,
+     they simply rise once when the page loads. */
+  .reveal {
+    animation:
+      fade-in 0.7s ease-out both,
+      rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: fade-in linear both, rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+
+  /* The sample card on the welcome page: turns over like a real card. */
+  .flip-card {
+    perspective: 1000px;
+  }
+
+  .flip-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .flip-card[data-flipped="true"] .flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-face {
+    position: absolute;
+    inset: 0;
+    display: block;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+
   /* The arrow on a main button nudges, the coin bobs, and bar blocks pop in. */
   .nudge-x {
     animation: nudge-x 1.4s ease-in-out infinite;
@@ -520,7 +569,9 @@
   .float-y,
   .twinkle,
   .nudge-x,
-  .bob-sm {
+  .bob-sm,
+  .float-slow,
+  .reveal {
     animation: none !important;
   }
 }
