@@ -8,7 +8,6 @@ import { CoinsTile, GoalTile, LevelTile } from "@/features/dashboard/components/
 import { getDashboard } from "@/features/dashboard/queries";
 import { WelcomeCard } from "@/features/dashboard/components/welcome-card";
 import { isOnboarded } from "@/features/onboarding/steps";
-import { getPlayer } from "@/features/profile/queries";
 import { ONBOARDING_ROUTE } from "@/lib/routes";
 
 export const metadata: Metadata = { title: "Home" };
@@ -40,15 +39,13 @@ function today(timeZone: string): string {
 // then recent decks.
 // The animated backdrop is fixed behind the whole screen and hides with the page.
 export default async function HomePage() {
-  const { profile } = await getPlayer();
-  if (!isOnboarded(profile.onboarding_step)) redirect(ONBOARDING_ROUTE);
-
   const { player, decks, nextUp, dailyGoal } = await getDashboard();
+  if (!isOnboarded(player.profile.onboarding_step)) redirect(ONBOARDING_ROUTE);
   const timeZone = player.profile.timezone;
 
   return (
     <>
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+      <div aria-hidden className="fade-in pointer-events-none fixed inset-0 -z-10">
         {decks.length === 0 ? <PixelMeadow /> : <PixelBackdrop calm />}
       </div>
 

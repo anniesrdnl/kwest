@@ -235,4 +235,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Pixel redesign phase 5: quiz and matching screens, flashcard back, loading placeholder and logo text made lighter and crisper
 - [x] New welcome page: scrolling sections, hover and press effects, flip demo card; icon next to the Kwest name removed
 - [x] Decks page redesign: scene backdrop, card-stack empty state, hover and press effects
+- [x] Home loading screen is a small pixel loader (no fake layout); Home reads its data in one round trip instead of two
 - [ ] Multiplayer study game

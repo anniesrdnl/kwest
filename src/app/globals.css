@@ -390,6 +390,11 @@
     animation: twinkle 2.4s ease-in-out infinite;
   }
 
+  /* A plain fade, for scenes that appear once a page has loaded. */
+  .fade-in {
+    animation: fade-in 0.8s ease-out both;
+  }
+
   /* The sun drifts up and down very slowly. */
   .float-slow {
     animation: float-y 7s ease-in-out infinite alternate;

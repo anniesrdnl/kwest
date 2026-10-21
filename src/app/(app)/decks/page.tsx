@@ -15,7 +15,7 @@ export default async function DecksPage() {
 
   return (
     <>
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+      <div aria-hidden className="fade-in pointer-events-none fixed inset-0 -z-10">
         {empty ? <PixelMeadow clouds={false} sunClassName="top-[30%] right-[5%]" /> : <PixelBackdrop calm />}
       </div>
 

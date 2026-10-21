@@ -1,4 +1,5 @@
 import "server-only";
+import { requireUser } from "@/lib/auth/session";
 import { getPlayer, type Player } from "@/features/profile/queries";
 import { getDecks, type Deck } from "@/features/decks/queries";
 import { createClient } from "@/lib/supabase/server";
@@ -36,23 +37,28 @@ export function pickNextUp(decks: Deck[]): NextUp | null {
 }
 
 export async function getDashboard(): Promise<Dashboard> {
-  const player = await getPlayer();
+  const user = await requireUser();
   const supabase = await createClient();
-  const today = localDate(player.profile.timezone);
 
-  const [decks, activity] = await Promise.all([
+  // One round trip, not two: the player's own "today" depends on their time zone, which is
+  // not known yet. Every time zone is within a day of UTC, so ask for those three days and pick one after.
+  const nearDays = [-1, 0, 1].map((offset) => localDate("UTC", new Date(Date.now() + offset * 86_400_000)));
+  const [player, decks, activity] = await Promise.all([
+    getPlayer(),
     getDecks(),
-    supabase.from("daily_activity").select("cards_reviewed, goal_met").eq("user_id", player.id).eq("day", today).maybeSingle(),
+    supabase.from("daily_activity").select("day, cards_reviewed, goal_met").eq("user_id", user.id).in("day", nearDays),
   ]);
   if (activity.error) throw new Error(`Could not load today's activity: ${activity.error.message}`);
 
+  const today = localDate(player.profile.timezone);
+  const todays = activity.data.find((row) => row.day === today);
   const goal = player.stats.daily_goal;
-  const reviewed = activity.data?.cards_reviewed ?? 0;
+  const reviewed = todays?.cards_reviewed ?? 0;
 
   return {
     player,
     decks,
     nextUp: pickNextUp(decks),
-    dailyGoal: { reviewed, goal, met: Boolean(activity.data?.goal_met) || reviewed >= goal },
+    dailyGoal: { reviewed, goal, met: Boolean(todays?.goal_met) || reviewed >= goal },
   };
 }
