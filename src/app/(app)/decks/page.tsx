@@ -1,48 +1,50 @@
 import type { Metadata } from "next";
 import { Compass, Plus } from "lucide-react";
+import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
+import { PixelMeadow } from "@/components/brand/pixel-meadow";
 import { ButtonLink } from "@/components/ui/button";
-import { Panel } from "@/components/ui/panel";
 import { DeckList } from "@/features/decks/components/deck-list";
+import { EmptyDecks } from "@/features/decks/components/empty-decks";
 import { getDecks } from "@/features/decks/queries";
 
 export const metadata: Metadata = { title: "Decks" };
 
 export default async function DecksPage() {
   const decks = await getDecks();
+  const empty = decks.length === 0;
 
   return (
-    <div className="space-y-6">
-      <div className="rise flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl sm:text-[2rem] sm:leading-tight">Decks</h1>
-        <div className="flex flex-wrap gap-2">
-          <ButtonLink href="/explore" variant="outline">
-            <Compass size={18} aria-hidden />
-            Explore
-          </ButtonLink>
-          <ButtonLink href="/decks/new">
-            <Plus size={18} aria-hidden />
-            New deck
-          </ButtonLink>
-        </div>
+    <>
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+        {empty ? <PixelMeadow clouds={false} sunClassName="top-[30%] right-[5%]" /> : <PixelBackdrop calm />}
       </div>
 
-      {decks.length === 0 ? (
-        <Panel className="rise" style={{ animationDelay: "0.1s" }}>
-          <div className="flex flex-col items-center gap-4 py-6 text-center">
-            <div className="space-y-1">
-              <h2 className="text-2xl">No decks yet</h2>
-              <p className="text-text-muted">A deck is a set of flashcards about one topic. Make your first one.</p>
-            </div>
-            <ButtonLink href="/decks/new" size="lg">
-              Make a deck
+      <div className="space-y-6">
+        <div className="rise flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl sm:text-[2rem] sm:leading-tight">Decks</h1>
+          <div className="flex flex-wrap gap-2">
+            <ButtonLink href="/explore" variant="outline" className="group">
+              <Compass size={18} aria-hidden className="transition-[rotate] duration-300 ease-out group-hover:rotate-45" />
+              Explore
             </ButtonLink>
+            {/* With no decks yet, the one button in the middle is enough. */}
+            {!empty && (
+              <ButtonLink href="/decks/new" className="group">
+                <Plus size={18} aria-hidden className="transition-[rotate] duration-300 ease-out group-hover:rotate-90" />
+                New deck
+              </ButtonLink>
+            )}
           </div>
-        </Panel>
-      ) : (
-        <div className="rise" style={{ animationDelay: "0.1s" }}>
-          <DeckList decks={decks} />
         </div>
-      )}
-    </div>
+
+        {empty ? (
+          <EmptyDecks />
+        ) : (
+          <div className="rise" style={{ animationDelay: "0.1s" }}>
+            <DeckList decks={decks} />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

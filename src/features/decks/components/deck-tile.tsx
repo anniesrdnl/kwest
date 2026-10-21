@@ -24,7 +24,7 @@ export function PixelTile({
   children: ReactNode;
 }) {
   return (
-    <Link href={href} className="group block h-full transition-[translate] duration-150 active:translate-y-0.5">
+    <Link href={href} className="group block h-full transition-[translate] duration-150 hover:-translate-y-0.5 active:translate-y-px">
       <div className="pixel-lift h-full">
         <div className="pixel-frame flex h-full items-center gap-3 p-4 group-hover:[--frame-bg:var(--accent-soft)]">
           <DeckBadge title={title} colorKey={colorKey} className="transition-transform duration-150 group-hover:-translate-y-0.5" />

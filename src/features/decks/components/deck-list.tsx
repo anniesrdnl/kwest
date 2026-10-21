@@ -120,8 +120,8 @@ export function DeckList({ decks }: { decks: Deck[] }) {
         </div>
       ) : (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {shown.map((deck) => (
-            <li key={deck.id}>
+          {shown.map((deck, i) => (
+            <li key={deck.id} className="rise" style={{ animationDelay: `${0.15 + Math.min(i, 8) * 0.05}s` }}>
               <DeckTile deck={deck} extra={deck.visibility === "public" ? " · Public" : deck.shared ? " · Shared" : ""} />
             </li>
           ))}

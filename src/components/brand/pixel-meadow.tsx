@@ -145,7 +145,16 @@ function Hills({
  * with little trees, on the plain page color. On phones the hills sit above the tab bar.
  * Decoration only. Put it inside a fixed or relative wrapper; it fills that wrapper.
  */
-export function PixelMeadow({ flush = false, clouds = true }: { flush?: boolean; clouds?: boolean }) {
+export function PixelMeadow({
+  flush = false,
+  clouds = true,
+  sunClassName = "top-[14%] right-[12%]",
+}: {
+  flush?: boolean;
+  clouds?: boolean;
+  /** Where the sun sits (it is hidden below tablet width). */
+  sunClassName?: string;
+}) {
   // With no tab bar below (first-run pages), the hills sit right on the bottom edge.
   const hillsAt = flush ? "bottom-0" : "bottom-16 md:bottom-0";
   return (
@@ -158,7 +167,7 @@ export function PixelMeadow({ flush = false, clouds = true }: { flush?: boolean;
         />
       ))}
 
-      <PixelSun className="absolute top-[14%] right-[12%] hidden md:block" />
+      <PixelSun className={`absolute hidden md:block ${sunClassName}`} />
 
       {clouds &&
         CLOUDS.map((c, i) => (
