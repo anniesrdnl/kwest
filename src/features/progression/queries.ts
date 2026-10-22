@@ -1,4 +1,5 @@
 import "server-only";
+import { requireUser } from "@/lib/auth/session";
 import { getPlayer } from "@/features/profile/queries";
 import { createClient } from "@/lib/supabase/server";
 import { localDate } from "@/lib/time";
@@ -33,10 +34,13 @@ const COMING_LATER = new Set<string>();
 
 /** Stats, the last 7 days and achievements for the profile page. */
 export async function getProgressOverview(): Promise<ProgressOverview> {
-  const { id, profile, stats } = await getPlayer();
+  // One round trip, not two: the user id is already known, so the player and the five
+  // queries all start together (getPlayer is cached, so the page shares it).
+  const { id } = await requireUser();
   const supabase = await createClient();
 
-  const [catalog, earned, activity, sessions, masteries] = await Promise.all([
+  const [{ profile, stats }, catalog, earned, activity, sessions, masteries] = await Promise.all([
+    getPlayer(),
     supabase.from("achievements").select("*").order("sort"),
     supabase.from("user_achievements").select("achievement_key, earned_at").eq("user_id", id),
     supabase.from("daily_activity").select("day, cards_reviewed, goal_met").eq("user_id", id),

@@ -1,4 +1,5 @@
 import "server-only";
+import { requireUser } from "@/lib/auth/session";
 import { getPlayer } from "@/features/profile/queries";
 import { createClient } from "@/lib/supabase/server";
 import { lookOf, type AvatarLook } from "./avatar";
@@ -27,10 +28,12 @@ export type Shop = {
 };
 
 export async function getShop(): Promise<Shop> {
-  const { id, profile, stats } = await getPlayer();
+  // One round trip, not two: the user id is known up front, so the player and both queries start together.
+  const { id } = await requireUser();
   const supabase = await createClient();
 
-  const [items, inventory] = await Promise.all([
+  const [{ profile, stats }, items, inventory] = await Promise.all([
+    getPlayer(),
     supabase.from("items").select("key, name, category, price, unlock_level").in("category", [...SHOP_CATEGORIES]).order("sort"),
     supabase.from("inventory").select("item_key").eq("user_id", id),
   ]);
