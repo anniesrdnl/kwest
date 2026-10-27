@@ -188,7 +188,7 @@
   --color-gold: var(--gold);
   --color-focus: var(--focus);
 
-  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-face), ui-monospace, Consolas, monospace;
   --font-pixel: var(--font-pixel-face), ui-monospace, monospace;
   --font-display: var(--font-sans);
   --color-ink: var(--ink);
