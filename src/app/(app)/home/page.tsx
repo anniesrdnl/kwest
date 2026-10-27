@@ -54,7 +54,7 @@ export default async function HomePage() {
       ) : (
         <div className="space-y-8">
           <header className="rise min-w-0 space-y-1">
-            <h1 className="text-2xl break-words sm:text-[2rem] sm:leading-tight">
+            <h1 className="font-sans text-3xl font-semibold break-words sm:text-4xl sm:leading-tight">
               {greeting(timeZone)}, {player.profile.display_name}
             </h1>
             <p className="text-text-muted">{today(timeZone)}</p>

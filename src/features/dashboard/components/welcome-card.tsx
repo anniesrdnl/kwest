@@ -24,7 +24,7 @@ export function WelcomeCard({ name }: { name: string }) {
           <div className="space-y-6 px-1 py-4 sm:space-y-8 sm:px-6 sm:py-10">
             <h1
               id="welcome-heading"
-              className="rise text-[2rem] break-words sm:text-5xl sm:leading-tight"
+              className="rise font-sans text-3xl font-semibold break-words sm:text-5xl sm:leading-tight"
               style={{ animationDelay: "0.05s" }}
             >
               Welcome, {name}
