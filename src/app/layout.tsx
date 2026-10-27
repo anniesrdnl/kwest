@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Tiny5 } from "next/font/google";
+import { Poppins, Tiny5 } from "next/font/google";
 import "./globals.css";
 
-// Body and heading font: a plain, easy-to-read monospace (the look of the navigation sample).
-const sans = IBM_Plex_Mono({
+// Body and heading font.
+const sans = Poppins({
   variable: "--font-sans-face",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],

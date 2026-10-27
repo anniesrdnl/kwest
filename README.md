@@ -85,7 +85,7 @@ All grading, XP and coin rewards happen in Postgres functions, so the browser ca
 | Area | Choice |
 |---|---|
 | Framework | [Next.js 16](https://nextjs.org) App Router with Turbopack, Cache Components and Partial Prefetching |
-| UI | React 19, TypeScript (strict), Tailwind CSS 4, [lucide-react](https://lucide.dev) icons, IBM Plex Mono (text) and Tiny5 (pixel buttons and logo) |
+| UI | React 19, TypeScript (strict), Tailwind CSS 4, [lucide-react](https://lucide.dev) icons, Poppins (text) and Tiny5 (pixel buttons and logo) |
 | Backend | [Supabase](https://supabase.com): Postgres, Auth and Row Level Security, accessed with `@supabase/ssr` |
 | Validation | [zod](https://zod.dev) 4, shared by the browser and Server Actions |
 
@@ -191,7 +191,7 @@ Each feature keeps its data access in a server-only `queries.ts` and its mutatio
 
 ## Design system
 
-Kwest has a pixel picture-book look: flat colors, thick black outlines, square corners, hard pixel shadows, and a pixel font (Tiny5) for button text, the logo and pixel art only. All other text uses IBM Plex Mono, a plain monospace that is easy to read.
+Kwest has a pixel picture-book look: flat colors, thick black outlines, square corners, hard pixel shadows, and a pixel font (Tiny5) for button text, the logo and pixel art only. All other text uses Poppins so it stays easy to read.
 
 Design tokens live in [`src/app/globals.css`](src/app/globals.css) and are exposed as Tailwind colors (`bg-surface`, `text-text-muted`, `bg-secondary`, ...).
 
@@ -238,6 +238,6 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Home loading screen is a small pixel loader (no fake layout); Home reads its data in one round trip instead of two
 - [x] Profile, Shop, and the quiz, flashcards and Challenge pages also read their data in one round trip
 - [x] Card reader skips document titles, "Page N" lines, table header rows (Command / What it does) and headers or footers repeated on every page
-- [x] Navigation uses larger two-tone pixel pictures (src/components/brand/nav-icon.tsx) with easy-to-read IBM Plex Mono labels instead of the pixel font
-- [x] All text uses IBM Plex Mono; the pixel font is kept only for button text, the logo and pixel art. Swap the font in src/app/layout.tsx
+- [x] Navigation uses larger two-tone pixel pictures (src/components/brand/nav-icon.tsx) with easy-to-read Poppins labels instead of the pixel font
+- [x] All text uses Poppins; the pixel font is kept only for button text, the logo and pixel art. Swap the font in src/app/layout.tsx
 - [ ] Multiplayer study game
