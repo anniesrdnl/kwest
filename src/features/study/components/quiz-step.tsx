@@ -115,7 +115,7 @@ export function QuizStep({
       </div>
 
       {question.type === "mc" && (
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {question.options.map((option, i) => {
             const isRight = feedback && option === feedback.expected;
             const isPickedWrong = feedback && !feedback.isCorrect && option === given;
@@ -125,7 +125,7 @@ export function QuizStep({
                   type="button"
                   onClick={() => submit(option)}
                   disabled={Boolean(feedback) || sending || busy}
-                  className={`flex min-h-14 w-full items-center gap-3 border px-4 py-3 text-left transition-colors enabled:active:translate-y-px ${
+                  className={`flex h-full min-h-14 w-full items-start gap-3 border px-4 py-3 text-left transition-colors enabled:active:translate-y-px ${
                     isRight
                       ? "border-correct bg-surface ring-1 ring-correct"
                       : isPickedWrong
@@ -150,7 +150,7 @@ export function QuizStep({
                       i + 1
                     )}
                   </span>
-                  <span className="break-words">{option}</span>
+                  <span className="py-1 break-words">{option}</span>
                 </button>
               </li>
             );
