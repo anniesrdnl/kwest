@@ -7,14 +7,14 @@ export type StudyDeck = { deck: DeckDetail; cards: StudyCard[] };
 
 /** A deck's cards with the player's progress on each, or null if the deck isn't theirs. */
 export async function getStudyDeck(id: string): Promise<StudyDeck | null> {
-  const deck = await getDeck(id);
-  if (!deck) return null;
-
+  // One round trip, not two: progress is asked for while the deck loads. A bad id makes the
+  // progress query fail, but then getDeck gives null, so that error is only used for real decks.
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("card_progress")
-    .select("card_id, box, due_at, recent_wrong")
-    .eq("set_id", id);
+  const [deck, { data, error }] = await Promise.all([
+    getDeck(id),
+    supabase.from("card_progress").select("card_id, box, due_at, recent_wrong").eq("set_id", id),
+  ]);
+  if (!deck) return null;
   if (error) throw new Error(`Could not load progress: ${error.message}`);
 
   const progress = new Map(data.map((p) => [p.card_id, p]));

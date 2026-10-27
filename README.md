@@ -236,4 +236,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] New welcome page: scrolling sections, hover and press effects, flip demo card; icon next to the Kwest name removed
 - [x] Decks page redesign: scene backdrop, card-stack empty state, hover and press effects
 - [x] Home loading screen is a small pixel loader (no fake layout); Home reads its data in one round trip instead of two
+- [x] Profile, Shop, and the quiz, flashcards and Challenge pages also read their data in one round trip
 - [ ] Multiplayer study game
