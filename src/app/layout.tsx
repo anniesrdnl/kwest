@@ -1,26 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Poppins, Tiny5 } from "next/font/google";
+import { Figtree, Tiny5 } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+// Body and heading font. A free, clean sans-serif standing in for Anthropic Sans
+// (a private font that is not available to download). Swap it here when the real files exist.
+const sans = Figtree({
+  variable: "--font-sans-face",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
-// Pixel font for headings, buttons and the logo. Picked for clear digits
+// Pixel font for button text, the logo and pixel art only. Picked for clear digits
 // (Pixelify Sans drew "2" like "8").
 const pixel = Tiny5({
   variable: "--font-pixel-face",
   subsets: ["latin"],
   weight: "400",
-});
-
-// Plain, easy-to-read monospace for the navigation labels (the pixel font is hard to read at small sizes).
-const label = IBM_Plex_Mono({
-  variable: "--font-label-face",
-  subsets: ["latin"],
-  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -40,7 +34,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable} ${pixel.variable} ${label.variable} h-full antialiased`}>
+    <html lang="en" className={`${sans.variable} ${pixel.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );

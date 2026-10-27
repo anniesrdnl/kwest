@@ -110,7 +110,7 @@ function Game({ link, onFinished, onRestart }: { link: ChallengeLinkData; onFini
             {target && (
               <p className="bg-accent-soft px-3 py-3">
                 <span className="block text-sm text-text-muted">Score to beat</span>
-                <span className="font-pixel text-base">{scoreLine(target)}</span>
+                <span className="font-display text-base">{scoreLine(target)}</span>
               </p>
             )}
 
@@ -234,7 +234,7 @@ function Board({ rows }: { rows: ChallengeBoardRow[] }) {
         <ol className="pixel-frame divide-y-2 divide-border">
           {rows.map((row, i) => (
             <li key={i} className={`flex items-center gap-3 px-4 py-3 ${row.isYou && !row.isOwner ? "bg-accent-soft" : ""}`}>
-              <span className="w-6 shrink-0 text-center font-pixel text-base tabular-nums">{i + 1}</span>
+              <span className="w-6 shrink-0 text-center font-display text-base tabular-nums">{i + 1}</span>
               <UserAvatar name={row.name} look={{ icon: row.icon, color: row.color, frame: row.frame }} size="sm" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">

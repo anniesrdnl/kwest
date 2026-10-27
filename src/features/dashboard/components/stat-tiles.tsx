@@ -41,7 +41,7 @@ export function GoalTile({ dailyGoal, delay }: { dailyGoal: DailyGoal; delay: nu
   return (
     <Tile href="/profile#settings-heading" label="Daily goal" delay={delay}>
       <p className="flex items-baseline gap-2">
-        <span className="font-pixel text-[2rem] leading-none tabular-nums">{reviewed}</span>
+        <span className="font-display text-[2rem] leading-none tabular-nums">{reviewed}</span>
         <span className="text-text-muted">/ {goal} cards today</span>
       </p>
       <PixelBar
@@ -53,7 +53,7 @@ export function GoalTile({ dailyGoal, delay }: { dailyGoal: DailyGoal; delay: nu
         valueText={met ? `Goal reached: ${reviewed} cards today` : `${reviewed} of ${goal} cards today`}
       />
       {met ? (
-        <p className="inline-flex items-center gap-1.5 bg-secondary px-2 py-0.5 font-pixel text-base text-secondary-fg">
+        <p className="inline-flex items-center gap-1.5 bg-secondary px-2 py-0.5 font-display text-base text-secondary-fg">
           <PixelIcon name="check" scale={2} />
           Goal reached
         </p>
@@ -71,7 +71,7 @@ export function LevelTile({ xpTotal, delay }: { xpTotal: number; delay: number }
   return (
     <Tile href="/profile" label="Level" delay={delay}>
       <p className="flex items-baseline gap-2">
-        <span className="font-pixel text-[2rem] leading-none">LV {level}</span>
+        <span className="font-display text-[2rem] leading-none">LV {level}</span>
         <span className="text-text-muted">{titleForLevel(level)}</span>
       </p>
       <PixelBar
@@ -95,7 +95,7 @@ export function CoinsTile({ coins, delay }: { coins: number; delay: number }) {
     <Tile href="/shop" label="Coins" delay={delay}>
       <p className="flex items-center gap-3">
         <PixelIcon name="coin" scale={4} className="bob-sm text-gold" />
-        <span className="font-pixel text-[2rem] leading-none tabular-nums">{coins}</span>
+        <span className="font-display text-[2rem] leading-none tabular-nums">{coins}</span>
       </p>
       <p className="text-sm text-text-muted">Spend them on avatar icons, colors and frames.</p>
     </Tile>

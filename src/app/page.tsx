@@ -36,7 +36,7 @@ export default function LandingPage() {
         </div>
         <a
           href="#how"
-          className="rise group absolute bottom-6 flex min-h-11 flex-col items-center gap-1 px-4 font-pixel text-base text-text-muted transition-colors duration-150 hover:text-accent-ink"
+          className="rise group absolute bottom-6 flex min-h-11 flex-col items-center gap-1 px-4 font-display text-base text-text-muted transition-colors duration-150 hover:text-accent-ink"
           style={{ animationDelay: "1.1s" }}
         >
           How it works
@@ -50,7 +50,7 @@ export default function LandingPage() {
       <section id="how" className="relative mx-auto w-full max-w-4xl scroll-mt-4 px-4 py-20">
         <Sparkle className="hidden md:block" style={{ left: "2%", top: "14%" }} />
         <Sparkle className="hidden md:block" style={{ left: "96%", top: "70%", animationDelay: "0.8s" }} />
-        <h2 className="reveal text-center font-pixel text-[2rem] text-text">How it works</h2>
+        <h2 className="reveal text-center font-display text-[2rem] text-text">How it works</h2>
         <ol className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
           {STEPS.map((step, i) => (
             <li key={step.title} className="reveal" style={{ animationDelay: `${i * 0.08}s` }}>
@@ -60,7 +60,7 @@ export default function LandingPage() {
                     <span className="flex size-14 items-center justify-center bg-accent-soft text-accent-ink transition-[background-color,color] duration-150 group-hover:bg-accent group-hover:text-accent-fg">
                       <PixelIcon name={step.icon} scale={4} className="transition-[translate] duration-150 group-hover:-translate-y-0.5" />
                     </span>
-                    <h3 className="font-pixel text-2xl text-text">
+                    <h3 className="font-display text-2xl text-text">
                       <span className="text-accent-ink">{i + 1}.</span> {step.title}
                     </h3>
                     <p className="text-base text-text">{step.text}</p>
@@ -74,7 +74,7 @@ export default function LandingPage() {
 
       {/* Try a card */}
       <section className="relative mx-auto w-full max-w-4xl px-4 py-12 text-center">
-        <h2 className="reveal font-pixel text-[2rem] text-text">Try a card</h2>
+        <h2 className="reveal font-display text-[2rem] text-text">Try a card</h2>
         <div className="reveal mt-8" style={{ animationDelay: "0.08s" }}>
           <FlipDemo />
         </div>
@@ -85,7 +85,7 @@ export default function LandingPage() {
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <PixelMeadow flush clouds={false} />
         </div>
-        <h2 className="reveal font-pixel text-[2rem] text-text">Ready to start?</h2>
+        <h2 className="reveal font-display text-[2rem] text-text">Ready to start?</h2>
         <p className="reveal mt-4 max-w-md text-lg text-text" style={{ animationDelay: "0.08s" }}>
           Make your first deck in a minute.
         </p>

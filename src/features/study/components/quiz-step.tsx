@@ -100,7 +100,7 @@ export function QuizStep({
       )}
       <div className="pixel-lift">
         <section className="pixel-frame space-y-3 p-6 sm:p-8">
-          <p className="font-pixel text-base text-text-muted">
+          <p className="font-display text-base text-text-muted">
             {ask}
             {retry && <span className="ml-2 bg-secondary px-2 py-0.5 font-sans text-sm text-secondary-fg">Try again</span>}
           </p>
@@ -135,7 +135,7 @@ export function QuizStep({
                           : "border-border bg-surface enabled:hover:bg-accent-soft"
                   }`}
                 >
-                  <span className="inline-flex size-8 shrink-0 items-center justify-center bg-secondary font-pixel text-base text-secondary-fg">
+                  <span className="inline-flex size-8 shrink-0 items-center justify-center bg-secondary font-display text-base text-secondary-fg">
                     {isRight ? (
                       <>
                         <PixelIcon name="check" scale={2} />
@@ -182,7 +182,7 @@ export function QuizStep({
           }}
           className="space-y-3"
         >
-          <label htmlFor="typed-answer" className="block font-pixel text-base">
+          <label htmlFor="typed-answer" className="block font-display text-base">
             Your answer
           </label>
           <div className="flex gap-3">
@@ -216,7 +216,7 @@ export function QuizStep({
         >
           <PixelIcon name={feedback.isCorrect ? "check" : "close"} scale={4} className={`mt-1 shrink-0 ${feedback.isCorrect ? "text-correct" : "text-wrong"}`} />
           <div className="min-w-0 flex-1 space-y-2">
-            <p className={`flex items-center gap-2 font-pixel text-2xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
+            <p className={`flex items-center gap-2 font-display text-2xl ${feedback.isCorrect ? "text-correct" : "text-wrong"}`}>
               {feedback.isCorrect ? "Correct!" : timedOut ? "Time's up" : "Not quite"}
               {feedback.xp > 0 && (
                 <span className="ml-auto bg-secondary px-2.5 py-0.5 font-sans text-sm text-secondary-fg">+{feedback.xp} XP</span>
@@ -285,7 +285,7 @@ function Countdown({ limitMs, stopped, onTimeUp }: { limitMs: number; stopped: b
         tone={low ? "wrong" : "progress"}
         className="flex-1"
       />
-      <p className={`inline-flex w-16 items-center justify-end gap-1.5 font-pixel text-base tabular-nums ${low ? "text-wrong" : "text-text-muted"}`}>
+      <p className={`inline-flex w-16 items-center justify-end gap-1.5 font-display text-base tabular-nums ${low ? "text-wrong" : "text-text-muted"}`}>
         <PixelIcon name="clock" scale={2} />
         <span className="sr-only">Time left: </span>
         {seconds}s

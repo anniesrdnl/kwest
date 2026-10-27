@@ -365,7 +365,7 @@ function Face({ label, text, note, hint, back = false }: { label: string; text: 
         back ? "rotate-y-180 bg-accent-soft" : "bg-surface"
       }`}
     >
-      <span className="font-pixel text-base text-text-muted">{label}</span>
+      <span className="font-display text-base text-text-muted">{label}</span>
       <span className="text-center text-2xl font-semibold break-words whitespace-pre-line sm:text-3xl">{text}</span>
       <span className="min-h-5 text-center text-sm text-text-muted">{note ?? hint ?? ""}</span>
     </div>
@@ -427,12 +427,12 @@ function Results({
       {(leveledUp || result.masteredSet || result.sessionBonus > 0) && (
         <ul className="space-y-2 text-center">
           {leveledUp && (
-            <li className="flex items-center justify-center gap-2 font-pixel text-base text-accent-ink">
+            <li className="flex items-center justify-center gap-2 font-display text-base text-accent-ink">
               <PixelIcon name="spark" scale={2} /> You reached level {result.level}!
             </li>
           )}
           {result.masteredSet && (
-            <li className="flex items-center justify-center gap-2 font-pixel text-base text-accent-ink">
+            <li className="flex items-center justify-center gap-2 font-display text-base text-accent-ink">
               <PixelIcon name="check" scale={2} /> You mastered this deck.
             </li>
           )}

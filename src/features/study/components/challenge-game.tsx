@@ -290,12 +290,12 @@ function Results({
             </li>
           )}
           {leveledUp && (
-            <li className="flex items-center justify-center gap-2 font-pixel text-base text-accent-ink">
+            <li className="flex items-center justify-center gap-2 font-display text-base text-accent-ink">
               <PixelIcon name="spark" scale={2} /> You reached level {result.level}!
             </li>
           )}
           {result.masteredSet && (
-            <li className="flex items-center justify-center gap-2 font-pixel text-base text-accent-ink">
+            <li className="flex items-center justify-center gap-2 font-display text-base text-accent-ink">
               <PixelIcon name="check" scale={2} /> You mastered this deck.
             </li>
           )}

@@ -21,7 +21,7 @@ export function XpBar({ xpTotal, compact = false }: { xpTotal: number; compact?:
   if (compact) {
     return (
       <div className="flex items-center gap-2">
-        <span className="font-pixel text-base whitespace-nowrap">Level {level}</span>
+        <span className="font-display text-base whitespace-nowrap">Level {level}</span>
         {bar}
       </div>
     );

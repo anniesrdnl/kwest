@@ -43,7 +43,7 @@ export function ShopBoard({ shop }: { shop: Shop }) {
           <UserAvatar name={shop.name} look={previewLook} size="xl" />
           <div className="space-y-1 text-center sm:text-left">
             <p className="text-sm text-text-muted">{Object.keys(preview).length ? "Preview" : "Your avatar"}</p>
-            <p className="font-pixel text-2xl break-words">{shop.name}</p>
+            <p className="font-display text-2xl break-words">{shop.name}</p>
             <p className="inline-flex items-center gap-2">
               <PixelIcon name="coin" scale={2} className="text-gold" />
               <span className="font-semibold tabular-nums">{shop.coins}</span> coins · Level {shop.level}

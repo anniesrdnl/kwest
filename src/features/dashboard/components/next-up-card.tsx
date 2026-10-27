@@ -20,7 +20,7 @@ export function NextUpCard({ nextUp }: { nextUp: NextUp }) {
       label="Today's quest"
       aside={
         <div className="float-y text-center">
-          <p className="font-pixel text-[4rem] leading-none tabular-nums">{waiting}</p>
+          <p className="font-display text-[4rem] leading-none tabular-nums">{waiting}</p>
           <p className="mt-2 text-sm text-text-muted">{waiting === 1 ? "card waiting" : "cards waiting"}</p>
         </div>
       }
@@ -93,7 +93,7 @@ function NextUpShell({ label, aside, children }: { label: string; aside?: React.
       <section aria-labelledby="next-up-heading" className="pixel-frame p-6 sm:p-8">
         <div className="flex items-center gap-6 sm:gap-10">
           <div className="min-w-0 flex-1 space-y-5">
-            <h2 id="next-up-heading" className="inline-block bg-secondary px-2 py-0.5 font-pixel text-base text-secondary-fg">
+            <h2 id="next-up-heading" className="inline-block bg-secondary px-2 py-0.5 font-display text-base text-secondary-fg">
               {label}
             </h2>
             {children}

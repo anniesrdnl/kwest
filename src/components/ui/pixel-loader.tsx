@@ -11,7 +11,7 @@ export function PixelLoader({ label = "Loading…" }: { label?: string }) {
           />
         ))}
       </div>
-      <p className="font-pixel text-base text-text-muted">{label}</p>
+      <p className="font-display text-base text-text-muted">{label}</p>
     </div>
   );
 }

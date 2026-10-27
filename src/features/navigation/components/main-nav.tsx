@@ -28,7 +28,7 @@ export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className={`group relative inline-flex h-16 items-center gap-2.5 px-3 font-label text-base text-text transition-[translate] duration-150 active:translate-y-px ${active ? "font-semibold" : "font-medium"}`}
+            className={`group relative inline-flex h-16 items-center gap-2.5 px-3 text-base text-text transition-[translate] duration-150 active:translate-y-px ${active ? "font-semibold" : "font-medium"}`}
           >
             <NavIcon
               name={icon}
@@ -68,7 +68,7 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 font-label text-xs text-text transition-[translate] duration-150 active:translate-y-px ${
+                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-xs text-text transition-[translate] duration-150 active:translate-y-px ${
                   active ? "font-semibold" : "font-medium"
                 }`}
               >

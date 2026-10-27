@@ -13,7 +13,7 @@ export function WeekChart({ week, goal }: { week: DayActivity[]; goal: number })
   return (
     <figure className="space-y-3">
       <figcaption className="flex items-baseline justify-between gap-3">
-        <span className="font-pixel text-base">Last 7 days</span>
+        <span className="font-display text-base">Last 7 days</span>
         <span className="text-sm text-text-muted tabular-nums">{total} cards</span>
       </figcaption>
 

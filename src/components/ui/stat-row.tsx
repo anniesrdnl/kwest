@@ -14,7 +14,7 @@ export function StatRow({ items, className = "" }: { items: readonly { label: st
             className="border-border p-4 text-center max-sm:odd:border-r-2 max-sm:nth-[n+3]:border-t-2 sm:border-l-2 sm:first:border-l-0"
           >
             <dt className="text-sm text-text-muted">{label}</dt>
-            <dd className="font-pixel text-2xl tabular-nums">{value}</dd>
+            <dd className="font-display text-2xl tabular-nums">{value}</dd>
           </div>
         ))}
       </dl>

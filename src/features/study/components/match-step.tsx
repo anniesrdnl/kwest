@@ -107,7 +107,7 @@ export function MatchStep({ sessionId, round, isLast, busy, onAnswered, onError,
     <div className="space-y-5">
       <div className="pixel-lift">
         <section className="pixel-frame space-y-2 p-6 sm:p-8">
-          <p className="font-pixel text-base text-text-muted">{matchAsk(cards)}</p>
+          <p className="font-display text-base text-text-muted">{matchAsk(cards)}</p>
           <p className="text-lg">Tap one on the left, then its match on the right.</p>
           <p aria-live="polite" className="text-sm text-text-muted">
             {matched} of {cards.length} matched
@@ -163,7 +163,7 @@ export function MatchStep({ sessionId, round, isLast, busy, onAnswered, onError,
         <div role="status" className="flex items-start gap-4 border border-correct bg-correct/10 p-4">
           <PixelIcon name="check" scale={4} className="mt-1 shrink-0 text-correct" />
           <div className="min-w-0 flex-1 space-y-1">
-            <p className="flex items-center gap-2 font-pixel text-2xl text-correct">
+            <p className="flex items-center gap-2 font-display text-2xl text-correct">
               All matched!
               {xp > 0 && <span className="ml-auto bg-secondary px-2.5 py-0.5 font-sans text-sm text-secondary-fg">+{xp} XP</span>}
             </p>

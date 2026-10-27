@@ -37,7 +37,7 @@ export function FlipDemo() {
         <span className="flip-inner block size-full">
           <span aria-hidden={flipped} className="flip-face pixel-lift">
             <span className="pixel-frame flex size-full flex-col items-center justify-center gap-3 p-6 group-hover:[--frame-bg:var(--accent-soft)]">
-              <span className="font-pixel text-2xl text-text">{CARDS[front].question}</span>
+              <span className="font-display text-2xl text-text">{CARDS[front].question}</span>
               <span className="text-base text-text-muted">Tap to flip</span>
             </span>
           </span>

@@ -188,9 +188,9 @@
   --color-gold: var(--gold);
   --color-focus: var(--focus);
 
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-pixel: var(--font-pixel-face), ui-monospace, monospace;
-  --font-label: var(--font-label-face), ui-monospace, monospace;
+  --font-display: var(--font-sans);
   --color-ink: var(--ink);
 
   /* Square, pixel corners everywhere (rounded-full stays round). */
@@ -224,17 +224,20 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-pixel);
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   /* The pixel font has one weight; a fake bold would blur its pixels. */
-  h1,
-  h2,
-  h3,
   .font-pixel {
     font-synthesis: none;
+  }
+
+  /* Text that used to be pixel lettering: semibold sans, same sizes. */
+  .font-display {
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   /* Crisp, stair-stepped edges on icons and drawings. */

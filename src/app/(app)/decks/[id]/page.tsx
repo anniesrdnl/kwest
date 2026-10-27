@@ -52,7 +52,7 @@ export default async function DeckPage({ params }: PageProps<"/decks/[id]">) {
               <div key={label} className="px-3 py-3 sm:px-5">
                 <dt className="sr-only">{label}</dt>
                 <dd>
-                  <span className="block font-pixel text-2xl tabular-nums">{value}</span>
+                  <span className="block font-display text-2xl tabular-nums">{value}</span>
                   <span className="text-sm text-text-muted">{label}</span>
                 </dd>
               </div>
