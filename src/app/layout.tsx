@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Tiny5 } from "next/font/google";
+import { IBM_Plex_Mono, Poppins, Tiny5 } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -14,6 +14,13 @@ const pixel = Tiny5({
   variable: "--font-pixel-face",
   subsets: ["latin"],
   weight: "400",
+});
+
+// Plain, easy-to-read monospace for the navigation labels (the pixel font is hard to read at small sizes).
+const label = IBM_Plex_Mono({
+  variable: "--font-label-face",
+  subsets: ["latin"],
+  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -33,7 +40,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable} ${pixel.variable} h-full antialiased`}>
+    <html lang="en" className={`${poppins.variable} ${pixel.variable} ${label.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );

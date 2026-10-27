@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PixelIcon } from "@/components/brand/pixel";
+import { NavIcon } from "@/components/brand/nav-icon";
 import { NAV_ITEMS, isActive } from "../nav-items";
 
 // usePathname can suspend on routes with dynamic params (Cache Components),
@@ -14,7 +14,7 @@ export function DesktopNav() {
 }
 
 /**
- * Light tab effects: on hover the icon turns blush and a thin soft line slides in underneath.
+ * Light tab effects: on hover the picture lifts 1px and a thin soft line slides in underneath.
  * The page you are on keeps a blush line. A click nudges the tab down 1px.
  * Below the lg size only the icons show (the names stay for screen readers).
  */
@@ -28,12 +28,12 @@ export function DesktopNavLinks({ pathname }: { pathname: string | null }) {
             key={href}
             href={href}
             aria-current={active ? "page" : undefined}
-            className="group relative inline-flex h-16 items-center gap-2 px-3 font-pixel text-base tracking-wide text-text transition-[translate] duration-150 active:translate-y-px"
+            className={`group relative inline-flex h-16 items-center gap-2.5 px-3 font-label text-base text-text transition-[translate] duration-150 active:translate-y-px ${active ? "font-semibold" : "font-medium"}`}
           >
-            <PixelIcon
+            <NavIcon
               name={icon}
               scale={2}
-              className={`transition-colors duration-150 ${active ? "text-accent-ink" : "group-hover:text-accent-ink"}`}
+              className="transition-[translate] duration-150 group-hover:-translate-y-px"
             />
             <span className="sr-only lg:not-sr-only">{label}</span>
             <span
@@ -53,7 +53,7 @@ export function MobileTabBar() {
   return <MobileTabBarLinks pathname={usePathname()} />;
 }
 
-/** The phone tab bar: the current page gets a blush icon and a thin line above it. */
+/** The phone tab bar: the current page gets bold text and a thin line above it. */
 export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
   return (
     <nav
@@ -68,7 +68,7 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-xs text-text transition-[translate] duration-150 active:translate-y-px ${
+                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 font-label text-xs text-text transition-[translate] duration-150 active:translate-y-px ${
                   active ? "font-semibold" : "font-medium"
                 }`}
               >
@@ -76,7 +76,7 @@ export function MobileTabBarLinks({ pathname }: { pathname: string | null }) {
                   aria-hidden
                   className={`absolute inset-x-4 -top-0.5 h-0.5 transition-colors duration-150 ${active ? "bg-accent" : "bg-transparent"}`}
                 />
-                <PixelIcon name={icon} scale={2} className={active ? "text-accent-ink" : ""} />
+                <NavIcon name={icon} scale={2} />
                 {label}
               </Link>
             </li>

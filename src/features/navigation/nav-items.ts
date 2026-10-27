@@ -1,7 +1,7 @@
-import type { PixelIconName } from "@/components/brand/pixel";
+import type { NavIconName } from "@/components/brand/nav-icon";
 import { HOME_ROUTE } from "@/lib/routes";
 
-export type NavItem = { href: string; label: string; icon: PixelIconName };
+export type NavItem = { href: string; label: string; icon: NavIconName };
 
 /** Main navigation. Desktop shows it in the top bar, mobile as a bottom tab bar. */
 export const NAV_ITEMS: readonly NavItem[] = [

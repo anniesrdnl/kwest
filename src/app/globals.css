@@ -190,6 +190,7 @@
 
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-pixel: var(--font-pixel-face), ui-monospace, monospace;
+  --font-label: var(--font-label-face), ui-monospace, monospace;
   --color-ink: var(--ink);
 
   /* Square, pixel corners everywhere (rounded-full stays round). */

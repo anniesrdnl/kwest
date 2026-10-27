@@ -238,4 +238,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Home loading screen is a small pixel loader (no fake layout); Home reads its data in one round trip instead of two
 - [x] Profile, Shop, and the quiz, flashcards and Challenge pages also read their data in one round trip
 - [x] Card reader skips document titles, "Page N" lines, table header rows (Command / What it does) and headers or footers repeated on every page
+- [x] Navigation uses larger two-tone pixel pictures (src/components/brand/nav-icon.tsx) with easy-to-read IBM Plex Mono labels instead of the pixel font
 - [ ] Multiplayer study game
