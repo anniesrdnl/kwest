@@ -5,14 +5,22 @@ type PanelProps = ComponentProps<"section"> & {
   actions?: ReactNode;
   /** Fill color: white (default) or the blush hero color. */
   tone?: "plain" | "hero";
+  /** Light hover and press effects: the box lifts a little, tints, and sinks 1px when pressed. */
+  interactive?: boolean;
 };
 
 /** Main container: a box with stepped pixel corners, a 2px outline and a pixel shadow. */
-export function Panel({ title, actions, tone = "plain", className = "", children, ...props }: PanelProps) {
+export function Panel({ title, actions, tone = "plain", interactive = false, className = "", children, ...props }: PanelProps) {
   return (
-    <div className="pixel-lift">
+    <div
+      className={`pixel-lift ${
+        interactive ? "group transition-[translate] duration-150 ease-out hover:-translate-y-0.5 active:translate-y-px" : ""
+      }`}
+    >
       <section
-        className={`pixel-frame ${tone === "hero" ? "text-hero-fg [--frame-bg:var(--hero)]" : ""} ${className}`}
+        className={`pixel-frame ${tone === "hero" ? "text-hero-fg [--frame-bg:var(--hero)]" : ""} ${
+          interactive && tone === "plain" ? "group-hover:[--frame-bg:var(--surface-2)]" : ""
+        } ${className}`}
         {...props}
       >
         {(title || actions) && (

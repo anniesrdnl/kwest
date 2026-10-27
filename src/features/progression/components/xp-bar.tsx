@@ -14,6 +14,7 @@ export function XpBar({ xpTotal, compact = false }: { xpTotal: number; compact?:
       valueText={`${xpIntoLevel} of ${xpNeeded} XP to level ${level + 1}`}
       segments={compact ? 5 : 10}
       size={compact ? "sm" : "md"}
+      animate={!compact}
       className={compact ? "w-16" : "w-full"}
     />
   );

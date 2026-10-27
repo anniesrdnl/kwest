@@ -54,10 +54,10 @@ export function AchievementList({ achievements, timeZone }: { achievements: Achi
             const Icon = ICONS[a.icon] ?? Trophy;
             const earned = Boolean(a.earnedAt);
             return (
-              <li key={a.key} className="flex gap-3 p-4">
+              <li key={a.key} className="group flex gap-3 p-4 transition-colors duration-150 hover:bg-accent-soft">
                 <span
-                  className={`inline-flex size-12 shrink-0 items-center justify-center ${
-                    earned ? "bg-accent text-accent-fg" : "bg-surface-2 text-text-muted"
+                  className={`inline-flex size-12 shrink-0 items-center justify-center transition-[translate,background-color] duration-150 group-hover:-translate-y-0.5 ${
+                    earned ? "bg-accent text-accent-fg group-hover:bg-accent-hover" : "bg-surface-2 text-text-muted group-hover:bg-track"
                   }`}
                 >
                   {earned ? <Icon size={22} aria-hidden /> : <PixelIcon name="lock" scale={3} />}

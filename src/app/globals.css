@@ -461,6 +461,12 @@
     animation: block-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
   }
 
+  /* Chart bars grow up from the baseline. */
+  .bar-grow {
+    transform-origin: bottom;
+    animation: bar-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
   /* An error message gives one small shake. */
   .shake {
     animation: shake 0.4s ease-in-out;
@@ -540,6 +546,12 @@
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
   }
 }
 

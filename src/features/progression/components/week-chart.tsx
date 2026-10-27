@@ -26,8 +26,8 @@ export function WeekChart({ week, goal }: { week: DayActivity[]; goal: number })
           {week.map((d, i) => (
             <div key={d.day} className="group relative flex h-full flex-1 items-end justify-center">
               <div
-                className={`w-full max-w-10 ${d.cards > 0 ? "pixel-block bg-accent" : "bg-track"}`}
-                style={{ height: d.cards > 0 ? `${Math.max((d.cards / max) * 100, 3)}%` : "4px" }}
+                className={`bar-grow w-full max-w-10 transition-colors duration-150 ${d.cards > 0 ? "pixel-block bg-accent group-hover:bg-accent-hover" : "bg-track group-hover:bg-border"}`}
+                style={{ height: d.cards > 0 ? `${Math.max((d.cards / max) * 100, 3)}%` : "4px", animationDelay: `${0.15 + i * 0.07}s` }}
               />
               {/* Only rendered on hover, so it never widens the page; edge bars align inward. */}
               <span
