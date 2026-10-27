@@ -237,4 +237,5 @@ All text and background pairs meet WCAG AA contrast.
 - [x] Decks page redesign: scene backdrop, card-stack empty state, hover and press effects
 - [x] Home loading screen is a small pixel loader (no fake layout); Home reads its data in one round trip instead of two
 - [x] Profile, Shop, and the quiz, flashcards and Challenge pages also read their data in one round trip
+- [x] Card reader skips document titles, "Page N" lines, table header rows (Command / What it does) and headers or footers repeated on every page
 - [ ] Multiplayer study game

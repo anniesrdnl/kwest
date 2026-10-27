@@ -5,9 +5,15 @@ export type ParsedCard = { prompt: string; answer: string; explanation?: string;
 /** What the reader found: the cards, and how many lines were left out as not review material. */
 export type Reviewer = { cards: ParsedCard[]; left: number };
 
-// A first row like "Term<tab>Definition" is a header from a spreadsheet, not a card.
+// A first row like "Term<tab>Definition" or "Command<tab>What it does" is a table header, not a card.
 const HEADER_WORDS =
-  /^(front|back|term|terms|definition|definitions|word|words|meaning|meanings|question|questions|answer|answers|note|notes)$/i;
+  /^(front|back|terms?|definitions?|words?|meanings?|questions?|answers?|notes?|commands?|syntax|usage|descriptions?|functions?|purpose|examples?|options?|flags?|tools?|concepts?|topics?|keywords?|items?|details?|explanations?|what (?:it|this) (?:does|means|is)|how to use(?: it)?)$/i;
+
+/** A line near the top that names the document ("Kali Linux Commands - Simple Reviewer"), not a card. */
+const TITLE_END = /\b(reviewer|review|study guide|cheat ?sheet|handout|worksheet|lecture notes|reference|syllabus|module|lesson)$/i;
+
+/** Page headers and footers print the same line on every page. A line seen this often is not a card. */
+const REPEATS = 3;
 
 /** Headings and labels. A line that starts like this is not a term. */
 const LABEL =
@@ -140,10 +146,17 @@ function definition(sentence: string): ParsedCard | null {
  * This follows fixed rules. It does not understand the text, so the cards are meant to be checked.
  */
 export function buildReviewer(text: string): Reviewer {
-  const rows = unwrap(text.split(/\r?\n/).map((l) => l.replace(/[  ]+/g, " ").trim())).filter(Boolean);
+  const all = unwrap(text.split(/\r?\n/).map((l) => l.replace(/[  ]+/g, " ").trim())).filter(Boolean);
+  // Page headers and footers: the same line (page numbers aside) on many pages.
+  const norm = (l: string) => l.toLowerCase().replace(/\d+/g, "#");
+  const counts = new Map<string, number>();
+  for (const l of all) counts.set(norm(l), (counts.get(norm(l)) ?? 0) + 1);
+  const isRepeat = (l: string) =>
+    l.length >= 12 && !l.endsWith("?") && !NOTE_LINE.test(l) && !BULLET.test(l) && (counts.get(norm(l)) ?? 0) >= REPEATS;
+  const rows = all.filter((l) => !isRepeat(l));
   const cards: ParsedCard[] = [];
   const seen = new Set<string>();
-  let left = 0;
+  let left = all.length - rows.length;
   /** Index of the line that made the latest card, so a note only attaches to the card right above it. */
   let lastAt = -2;
 
@@ -171,7 +184,13 @@ export function buildReviewer(text: string): Reviewer {
       };
       if (explanation) card.explanation = clip(explanation, LIMITS.note);
       // Page layouts also make tab gaps (cover pages, headers), so rows with labels or dates are not cards.
-      const layout = LABEL.test(prompt) || NOISE.test(prompt) || !goodMeaning(answer);
+      // A title next to a page number or date ("Kali Linux Commands - Simple Reviewer / Page 1") is a header.
+      const layout =
+        LABEL.test(prompt) ||
+        NOISE.test(prompt) ||
+        NOISE.test(answer) ||
+        (i < 5 && TITLE_END.test(prompt)) ||
+        !goodMeaning(answer);
       if (!prompt || !answer || layout || !add(card, i)) left++;
       continue;
     }
@@ -227,6 +246,10 @@ export function buildReviewer(text: string): Reviewer {
 
     // "term: meaning" or "term - meaning".
     const pair = splitPair(line);
+    if (pair && i < 5 && TITLE_END.test(line)) {
+      left++;
+      continue;
+    }
     if (pair && goodTerm(pair[0]) && goodMeaning(pair[1])) {
       if (!add({ kind: "term", prompt: pair[0], answer: clip(pair[1], LIMITS.side) }, i)) left++;
       continue;
