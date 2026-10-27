@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PixelBackdrop } from "@/components/brand/pixel-backdrop";
+import { PixelMeadow } from "@/components/brand/pixel-meadow";
 import { PixelIcon } from "@/components/brand/pixel";
 import { Panel } from "@/components/ui/panel";
 import { SettingsList, SettingsSection } from "@/components/ui/settings-list";
@@ -35,7 +35,7 @@ export default async function ProfilePage() {
   return (
     <>
       <div aria-hidden className="fade-in pointer-events-none fixed inset-0 -z-10">
-        <PixelBackdrop calm />
+        <PixelMeadow sunClassName="top-[22%] right-[4%]" />
       </div>
 
       <div className="mx-auto max-w-3xl space-y-10">
